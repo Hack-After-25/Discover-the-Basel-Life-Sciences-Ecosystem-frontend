@@ -5,9 +5,9 @@ import { SiteHeader } from "@/components/site-header";
 import { Overlays } from "@/components/overlays";
 
 export const metadata: Metadata = {
-  title: "Basel Life Sciences Navigator",
+  title: "ARIADNE — De Fadä durch Basel",
   description:
-    "Describe what your team needs and get matched resources and a 12-month plan across Basel-Stadt and Basel-Landschaft.",
+    "AI-powered Research, Innovation And Discovery Navigator for Entrepreneurs. Your thread through Basel’s life-sciences labyrinth.",
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };

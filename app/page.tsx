@@ -62,12 +62,14 @@ export default function IntakePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 pb-20 pt-12 sm:px-6 sm:pt-20">
-      <h1 className="text-4xl font-semibold leading-[1.1] text-primary sm:text-5xl">
-        Tell us what your team needs. Get the people, places and plan in Basel.
+      <p className="text-sm font-medium uppercase tracking-[0.12em] text-accent">De Fadä durch Basel</p>
+      <h1 className="mt-2 text-4xl font-semibold leading-[1.1] text-primary sm:text-5xl">
+        Your thread through Basel’s life-sciences labyrinth.
       </h1>
       <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-        Speak or type in English, German or French. You get matched labs, investors, programmes and experts across
-        Basel-Stadt and Basel-Landschaft, each with a reason and its source, and a 12-month plan with a 90-day view.
+        Tell ARIADNE what your team needs — in English, Deutsch, Français or Baseldütsch. Get matched labs,
+        investors, programmes and experts across Basel-Stadt and Basel-Landschaft, each with a reason and its
+        source, and a 12-month plan.
       </p>
 
       <form onSubmit={submit} className="mt-10 rounded-2xl border border-line bg-white p-4 shadow-card sm:p-5">
@@ -148,7 +150,7 @@ export default function IntakePage() {
                 className="h-full w-full rounded-xl border border-line bg-surface p-4 text-left text-sm hover:border-accent"
               >
                 <span className="font-medium text-ink">{example.label}</span>
-                <span className="mt-1.5 line-clamp-3 block text-muted">{example.text}</span>
+                <span className="mt-1.5 block text-muted">{example.text}</span>
               </button>
             </li>
           ))}

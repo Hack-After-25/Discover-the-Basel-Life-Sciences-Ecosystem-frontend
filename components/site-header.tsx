@@ -29,8 +29,8 @@ export function SiteHeader() {
             <span className="absolute left-0 top-0 h-4 w-4 rounded-full bg-primary" />
             <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full bg-accent mix-blend-multiply" />
           </span>
-          <span className="hidden sm:inline">Basel Life Sciences Navigator</span>
-          <span className="sm:hidden">Navigator</span>
+          <span>ARIADNE</span>
+          <span className="hidden text-xs font-normal text-muted sm:inline">De Fadä durch Basel</span>
         </Link>
         <nav aria-label="Main" className="flex items-center gap-1">
           {hydrated && hasResults && (
