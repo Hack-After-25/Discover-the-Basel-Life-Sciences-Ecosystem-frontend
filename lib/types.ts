@@ -117,11 +117,14 @@ export interface Deadline {
   note: string;
 }
 
-/** The plan covers 90 days, shown as weeks 1 to 13. */
+/** "12m" = months 1 to 12, "90d" = weeks 1 to 13. */
+export type Horizon = "12m" | "90d";
+
 export interface RoadmapStep {
   id: string;
-  weekStart: number;
-  weekEnd: number;
+  /** First and last period, counted in months (12m) or weeks (90d). */
+  start: number;
+  end: number;
   title: string;
   description: string;
   relatedEntityIds: string[];
@@ -129,6 +132,7 @@ export interface RoadmapStep {
 }
 
 export interface Plan {
+  horizon: Horizon;
   /** Short text in the profile language, also used for voice output. */
   summary: string;
   steps: RoadmapStep[];

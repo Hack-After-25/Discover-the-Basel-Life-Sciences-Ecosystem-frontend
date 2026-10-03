@@ -6,10 +6,11 @@
  */
 import { DEADLINES, ENTITIES, RELATIONS } from "./mock-data";
 import { NEED_META, STAGE_LABEL } from "./entity-meta";
-import { AREA_I18N, LOCALE, NEED_I18N, REASON_I18N, STAGE_I18N, STEP_I18N, planSummary, type StepKey } from "./i18n";
+import { AREA_I18N, LOCALE, NEED_I18N, REASON_I18N, STAGE_I18N, STEP_I18N, STEP_I18N_12M, planSummary, type StepKey } from "./i18n";
 import type {
   Citation,
   Entity,
+  Horizon,
   IntroEmail,
   Language,
   Match,
@@ -247,39 +248,45 @@ export async function getMatches(profile: Profile): Promise<Match[]> {
 }
 
 /* ------------------------------------------------------------------ */
-/* getPlan: 90-day action plan, shown as weeks 1 to 13                 */
+/* getPlan: 12-month roadmap (months 1-12) or 90-day plan (weeks 1-13) */
 /* ------------------------------------------------------------------ */
 
-const STEP_TIMING: Record<NeedCategory, { start: number; end: number; after?: NeedCategory[] }> = {
-  acceleration: { start: 1, end: 3 },
-  lab_space: { start: 1, end: 6 },
-  legal_ip: { start: 2, end: 5 },
-  grants: { start: 2, end: 8 },
-  research: { start: 3, end: 10 },
-  regulatory: { start: 4, end: 8, after: ["lab_space"] },
-  investors: { start: 6, end: 13, after: ["legal_ip", "regulatory"] },
-  manufacturing: { start: 7, end: 12, after: ["regulatory"] },
-  clinical: { start: 8, end: 13, after: ["regulatory"] },
-  pharma_partners: { start: 10, end: 13, after: ["investors"] },
+type Span = [start: number, end: number];
+
+/** Timing per need: [months in the 12-month plan, weeks in the 90-day plan]. */
+const STEP_TIMING: Record<NeedCategory, { "12m": Span; "90d": Span; after?: NeedCategory[] }> = {
+  acceleration: { "12m": [1, 2], "90d": [1, 3] },
+  lab_space: { "12m": [1, 3], "90d": [1, 6] },
+  legal_ip: { "12m": [2, 3], "90d": [2, 5] },
+  grants: { "12m": [2, 5], "90d": [2, 8] },
+  research: { "12m": [3, 8], "90d": [3, 10] },
+  regulatory: { "12m": [3, 5], "90d": [4, 8], after: ["lab_space"] },
+  investors: { "12m": [4, 10], "90d": [6, 13], after: ["legal_ip", "regulatory"] },
+  manufacturing: { "12m": [5, 9], "90d": [7, 12], after: ["regulatory"] },
+  clinical: { "12m": [6, 11], "90d": [8, 13], after: ["regulatory"] },
+  pharma_partners: { "12m": [7, 12], "90d": [10, 13], after: ["investors"] },
 };
 
-function buildPlan(profile: Profile, matches: Match[]): Plan {
+export const PERIODS: Record<Horizon, number> = { "12m": 12, "90d": 13 };
+
+function buildPlan(profile: Profile, matches: Match[], horizon: Horizon): Plan {
   const lang = profile.language;
-  const text = (key: StepKey) => STEP_I18N[key][lang];
+  const last = PERIODS[horizon];
+  const text = (key: StepKey) => (horizon === "12m" && STEP_I18N_12M[key]?.[lang]) || STEP_I18N[key][lang];
   const idFor = (c: NeedCategory) => `step-${c}`;
   const categories = profile.needs.map((n) => n.category);
   const unique = categories.filter((c, i) => categories.indexOf(c) === i);
 
   const steps: RoadmapStep[] = [
-    { id: "step-entry", weekStart: 1, weekEnd: 1, ...text("entry"), relatedEntityIds: ["basel-area"], dependsOn: [] },
+    { id: "step-entry", start: 1, end: 1, ...text("entry"), relatedEntityIds: ["basel-area"], dependsOn: [] },
   ];
 
   for (const category of unique) {
     const t = STEP_TIMING[category];
     steps.push({
       id: idFor(category),
-      weekStart: t.start,
-      weekEnd: t.end,
+      start: t[horizon][0],
+      end: t[horizon][1],
       ...text(category),
       relatedEntityIds: matches
         .filter((m) => m.needCategory === category)
@@ -291,13 +298,13 @@ function buildPlan(profile: Profile, matches: Match[]): Plan {
 
   steps.push({
     id: "step-review",
-    weekStart: 13,
-    weekEnd: 13,
+    start: last,
+    end: last,
     ...text("review"),
     relatedEntityIds: [],
     dependsOn: steps.slice(1).map((s) => s.id),
   });
-  steps.sort((a, b) => a.weekStart - b.weekStart || a.weekEnd - b.weekEnd);
+  steps.sort((a, b) => a.start - b.start || a.end - b.end);
 
   // Deadlines of matched programmes first, then others open to this stage. Three at most.
   const matchedIds = new Set(matches.map((m) => m.entity.id));
@@ -314,6 +321,7 @@ function buildPlan(profile: Profile, matches: Match[]): Plan {
   const contacts = topContacts(matches, 3).map((e) => e.name);
   const next = deadlines[0];
   const summary = planSummary(lang, {
+    horizon,
     steps: steps.length,
     first: steps[0].title,
     contacts,
@@ -323,7 +331,7 @@ function buildPlan(profile: Profile, matches: Match[]): Plan {
     },
   });
 
-  return { summary, steps, deadlines };
+  return { horizon, summary, steps, deadlines };
 }
 
 /** Best-scoring distinct entities across all needs. */
@@ -336,8 +344,8 @@ export function topContacts(matches: Match[], limit: number): Entity[] {
     .map((m) => m.entity);
 }
 
-export async function getPlan(profile: Profile, matches: Match[]): Promise<Plan> {
-  return delay(buildPlan(profile, matches));
+export async function getPlan(profile: Profile, matches: Match[], horizon: Horizon = "12m"): Promise<Plan> {
+  return delay(buildPlan(profile, matches, horizon));
 }
 
 /* ------------------------------------------------------------------ */

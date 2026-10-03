@@ -1,4 +1,4 @@
-import type { Language, NeedCategory, RelationType, Stage } from "./types";
+import type { Horizon, Language, NeedCategory, RelationType, Stage } from "./types";
 
 /**
  * Translations for generated content (match reasons, plan text, spoken
@@ -295,14 +295,53 @@ export const STEP_I18N: Record<StepKey, Record<Language, StepText>> = {
   },
 };
 
+/** Wording that differs when the plan covers twelve months instead of 90 days. */
+export const STEP_I18N_12M: Partial<Record<StepKey, Record<Language, StepText>>> = {
+  investors: {
+    en: {
+      title: "Run the financing round",
+      description:
+        "Build the data room, begin with warm introductions, aim for a lead investor first, then fill the syndicate and close.",
+    },
+    de: {
+      title: "Finanzierungsrunde durchführen",
+      description:
+        "Bauen Sie den Datenraum auf, beginnen Sie mit persönlichen Empfehlungen, gewinnen Sie zuerst einen Lead-Investor, ergänzen Sie dann das Syndikat und schliessen Sie die Runde ab.",
+    },
+    fr: {
+      title: "Mener le tour de financement",
+      description:
+        "Constituez la data room, commencez par des introductions personnelles, trouvez d'abord un investisseur principal, puis complétez le syndicat et clôturez le tour.",
+    },
+  },
+  review: {
+    en: {
+      title: "Review progress and plan the next year",
+      description: "Compare outcomes with this plan, update your needs and generate a new plan.",
+    },
+    de: {
+      title: "Fortschritt prüfen und das nächste Jahr planen",
+      description:
+        "Vergleichen Sie die Ergebnisse mit diesem Plan, aktualisieren Sie Ihren Bedarf und erstellen Sie einen neuen Plan.",
+    },
+    fr: {
+      title: "Faire le point et planifier l'année suivante",
+      description: "Comparez les résultats avec ce plan, mettez à jour vos besoins et générez un nouveau plan.",
+    },
+  },
+};
+
+export const HORIZON_LABEL: Record<Horizon, string> = { "12m": "12 months", "90d": "90 days" };
+
 export function planSummary(
   lang: Language,
-  p: { steps: number; first: string; contacts: string[]; deadline?: { title: string; date: string } },
+  p: { horizon: Horizon; steps: number; first: string; contacts: string[]; deadline?: { title: string; date: string } },
 ): string {
   const names = p.contacts.join(", ");
+  const year = p.horizon === "12m";
   if (lang === "de") {
     return [
-      `Hier ist Ihr 90-Tage-Plan für Basel mit ${p.steps} Schritten.`,
+      `Hier ist Ihr ${year ? "12-Monats-Plan" : "90-Tage-Plan"} für Basel mit ${p.steps} Schritten.`,
       `Beginnen Sie mit: ${p.first}.`,
       names && `Ihre ersten Kontakte sind ${names}.`,
       p.deadline && `Die nächste Frist ist ${p.deadline.title}, am ${p.deadline.date}.`,
@@ -310,14 +349,14 @@ export function planSummary(
   }
   if (lang === "fr") {
     return [
-      `Voici votre plan sur 90 jours à Bâle, en ${p.steps} étapes.`,
+      `Voici votre plan sur ${year ? "12 mois" : "90 jours"} à Bâle, en ${p.steps} étapes.`,
       `Commencez par : ${p.first}.`,
       names && `Vos premiers contacts sont ${names}.`,
       p.deadline && `La prochaine échéance est ${p.deadline.title}, le ${p.deadline.date}.`,
     ].filter(Boolean).join(" ");
   }
   return [
-    `Here is your 90-day plan for Basel, in ${p.steps} steps.`,
+    `Here is your ${year ? "12-month" : "90-day"} plan for Basel, in ${p.steps} steps.`,
     `Start with: ${p.first}.`,
     names && `Your first contacts are ${names}.`,
     p.deadline && `The next deadline is ${p.deadline.title}, on ${p.deadline.date}.`,

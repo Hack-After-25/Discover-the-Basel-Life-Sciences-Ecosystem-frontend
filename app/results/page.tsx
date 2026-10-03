@@ -16,7 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const TABS = [
   { id: "matches", label: "Matches", icon: LayoutGrid },
-  { id: "plan", label: "90-day plan", icon: CalendarRange },
+  { id: "plan", label: "Plan", icon: CalendarRange },
   { id: "map", label: "Map", icon: MapPin },
   { id: "graph", label: "Graph", icon: Share2 },
 ] as const;
@@ -38,7 +38,7 @@ export default function ResultsPage() {
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
         <EmptyState
           title="No results yet"
-          body="Describe your team and what you need. Your matches, 90-day plan, map and graph appear here."
+          body="Describe your team and what you need. Your matches, 12-month plan, map and graph appear here."
           actionLabel="Describe your needs"
           actionHref="/"
         />

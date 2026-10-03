@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import * as api from "./api";
-import type { ChatMessage, Entity, Language, Match, Plan, Profile, Relation } from "./types";
+import type { ChatMessage, Entity, Horizon, Language, Match, Plan, Profile, Relation } from "./types";
 import { uid } from "./utils";
 
 interface NavigatorState {
@@ -12,6 +12,7 @@ interface NavigatorState {
   profile: Profile | null;
   matches: Match[];
   plan: Plan | null;
+  horizon: Horizon;
   /** Explicit language choice on the intake page. null = detect from the text. */
   language: Language | null;
   shortlist: string[];
@@ -28,6 +29,7 @@ interface NavigatorState {
 
   setNeedText: (text: string) => void;
   setLanguage: (language: Language | null) => void;
+  setHorizon: (horizon: Horizon) => Promise<void>;
   setProfile: (profile: Profile) => void;
   runAnalysis: () => Promise<void>;
   loadEntities: () => Promise<void>;
@@ -46,6 +48,7 @@ export const useNavigator = create<NavigatorState>()(
       profile: null,
       matches: [],
       plan: null,
+      horizon: "12m",
       language: null,
       shortlist: [],
       notes: {},
@@ -59,6 +62,18 @@ export const useNavigator = create<NavigatorState>()(
 
       setNeedText: (needText) => set({ needText }),
       setLanguage: (language) => set({ language }),
+
+      setHorizon: async (horizon) => {
+        const { profile, matches } = get();
+        set({ horizon });
+        if (!profile) return;
+        set({ analysing: true });
+        try {
+          set({ plan: await api.getPlan(profile, matches, horizon) });
+        } finally {
+          set({ analysing: false });
+        }
+      },
       setProfile: (profile) => set({ profile }),
 
       runAnalysis: async () => {
@@ -67,7 +82,7 @@ export const useNavigator = create<NavigatorState>()(
         set({ analysing: true });
         try {
           const matches = await api.getMatches(profile);
-          const plan = await api.getPlan(profile, matches);
+          const plan = await api.getPlan(profile, matches, get().horizon);
           set({ matches, plan });
         } finally {
           set({ analysing: false });
@@ -118,13 +133,14 @@ export const useNavigator = create<NavigatorState>()(
         set({ needText: "", profile: null, matches: [], plan: null, chat: [], detailId: null, emailId: null }),
     }),
     {
-      name: "basel-navigator-v2",
+      name: "basel-navigator-v3",
       partialize: (s) => ({
         needText: s.needText,
         profile: s.profile,
         matches: s.matches,
         plan: s.plan,
         language: s.language,
+        horizon: s.horizon,
         shortlist: s.shortlist,
         notes: s.notes,
         chat: s.chat,

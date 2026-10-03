@@ -2,24 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { CalendarClock, FlaskConical, Loader2, Printer, Square, Users, Volume2 } from "lucide-react";
-import { topContacts } from "@/lib/api";
+import { PERIODS, topContacts } from "@/lib/api";
 import { STAGE_LABEL } from "@/lib/entity-meta";
-import { LOCALE } from "@/lib/i18n";
+import { HORIZON_LABEL, LOCALE } from "@/lib/i18n";
 import { useNavigator } from "@/lib/store";
-import type { RoadmapStep } from "@/lib/types";
+import type { Horizon, RoadmapStep } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { speak, stopSpeaking } from "@/lib/voice";
 import { Button } from "./ui/button";
 import { EmptyState } from "./empty-state";
 
-const WEEKS = Array.from({ length: 13 }, (_, i) => i + 1);
-const GRID = "grid grid-cols-[220px_repeat(13,minmax(0,1fr))]";
+const HORIZONS: Horizon[] = ["12m", "90d"];
 
 export function PlanTab() {
   const plan = useNavigator((s) => s.plan);
   const profile = useNavigator((s) => s.profile);
   const matches = useNavigator((s) => s.matches);
   const openDetail = useNavigator((s) => s.openDetail);
+  const setHorizon = useNavigator((s) => s.setHorizon);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [speaking, setSpeaking] = useState<"idle" | "loading" | "playing">("idle");
   const [voiceError, setVoiceError] = useState<string | null>(null);
@@ -30,7 +30,7 @@ export function PlanTab() {
     return (
       <EmptyState
         title="No plan yet"
-        body="Add at least one need to your profile to generate a 90-day plan."
+        body="Add at least one need to your profile to generate a plan."
         actionLabel="Edit profile"
         actionHref="/profile"
       />
@@ -38,6 +38,10 @@ export function PlanTab() {
   }
 
   const steps = plan.steps;
+  const yearly = plan.horizon === "12m";
+  const count = PERIODS[plan.horizon];
+  const periods = Array.from({ length: count }, (_, i) => i + 1);
+  const gridStyle = { gridTemplateColumns: `220px repeat(${count}, minmax(0, 1fr))` };
   const selected = steps.find((s) => s.id === selectedId) ?? steps[0];
   const contacts = topContacts(matches, 5);
   const lab = matches.find((m) => m.needCategory === "lab_space" && m.entity.availability)?.entity;
@@ -67,13 +71,33 @@ export function PlanTab() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold">Your next 90 days in Basel</h2>
+          <h2 className="text-xl font-semibold">Your next {yearly ? "12 months" : "90 days"} in Basel</h2>
           <p className="print-only mt-1 text-sm text-muted">
             {profile.companyName ?? "Your team"}: {profile.teamSize} people, {STAGE_LABEL[profile.stage]},{" "}
             {profile.therapeuticArea}
           </p>
         </div>
-        <div className="no-print flex flex-wrap gap-2">
+        <div className="no-print flex flex-wrap items-center gap-2">
+          <div role="group" aria-label="Plan length" className="inline-flex rounded-lg border border-line p-0.5">
+            {HORIZONS.map((h) => (
+              <button
+                key={h}
+                type="button"
+                aria-pressed={plan.horizon === h}
+                onClick={() => {
+                  if (plan.horizon === h) return;
+                  setSelectedId(null);
+                  void setHorizon(h);
+                }}
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-sm font-medium",
+                  plan.horizon === h ? "bg-primary text-white" : "text-muted hover:text-ink",
+                )}
+              >
+                {HORIZON_LABEL[h]}
+              </button>
+            ))}
+          </div>
           <Button variant={speaking === "idle" ? "primary" : "accent"} onClick={readAloud} aria-pressed={speaking !== "idle"}>
             {speaking === "loading" ? (
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
@@ -131,7 +155,7 @@ export function PlanTab() {
             Funding deadlines
           </h3>
           {plan.deadlines.length === 0 ? (
-            <p className="mt-3 text-sm text-muted">No deadlines in the next 90 days.</p>
+            <p className="mt-3 text-sm text-muted">No upcoming deadlines for your stage.</p>
           ) : (
             <ul className="mt-3 space-y-3 text-sm">
               {plan.deadlines.map((d) => (
@@ -181,9 +205,9 @@ export function PlanTab() {
       {/* Timeline */}
       <div className="print-plain mt-5 overflow-x-auto rounded-2xl border border-line bg-white p-4 shadow-card">
         <div className="min-w-[760px]">
-          <div className={cn(GRID, "text-xs text-muted")}>
-            <div>Week</div>
-            {WEEKS.map((w) => (
+          <div className="grid text-xs text-muted" style={gridStyle}>
+            <div>{yearly ? "Month" : "Week"}</div>
+            {periods.map((w) => (
               <div key={w} className="border-l border-line pb-2 pl-1.5 tabular-nums">
                 {w}
               </div>
@@ -193,7 +217,7 @@ export function PlanTab() {
             {steps.map((step, index) => {
               const active = selected.id === step.id;
               return (
-                <li key={step.id} className={cn(GRID, "items-center border-t border-line")}>
+                <li key={step.id} className="grid items-center border-t border-line" style={gridStyle}>
                   <button
                     type="button"
                     lang={profile.language}
@@ -209,10 +233,10 @@ export function PlanTab() {
                   </button>
                   <div
                     className="relative grid h-full"
-                    style={{ gridColumn: "span 13 / span 13", gridTemplateColumns: "repeat(13, minmax(0, 1fr))" }}
-                    aria-label={`Week ${step.weekStart} to week ${step.weekEnd}`}
+                    style={{ gridColumn: `span ${count} / span ${count}`, gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
+                    aria-label={`${yearly ? "Month" : "Week"} ${step.start} to ${step.end}`}
                   >
-                    {WEEKS.map((w) => (
+                    {periods.map((w) => (
                       <div key={w} className="border-l border-line" />
                     ))}
                     <button
@@ -225,8 +249,8 @@ export function PlanTab() {
                         active ? "bg-accent" : "bg-primary/80 hover:bg-primary",
                       )}
                       style={{
-                        left: `calc(${((step.weekStart - 1) / 13) * 100}% + 3px)`,
-                        width: `calc(${((step.weekEnd - step.weekStart + 1) / 13) * 100}% - 6px)`,
+                        left: `calc(${((step.start - 1) / count) * 100}% + 3px)`,
+                        width: `calc(${((step.end - step.start + 1) / count) * 100}% - 6px)`,
                       }}
                     />
                   </div>
@@ -254,6 +278,7 @@ export function PlanTab() {
 
 function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: number; interactive?: boolean }) {
   const steps = useNavigator((s) => s.plan?.steps ?? []);
+  const unit = useNavigator((s) => (s.plan?.horizon === "90d" ? "week" : "month"));
   const language = useNavigator((s) => s.profile?.language ?? "en");
   const entities = useNavigator((s) => s.entities);
   const matches = useNavigator((s) => s.matches);
@@ -272,7 +297,7 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
     <section className="print-plain print-avoid-break rounded-2xl border border-line bg-white p-5 shadow-card">
       <p className="text-sm text-muted">
         Step {number},{" "}
-        {step.weekStart === step.weekEnd ? `week ${step.weekStart}` : `weeks ${step.weekStart} to ${step.weekEnd}`}
+        {step.start === step.end ? `${unit} ${step.start}` : `${unit}s ${step.start} to ${step.end}`}
       </p>
       <h3 lang={language} className="mt-1 text-lg font-semibold">
         {step.title}

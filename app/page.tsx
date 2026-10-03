@@ -67,7 +67,7 @@ export default function IntakePage() {
       </h1>
       <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
         Speak or type in English, German or French. You get matched labs, investors, programmes and experts across
-        Basel-Stadt and Basel-Landschaft, each with a reason and its source, and a 90-day action plan.
+        Basel-Stadt and Basel-Landschaft, each with a reason and its source, and a 12-month plan with a 90-day view.
       </p>
 
       <form onSubmit={submit} className="mt-10 rounded-2xl border border-line bg-white p-4 shadow-card sm:p-5">
