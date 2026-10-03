@@ -9,7 +9,7 @@ import { Skeleton } from "./ui/skeleton";
 
 const GraphView = dynamic(() => import("./graph-view"), {
   ssr: false,
-  loading: () => <Skeleton className="h-[540px] w-full rounded-2xl" />,
+  loading: () => <Skeleton className="h-[560px] w-full rounded-2xl" />,
 });
 
 export function GraphTab() {
@@ -40,9 +40,10 @@ export function GraphTab() {
     <div>
       <TypeLegend />
       <p className="mt-2 max-w-prose text-sm text-muted">
-        Grey lines link you to your matches. Teal arrows are relationships from the knowledge graph, such as who funds or
-        hosts whom. Faded nodes are not matches themselves but connect to one. Hover a line to read the relationship,
-        select a node for details, zoom in to read names.
+        Drag to rotate, scroll to zoom, right-drag to pan. Grey lines link you to your matches. Teal arrows are
+        relationships from the knowledge graph, such as who funds or hosts whom. Small nodes with grey names are not
+        matches themselves but connect to one. Hover a line to read the relationship, select a node to fly to it and
+        open its details.
       </p>
       <div className="mt-4">
         <GraphView profile={profile} matches={matches} relations={relations} entities={entities} onSelect={openDetail} />

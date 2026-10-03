@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import ForceGraph2D from "react-force-graph-2d";
+import ForceGraph3D, { type ForceGraphMethods } from "react-force-graph-3d";
+import SpriteText from "three-spritetext";
 import { TYPE_META } from "@/lib/entity-meta";
 import { RELATION_LABEL } from "@/lib/i18n";
 import type { Entity, Match, Profile, Relation } from "@/lib/types";
@@ -24,6 +25,7 @@ interface GraphNode {
   neighbour?: boolean;
   x?: number;
   y?: number;
+  z?: number;
 }
 
 interface GraphLink {
@@ -34,10 +36,12 @@ interface GraphLink {
 }
 
 const STARTUP_ID = "__startup__";
+const HEIGHT = 560;
 
-/** Client-only: load with next/dynamic and ssr: false. */
+/** Interactive 3D knowledge graph. Client-only: load with next/dynamic and ssr: false. */
 export default function GraphView({ profile, matches, relations, entities, onSelect }: Props) {
   const wrapper = useRef<HTMLDivElement>(null);
+  const graph = useRef<ForceGraphMethods | undefined>(undefined);
   const [width, setWidth] = useState(640);
 
   useEffect(() => {
@@ -74,7 +78,7 @@ export default function GraphView({ profile, matches, relations, entities, onSel
       })),
       ...Array.from(neighbourIds).map((id) => {
         const e = byId.get(id)!;
-        return { id, label: e.name, color: `${TYPE_META[e.type].color}80`, size: 3.5, neighbour: true };
+        return { id, label: e.name, color: TYPE_META[e.type].color, size: 3, neighbour: true };
       }),
     ];
     const present = new Set(nodes.map((n) => n.id));
@@ -88,41 +92,67 @@ export default function GraphView({ profile, matches, relations, entities, onSel
     return { nodes, links };
   }, [matches, relations, entities, profile.companyName]);
 
+  /** Fly the camera to a node, then open its details. */
+  const focusNode = (node: GraphNode) => {
+    const { x = 0, y = 0, z = 0 } = node;
+    const distance = 90;
+    const ratio = 1 + distance / Math.max(Math.hypot(x, y, z), 1);
+    graph.current?.cameraPosition({ x: x * ratio, y: y * ratio, z: z * ratio }, { x, y, z }, 900);
+    if (!node.isStartup) onSelect(node.id);
+  };
+
   return (
-    <div ref={wrapper} className="overflow-hidden rounded-2xl border border-line bg-white">
-      <ForceGraph2D
+    <div ref={wrapper} className="relative overflow-hidden rounded-2xl border border-line bg-white">
+      <ForceGraph3D
+        ref={graph}
         graphData={data}
         width={width}
-        height={540}
+        height={HEIGHT}
         backgroundColor="#ffffff"
+        showNavInfo={false}
         nodeRelSize={1}
         nodeVal={(n) => Math.pow((n as GraphNode).size, 2)}
         nodeColor={(n) => (n as GraphNode).color}
+        nodeOpacity={0.95}
+        nodeResolution={20}
         nodeLabel={(n) => (n as GraphNode).label}
+        nodeThreeObjectExtend
+        nodeThreeObject={(n: object) => {
+          const node = n as GraphNode;
+          const text = node.label.length > 30 ? `${node.label.slice(0, 28)}…` : node.label;
+          const sprite = new SpriteText(text);
+          sprite.color = node.neighbour ? "#5A6781" : "#14213D";
+          sprite.textHeight = node.isStartup ? 5 : 3.2;
+          sprite.fontWeight = node.isStartup ? "600" : "400";
+          sprite.fontFace = '"Schibsted Grotesk Variable", Helvetica, Arial, sans-serif';
+          sprite.backgroundColor = "rgba(255,255,255,0.75)";
+          sprite.padding = 0.8;
+          sprite.borderRadius = 1.5;
+          sprite.position.set(0, -(node.size + 5), 0);
+          return sprite;
+        }}
         linkLabel={(l) => (l as unknown as GraphLink).label}
-        linkColor={(l) => ((l as unknown as GraphLink).kind === "match" ? "#B9C6DC" : "#0E8F8A")}
-        linkWidth={(l) => ((l as unknown as GraphLink).kind === "match" ? 0.8 : 1.6)}
+        linkColor={(l) => ((l as unknown as GraphLink).kind === "match" ? "#9FB0CC" : "#0E8F8A")}
+        linkOpacity={0.7}
+        linkWidth={(l) => ((l as unknown as GraphLink).kind === "match" ? 0.3 : 0.9)}
         linkDirectionalArrowLength={(l) => ((l as unknown as GraphLink).kind === "relation" ? 4 : 0)}
         linkDirectionalArrowRelPos={1}
-        cooldownTicks={120}
-        nodeCanvasObjectMode={() => "after"}
-        nodeCanvasObject={(n, ctx, scale) => {
-          const node = n as GraphNode;
-          if (node.x === undefined || node.y === undefined) return;
-          if (!node.isStartup && scale < 1.1) return;
-          const fontSize = (node.isStartup ? 13 : 11) / scale;
-          ctx.font = `${node.isStartup ? 600 : 400} ${fontSize}px "Schibsted Grotesk Variable", sans-serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "top";
-          ctx.fillStyle = node.neighbour ? "#5A6781" : "#14213D";
-          const label = node.label.length > 34 ? `${node.label.slice(0, 32)}…` : node.label;
-          ctx.fillText(label, node.x, node.y + node.size + 2 / scale);
-        }}
-        onNodeClick={(n) => {
-          const node = n as GraphNode;
-          if (!node.isStartup) onSelect(node.id);
-        }}
+        linkDirectionalParticles={(l) => ((l as unknown as GraphLink).kind === "relation" ? 2 : 0)}
+        linkDirectionalParticleWidth={1.4}
+        linkDirectionalParticleSpeed={0.006}
+        cooldownTicks={140}
+        onEngineStop={() => graph.current?.zoomToFit(600, 60)}
+        onNodeClick={(n) => focusNode(n as GraphNode)}
       />
+      <div className="absolute bottom-3 right-3 flex gap-2">
+        <button
+          type="button"
+          onClick={() => graph.current?.zoomToFit(600, 60)}
+          className="rounded-lg border border-line bg-white px-3 py-1.5 text-sm font-medium text-ink shadow-card hover:bg-surface"
+        >
+          Reset view
+        </button>
+      </div>
     </div>
   );
 }
