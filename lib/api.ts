@@ -1,8 +1,10 @@
 /**
- * Single data-access layer. Every function here is a MOCK that resolves after
- * a short delay. To connect the real backend (Codex orchestrator + RAG +
- * Apertus), replace each function body with a fetch() call (see README) and
- * keep the signatures. Components and the store only import from this file.
+ * Single data-access layer. Each function calls the real backend when
+ * NEXT_PUBLIC_API_URL is set, and falls back to its original mock
+ * implementation otherwise — so the app still runs on mocks with zero
+ * config, exactly as before. Components and the store only import from
+ * this file. See README's "Connect the backend" section for the endpoint
+ * contract this was built against.
  */
 import { DEADLINES, ENTITIES, RELATIONS } from "./mock-data";
 import { NEED_META, STAGE_LABEL } from "./entity-meta";
@@ -29,6 +31,31 @@ const MOCK_DELAY_MS = 800;
 
 function delay<T>(value: T, ms = MOCK_DELAY_MS): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms));
+}
+
+/* ------------------------------------------------------------------ */
+/* Real backend wiring, per this file's own README section             */
+/* ("Connect the backend"). Falls back to the mock below when          */
+/* NEXT_PUBLIC_API_URL isn't set, so the app still runs on mocks with   */
+/* no env config, exactly as before.                                    */
+/* ------------------------------------------------------------------ */
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+async function apiPost<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`${path} failed with ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+async function apiGet<T>(path: string): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`);
+  if (!res.ok) throw new Error(`${path} failed with ${res.status}: ${await res.text()}`);
+  return res.json();
 }
 
 /* ------------------------------------------------------------------ */
@@ -126,6 +153,11 @@ function needDetail(category: NeedCategory, text: string, stage: Stage): string 
 
 /** `language` is the user's explicit choice. Leave it out to detect it from the text. */
 export async function parseNeed(text: string, language?: Language): Promise<Profile> {
+  if (API_BASE) return apiPost<Profile>("/parse-need", { text, language });
+  return mockParseNeed(text, language);
+}
+
+async function mockParseNeed(text: string, language?: Language): Promise<Profile> {
   const creating = CREATION_INTENT.test(text);
   const stage = detectStage(text) ?? (creating ? "academic" : "seed");
   const area = AREA_KEYWORDS.find(([, re]) => re.test(text))?.[0] ?? "platform technology";
@@ -244,6 +276,7 @@ function computeMatches(profile: Profile): Match[] {
 }
 
 export async function getMatches(profile: Profile): Promise<Match[]> {
+  if (API_BASE) return apiPost<Match[]>("/match", { profile });
   return delay(computeMatches(profile));
 }
 
@@ -345,6 +378,7 @@ export function topContacts(matches: Match[], limit: number): Entity[] {
 }
 
 export async function getPlan(profile: Profile, matches: Match[], horizon: Horizon = "12m"): Promise<Plan> {
+  if (API_BASE) return apiPost<Plan>("/plan", { profile, matches, horizon });
   return delay(buildPlan(profile, matches, horizon));
 }
 
@@ -353,6 +387,8 @@ export async function getPlan(profile: Profile, matches: Match[], horizon: Horiz
 /* ------------------------------------------------------------------ */
 
 export async function draftIntroEmail(profile: Profile, entityId: string): Promise<IntroEmail> {
+  if (API_BASE) return apiPost<IntroEmail>("/intro-email", { profile, entityId });
+
   const entity = ENTITIES.find((e) => e.id === entityId);
   if (!entity) throw new Error(`Unknown entity: ${entityId}`);
   if (profile.needs.length === 0) throw new Error("Profile has no needs");
@@ -385,6 +421,8 @@ export async function draftIntroEmail(profile: Profile, entityId: string): Promi
 /* ------------------------------------------------------------------ */
 
 export async function refine(profile: Profile, message: string): Promise<RefineResult> {
+  if (API_BASE) return apiPost<RefineResult>("/refine", { profile, message });
+
   const next: Profile = {
     ...profile,
     needs: profile.needs.map((n) => ({ ...n })),
@@ -469,10 +507,12 @@ export async function refine(profile: Profile, message: string): Promise<RefineR
 /* ------------------------------------------------------------------ */
 
 export async function getEntities(): Promise<Entity[]> {
+  if (API_BASE) return apiGet<Entity[]>("/entities");
   return delay(ENTITIES, 300);
 }
 
 /** Knowledge-graph edges (backend: graph_traverse). */
 export async function getRelations(): Promise<Relation[]> {
+  if (API_BASE) return apiGet<Relation[]>("/graph/relations");
   return delay(RELATIONS, 300);
 }
