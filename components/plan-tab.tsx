@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { CalendarClock, FlaskConical, Loader2, Printer, Square, Users, Volume2 } from "lucide-react";
 import { PERIODS, topContacts } from "@/lib/api";
-import { STAGE_LABEL } from "@/lib/entity-meta";
+import { STAGE_LABEL, THERAPEUTIC_AREA_LABELS } from "@/lib/entity-meta";
 import { HORIZON_LABEL, LOCALE } from "@/lib/i18n";
 import { useNavigator } from "@/lib/store";
 import type { Horizon, RoadmapStep } from "@/lib/types";
@@ -74,7 +74,7 @@ export function PlanTab() {
           <h2 className="text-xl font-semibold">Your next {yearly ? "12 months" : "90 days"} in Basel</h2>
           <p className="print-only mt-1 text-sm text-muted">
             {profile.companyName ?? "Your team"}: {profile.teamSize} people, {STAGE_LABEL[profile.stage]},{" "}
-            {profile.therapeuticArea}
+            {THERAPEUTIC_AREA_LABELS[profile.therapeuticArea]}
           </p>
         </div>
         <div className="no-print flex flex-wrap items-center gap-2">

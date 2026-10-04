@@ -12,6 +12,11 @@ export const LOCALE: Record<Language, string> = { en: "en-GB", de: "de-CH", fr: 
 
 export const AREA_I18N: Record<string, Record<Language, string>> = {
   oncology: { en: "oncology", de: "Onkologie", fr: "oncologie" },
+  diagnostics: { en: "diagnostics", de: "Diagnostik", fr: "diagnostic" },
+  "medical devices": { en: "medical devices", de: "Medizintechnik", fr: "technologies médicales" },
+  "e-health": { en: "e-health", de: "Digital Health", fr: "santé numérique" },
+  "pharma r&d tech": { en: "pharma R&D tech", de: "Pharma R&D Technologie", fr: "technologie pharma R&D" },
+  therapeutics: { en: "therapeutics (general)", de: "Therapeutika (allgemein)", fr: "thérapeutiques (général)" },
   neuroscience: { en: "neuroscience", de: "Neurowissenschaften", fr: "neurosciences" },
   immunology: { en: "immunology", de: "Immunologie", fr: "immunologie" },
   "infectious disease": { en: "infectious disease", de: "Infektionskrankheiten", fr: "maladies infectieuses" },
@@ -21,7 +26,6 @@ export const AREA_I18N: Record<string, Record<Language, string>> = {
   "gene and cell therapy": { en: "gene and cell therapy", de: "Gen- und Zelltherapie", fr: "thérapie génique et cellulaire" },
   medtech: { en: "medtech", de: "Medizintechnik", fr: "technologies médicales" },
   "digital health": { en: "digital health", de: "Digital Health", fr: "santé numérique" },
-  diagnostics: { en: "diagnostics", de: "Diagnostik", fr: "diagnostic" },
   "platform technology": { en: "platform technology", de: "Plattformtechnologie", fr: "technologies de plateforme" },
 };
 

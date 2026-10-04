@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus, X } from "lucide-react";
-import { NEED_CATEGORIES, NEED_META, STAGES, STAGE_LABEL, THERAPEUTIC_AREAS } from "@/lib/entity-meta";
+import { NEED_CATEGORIES, NEED_META, STAGES, STAGE_LABEL, THERAPEUTIC_AREAS, THERAPEUTIC_AREA_LABELS } from "@/lib/entity-meta";
 import { useHydrated, useNavigator } from "@/lib/store";
 import { LANGUAGES, LANGUAGE_LABEL } from "@/lib/i18n";
 import type { Language, NeedCategory, Profile, Stage } from "@/lib/types";
@@ -99,7 +99,7 @@ export default function ProfilePage() {
             <Select id="area" value={profile.therapeuticArea} onChange={(e) => update({ therapeuticArea: e.target.value })}>
               {THERAPEUTIC_AREAS.map((a) => (
                 <option key={a} value={a}>
-                  {a.charAt(0).toUpperCase() + a.slice(1)}
+                  {THERAPEUTIC_AREA_LABELS[a]}
                 </option>
               ))}
             </Select>

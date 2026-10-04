@@ -46,15 +46,18 @@ export const CANTON_LABEL: Record<Canton, string> = {
 
 export const THERAPEUTIC_AREAS = [
   "oncology",
-  "neuroscience",
-  "immunology",
-  "infectious disease",
-  "rare disease",
-  "cardiometabolic",
-  "ophthalmology",
-  "gene and cell therapy",
-  "medtech",
-  "digital health",
   "diagnostics",
-  "platform technology",
+  "medical devices",
+  "therapeutics",
+  "e-health",
+  "pharma r&d tech"
 ];
+
+export const THERAPEUTIC_AREA_LABELS: Record<string, string> = {
+  oncology: "Oncology",
+  diagnostics: "Diagnostics",
+  "medical devices": "Medical Devices",
+  therapeutics: "Therapeutics (General)",
+  "e-health": "E-Health",
+  "pharma r&d tech": "Pharma R&D Tech",
+};

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Bookmark, Pencil } from "lucide-react";
-import { CANTON_LABEL, NEED_META, STAGE_LABEL } from "@/lib/entity-meta";
+import { CANTON_LABEL, NEED_META, STAGE_LABEL, THERAPEUTIC_AREA_LABELS } from "@/lib/entity-meta";
 import { LANGUAGE_LABEL } from "@/lib/i18n";
 import { useNavigator } from "@/lib/store";
 
@@ -17,7 +17,7 @@ export function ProfileSidebar() {
         <div>
           <h2 className="text-base font-semibold">{profile.companyName ?? "Your team"}</h2>
           <p className="mt-0.5 text-sm text-muted">
-            {profile.teamSize} people, {STAGE_LABEL[profile.stage]}, {profile.therapeuticArea}
+            {profile.teamSize} people, {STAGE_LABEL[profile.stage]}, {THERAPEUTIC_AREA_LABELS[profile.therapeuticArea]}
           </p>
           <p className="mt-0.5 text-sm text-muted">Answers in {LANGUAGE_LABEL[profile.language]}</p>
         </div>
