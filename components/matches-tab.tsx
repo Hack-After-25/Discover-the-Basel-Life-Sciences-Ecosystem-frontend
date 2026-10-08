@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ENTITY_TYPES, NEED_META, TYPE_META } from "@/lib/entity-meta";
+import Link from "next/link";
+import { ENTITY_TYPES, NEED_META, NEED_TO_ENTITY_TYPE, TYPE_META } from "@/lib/entity-meta";
 import { useNavigator } from "@/lib/store";
 import type { Canton, EntityType, Match, NeedCategory } from "@/lib/types";
 import { EmptyState } from "./empty-state";
@@ -83,6 +84,12 @@ export function MatchesTab() {
               ) : (
                 <p className="mt-3 text-sm text-muted">No direct matches yet for this need.</p>
               )}
+              <Link
+                href={`/directory?type=${NEED_TO_ENTITY_TYPE[need]}`}
+                className="mt-3 inline-block text-sm font-medium text-primary underline-offset-2 hover:underline"
+              >
+                See the full {TYPE_META[NEED_TO_ENTITY_TYPE[need]].label.toLowerCase()} list in the directory
+              </Link>
               {programmes.length > 0 && (
                 <>
                   <h3 className="mt-6 text-base font-semibold">
