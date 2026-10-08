@@ -97,7 +97,14 @@ export interface Match {
   citations: Citation[];
   /** Reference into the backend audit chain for this retrieval. */
   auditId: string;
+  /**
+   * "provider" is the thing itself (a lab, an investor, a pharma company).
+   * "programme" is a support programme that can arrange it. Missing means provider.
+   */
+  role?: MatchRole;
 }
+
+export type MatchRole = "provider" | "programme";
 
 export type RelationType = "funds" | "member_of" | "offers_lab_space_for" | "partners_with";
 
