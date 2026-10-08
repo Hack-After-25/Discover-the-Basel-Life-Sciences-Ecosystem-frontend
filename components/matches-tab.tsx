@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { ENTITY_TYPES, NEED_META, TYPE_META } from "@/lib/entity-meta";
 import { useNavigator } from "@/lib/store";
-import type { Canton, EntityType, NeedCategory } from "@/lib/types";
+import type { Canton, EntityType, Match, NeedCategory } from "@/lib/types";
 import { EmptyState } from "./empty-state";
 import { MatchCard } from "./match-card";
 import { Select } from "./ui/input";
@@ -69,22 +69,47 @@ export function MatchesTab() {
           />
         </div>
       ) : (
-        groups.map(([need, items]) => (
-          <section key={need} className="mt-8" aria-labelledby={`need-${need}`}>
-            <h2 id={`need-${need}`} className="text-xl font-semibold">
-              {NEED_META[need].label}
-              <span className="ml-2 text-sm font-normal text-muted">{items.length} matches</span>
-            </h2>
-            <ul className="mt-4 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-              {items.map((m) => (
-                <li key={`${m.needCategory}-${m.entity.id}`}>
-                  <MatchCard entity={m.entity} match={m} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
+        groups.map(([need, items]) => {
+          const providers = items.filter((m) => m.role !== "programme");
+          const programmes = items.filter((m) => m.role === "programme");
+          return (
+            <section key={need} className="mt-8" aria-labelledby={`need-${need}`}>
+              <h2 id={`need-${need}`} className="text-xl font-semibold">
+                {NEED_META[need].label}
+                <span className="ml-2 text-sm font-normal text-muted">{providers.length} matches</span>
+              </h2>
+              {providers.length > 0 ? (
+                <MatchList items={providers} />
+              ) : (
+                <p className="mt-3 text-sm text-muted">No direct matches yet for this need.</p>
+              )}
+              {programmes.length > 0 && (
+                <>
+                  <h3 className="mt-6 text-base font-semibold">
+                    Programmes that can help
+                    <span className="ml-2 text-sm font-normal text-muted">
+                      They can arrange this for you but are not providers themselves.
+                    </span>
+                  </h3>
+                  <MatchList items={programmes} />
+                </>
+              )}
+            </section>
+          );
+        })
       )}
     </div>
+  );
+}
+
+function MatchList({ items }: { items: Match[] }) {
+  return (
+    <ul className="mt-4 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+      {items.map((m) => (
+        <li key={`${m.needCategory}-${m.entity.id}`}>
+          <MatchCard entity={m.entity} match={m} />
+        </li>
+      ))}
+    </ul>
   );
 }
