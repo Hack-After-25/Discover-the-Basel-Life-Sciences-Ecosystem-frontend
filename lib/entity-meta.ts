@@ -28,6 +28,20 @@ export const NEED_META: Record<NeedCategory, { label: string; defaultDetail: str
 
 export const NEED_CATEGORIES = Object.keys(NEED_META) as NeedCategory[];
 
+/** The directory tab that lists every provider for a need ("See all"). */
+export const NEED_TO_ENTITY_TYPE: Record<NeedCategory, EntityType> = {
+  lab_space: "lab_space",
+  investors: "investor",
+  regulatory: "service_provider",
+  pharma_partners: "pharma",
+  acceleration: "accelerator",
+  research: "research_institute",
+  grants: "funding_program",
+  manufacturing: "service_provider",
+  legal_ip: "service_provider",
+  clinical: "service_provider",
+};
+
 export const STAGE_LABEL: Record<Stage, string> = {
   academic: "Academic / pre-company",
   "pre-seed": "Pre-seed",

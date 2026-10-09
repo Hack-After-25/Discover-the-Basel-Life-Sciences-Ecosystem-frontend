@@ -38,6 +38,9 @@ export function SiteHeader() {
               Results
             </Link>
           )}
+          <Link href="/directory" className={link("/directory")}>
+            Directory
+          </Link>
           <Link href="/shortlist" className={cn(link("/shortlist"), "inline-flex items-center gap-1.5")}>
             <Bookmark className="h-4 w-4" aria-hidden />
             Shortlist
