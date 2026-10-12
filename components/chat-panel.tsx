@@ -35,7 +35,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
       className={cn(
         "no-print flex flex-col bg-white",
         // Mobile: full-screen sheet. Desktop: sticky column.
-        "fixed inset-0 z-[950] lg:sticky lg:inset-auto lg:top-20 lg:z-0 lg:h-[calc(100vh-6.5rem)] lg:rounded-2xl lg:border lg:border-line",
+        "fixed inset-0 z-[950] lg:sticky lg:inset-auto lg:top-24 lg:z-0 lg:h-[calc(100vh-7.5rem)] lg:rounded-2xl lg:border lg:border-line",
       )}
     >
       <div className="flex items-center justify-between border-b border-line px-4 py-3">

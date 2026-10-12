@@ -70,7 +70,7 @@ export function MatchesTab() {
           const programmes = items.filter((m) => m.role === "programme");
           const entityType = NEED_TO_ENTITY_TYPE[need];
           return (
-            <section key={need} id={`need-${need}`} className="mt-8 scroll-mt-24" aria-labelledby={`need-${need}-title`}>
+            <section key={need} id={`need-${need}`} className="mt-8 scroll-mt-28" aria-labelledby={`need-${need}-title`}>
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h2 id={`need-${need}-title`} className="flex items-center gap-2.5 text-xl font-semibold">
                   <span aria-hidden className="h-2.5 w-2.5 rounded-[3px]" style={{ backgroundColor: TYPE_META[entityType].color }} />
