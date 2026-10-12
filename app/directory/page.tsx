@@ -87,9 +87,9 @@ function Directory() {
             className="min-h-11 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted/80"
           />
         </div>
-        <div className="w-full sm:w-[220px] [&>select]:h-12 [&>select]:rounded-xl [&>select]:font-medium">
+        <div className="w-full sm:w-[220px]">
           <label htmlFor="d-canton" className="sr-only">Region</label>
-          <RegionSelect id="d-canton" value={canton} onChange={setCanton} />
+          <RegionSelect id="d-canton" className="h-12 rounded-xl font-medium" value={canton} onChange={setCanton} />
         </div>
         <div role="group" aria-label="View" className="inline-flex gap-0.5 rounded-xl bg-[#EAECEF] p-[3px]">
           <button type="button" aria-label="Table view" aria-pressed={view === "table"} className={viewButton(view === "table")} onClick={() => setView("table")}>

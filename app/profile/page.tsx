@@ -20,7 +20,8 @@ import { EmptyState } from "@/components/empty-state";
 import { FlowSteps } from "@/components/flow-steps";
 import { RegionSelect } from "@/components/region-select";
 import { Button } from "@/components/ui/button";
-import { Input, Select } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
+import { Dropdown } from "@/components/ui/dropdown";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProfilePage() {
@@ -124,22 +125,15 @@ export default function ProfilePage() {
                 />
               </Field>
               <Field label="Stage" id="stage">
-                <Select id="stage" value={profile.stage} onChange={(e) => update({ stage: e.target.value as Stage })}>
-                  {STAGES.map((s) => (
-                    <option key={s} value={s}>
-                      {STAGE_LABEL[s]}
-                    </option>
-                  ))}
-                </Select>
+                <Dropdown id="stage" value={profile.stage} onChange={(v) => update({ stage: v as Stage })} options={STAGES.map((s) => ({ value: s, label: STAGE_LABEL[s] }))} />
               </Field>
               <Field label="Field" id="area">
-                <Select id="area" value={profile.therapeuticArea} onChange={(e) => update({ therapeuticArea: e.target.value })}>
-                  {THERAPEUTIC_AREAS.map((a) => (
-                    <option key={a} value={a}>
-                      {THERAPEUTIC_AREA_LABELS[a]}
-                    </option>
-                  ))}
-                </Select>
+                <Dropdown
+                  id="area"
+                  value={profile.therapeuticArea}
+                  onChange={(v) => update({ therapeuticArea: v })}
+                  options={THERAPEUTIC_AREAS.map((a) => ({ value: a, label: THERAPEUTIC_AREA_LABELS[a] }))}
+                />
               </Field>
               <Field label="Where to look" id="region">
                 <RegionSelect
@@ -149,13 +143,12 @@ export default function ProfilePage() {
                 />
               </Field>
               <Field label="Answer language" id="language">
-                <Select id="language" value={profile.language} onChange={(e) => update({ language: e.target.value as Language })}>
-                  {LANGUAGES.map((l) => (
-                    <option key={l} value={l}>
-                      {LANGUAGE_LABEL[l]}
-                    </option>
-                  ))}
-                </Select>
+                <Dropdown
+                  id="language"
+                  value={profile.language}
+                  onChange={(v) => update({ language: v as Language })}
+                  options={LANGUAGES.map((l) => ({ value: l, label: LANGUAGE_LABEL[l] }))}
+                />
               </Field>
             </div>
           </section>
