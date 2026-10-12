@@ -1,9 +1,9 @@
 "use client";
 
 import { Bookmark, BookmarkCheck, Mail } from "lucide-react";
-import { TYPE_META } from "@/lib/entity-meta";
 import { useNavigator } from "@/lib/store";
 import type { Entity, Match } from "@/lib/types";
+import { ScoreRing } from "./score-ring";
 import { Button } from "./ui/button";
 import { CantonBadge, TypeBadge } from "./type-badge";
 
@@ -19,47 +19,56 @@ export function MatchCard({ entity, match }: Props) {
   const openDetail = useNavigator((s) => s.openDetail);
   const openEmail = useNavigator((s) => s.openEmail);
   const hasProfile = useNavigator((s) => s.profile !== null);
-  const color = TYPE_META[entity.type].color;
+
+  const verified = formatVerified(entity.lastVerified);
 
   return (
-    <article
-      className="flex h-full flex-col rounded-2xl border border-line bg-white p-5 shadow-card"
-      style={{ borderTopColor: color, borderTopWidth: 3 }}
-    >
+    <article className="flex h-full flex-col gap-3 rounded-[18px] border border-line bg-white p-[18px] shadow-card transition-shadow hover:shadow-lift">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap gap-1.5">
             <TypeBadge type={entity.type} />
             <CantonBadge canton={entity.canton} />
           </div>
-          <h3 className="mt-2.5 text-base font-semibold leading-snug">{entity.name}</h3>
+          <h3 className="mt-2.5 text-base font-semibold leading-snug">
+            <button type="button" onClick={() => openDetail(entity.id)} className="text-left hover:text-primary">
+              {entity.name}
+            </button>
+          </h3>
         </div>
-        {match && (
-          <div className="shrink-0 text-right" aria-label={`Match score ${match.score} out of 100`}>
-            <div className="text-2xl font-semibold tabular-nums text-primary">{match.score}</div>
-            <div className="text-xs text-muted">match</div>
-          </div>
-        )}
+        {match && <ScoreRing score={match.score} />}
       </div>
 
-      <p className="mt-3 rounded-lg bg-accent-soft px-3 py-2 text-sm font-medium text-accent-dark">
-        {match ? match.reason : entity.description}
+      <p className="text-sm leading-relaxed text-[#26303F]">{match ? match.reason : entity.description}</p>
+
+      {(entity.facilities.length > 0 || entity.focusAreas.length > 0) && (
+        <ul className="flex flex-wrap gap-1.5" aria-label="Facilities and focus areas">
+          {(entity.facilities.length > 0 ? entity.facilities.slice(0, 3) : entity.focusAreas.slice(0, 3)).map((item) => (
+            <li key={item} className="rounded-md border border-line px-2 py-0.5 text-xs text-muted">
+              {item === "all" ? "all fields" : item}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {entity.availability && (
+        <p className="flex items-center gap-1.5 text-[13px] font-semibold text-accent-dark">
+          <span aria-hidden className="h-[7px] w-[7px] rounded-full bg-[#10B981]" />
+          {entity.availability}
+        </p>
+      )}
+
+      <p className="text-xs text-muted">
+        Source: {entity.source}
+        {verified && ` · verified ${verified}`}
       </p>
 
-      <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Focus areas">
-        {entity.focusAreas.slice(0, 4).map((area) => (
-          <li key={area} className="rounded-md bg-surface px-2 py-0.5 text-xs text-muted">
-            {area === "all" ? "all fields" : area}
-          </li>
-        ))}
-      </ul>
-
-      {match && (
-        <details className="mt-3 text-sm">
-          <summary className="cursor-pointer font-medium text-primary">Why this match?</summary>
+      {match && match.citations.length > 0 && (
+        <details className="text-sm">
+          <summary className="cursor-pointer font-semibold text-primary">Why this match</summary>
           <ul className="mt-2 space-y-2">
             {match.citations.map((c, i) => (
-              <li key={i} className="rounded-lg border border-line p-2.5">
+              <li key={i} className="rounded-[10px] border border-line bg-surface p-2.5">
                 <a href={c.url} target="_blank" rel="noreferrer" className="font-medium text-ink underline underline-offset-2">
                   {c.source}
                 </a>
@@ -67,11 +76,11 @@ export function MatchCard({ entity, match }: Props) {
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-xs text-muted">Audit reference {match.auditId}</p>
+          <p className="mt-2 font-mono text-xs text-muted">Audit reference {match.auditId}</p>
         </details>
       )}
 
-      <div className="mt-auto flex flex-wrap gap-2 pt-4">
+      <div className="mt-auto flex flex-wrap gap-2 pt-1">
         <Button
           size="sm"
           variant={shortlisted ? "accent" : "outline"}
@@ -79,12 +88,12 @@ export function MatchCard({ entity, match }: Props) {
           onClick={() => toggleShortlist(entity.id)}
         >
           {shortlisted ? <BookmarkCheck className="h-4 w-4" aria-hidden /> : <Bookmark className="h-4 w-4" aria-hidden />}
-          {shortlisted ? "Shortlisted" : "Add to shortlist"}
+          {shortlisted ? "Saved" : "Save"}
         </Button>
         {hasProfile && (
           <Button size="sm" variant="outline" onClick={() => openEmail(entity.id)}>
             <Mail className="h-4 w-4" aria-hidden />
-            Draft intro email
+            Draft intro
           </Button>
         )}
         <Button size="sm" variant="ghost" onClick={() => openDetail(entity.id)}>
@@ -93,4 +102,11 @@ export function MatchCard({ entity, match }: Props) {
       </div>
     </article>
   );
+}
+
+function formatVerified(iso: string | undefined) {
+  if (!iso) return null;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleDateString("en-GB", { month: "short", year: "numeric" });
 }

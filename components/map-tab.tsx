@@ -37,7 +37,7 @@ export function MapTab() {
         <label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium">
           <input
             type="checkbox"
-            className="h-4 w-4 accent-[#0E8F8A]"
+            className="h-4 w-4 accent-[#0F766E]"
             checked={showAll}
             onChange={(e) => setShowAll(e.target.checked)}
           />

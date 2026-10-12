@@ -96,7 +96,7 @@ export function MicButton({ language, onTranscript, onError }: Props) {
   return (
     <Button
       variant={state === "recording" ? "accent" : "outline"}
-      size="lg"
+      size="md"
       onClick={toggle}
       disabled={state === "transcribing"}
       aria-pressed={state === "recording"}
@@ -106,7 +106,7 @@ export function MicButton({ language, onTranscript, onError }: Props) {
       ) : state === "recording" ? (
         <Square className="h-4 w-4 fill-current" aria-hidden />
       ) : (
-        <Mic className="h-5 w-5" aria-hidden />
+        <Mic className="h-[18px] w-[18px]" aria-hidden />
       )}
       {state === "transcribing" ? "Transcribing" : state === "recording" ? "Stop recording" : "Speak"}
     </Button>

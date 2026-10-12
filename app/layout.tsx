@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/schibsted-grotesk";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/geist-mono";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { Overlays } from "@/components/overlays";
