@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import * as api from "./api";
-import type { ChatMessage, Entity, Horizon, Language, Match, Plan, Profile, Relation } from "./types";
+import type { Canton, ChatMessage, Entity, Horizon, Language, Match, Plan, Profile, Region, Relation } from "./types";
 import { uid } from "./utils";
 
 interface NavigatorState {
@@ -22,6 +22,7 @@ interface NavigatorState {
   // Not persisted
   entities: Entity[];
   relations: Relation[];
+  regions: Region[];
   analysing: boolean;
   chatBusy: boolean;
   detailId: string | null;
@@ -55,6 +56,7 @@ export const useNavigator = create<NavigatorState>()(
       chat: [],
       entities: [],
       relations: [],
+      regions: [],
       analysing: false,
       chatBusy: false,
       detailId: null,
@@ -91,8 +93,12 @@ export const useNavigator = create<NavigatorState>()(
 
       loadEntities: async () => {
         if (get().entities.length) return;
-        const [entities, relations] = await Promise.all([api.getEntities(), api.getRelations()]);
-        set({ entities, relations });
+        const [entities, relations, regions] = await Promise.all([
+          api.getEntities(),
+          api.getRelations(),
+          api.getRegions(),
+        ]);
+        set({ entities, relations, regions });
       },
 
       toggleShortlist: (id) =>
@@ -154,4 +160,10 @@ export function useHydrated() {
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
   return hydrated;
+}
+
+/** Display name for a region code, from the loaded regions. */
+export function useRegionName(): (code: Canton) => string {
+  const regions = useNavigator((s) => s.regions);
+  return (code) => regions.find((r) => r.code === code)?.name ?? code;
 }

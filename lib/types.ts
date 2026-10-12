@@ -7,7 +7,16 @@ export type EntityType =
   | "research_institute"
   | "funding_program";
 
-export type Canton = "BS" | "BL";
+/** Swiss canton code ("BS", "BL", "AG", ...). The available regions come
+ * from the backend (GET /regions), not a fixed list. */
+export type Canton = string;
+
+/** A region the directory has organisations in, with its display name. */
+export interface Region {
+  code: Canton;
+  name: string;
+  count: number;
+}
 
 /** Answer and voice language. */
 export type Language = "en" | "de" | "fr";

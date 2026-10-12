@@ -7,6 +7,7 @@ import { useNavigator } from "@/lib/store";
 import type { Canton, EntityType, Match, NeedCategory } from "@/lib/types";
 import { EmptyState } from "./empty-state";
 import { MatchCard } from "./match-card";
+import { RegionSelect } from "./region-select";
 import { Select } from "./ui/input";
 
 export function MatchesTab() {
@@ -38,12 +39,8 @@ export function MatchesTab() {
           </Select>
         </div>
         <div>
-          <label htmlFor="f-canton" className="mb-1 block text-sm font-medium">Canton</label>
-          <Select id="f-canton" value={canton} onChange={(e) => setCanton(e.target.value as Canton | "")}>
-            <option value="">Both cantons</option>
-            <option value="BS">Basel-Stadt</option>
-            <option value="BL">Basel-Landschaft</option>
-          </Select>
+          <label htmlFor="f-canton" className="mb-1 block text-sm font-medium">Region</label>
+          <RegionSelect id="f-canton" value={canton} onChange={setCanton} />
         </div>
         <div>
           <label htmlFor="f-score" className="mb-1 block text-sm font-medium">
@@ -66,7 +63,7 @@ export function MatchesTab() {
         <div className="mt-6">
           <EmptyState
             title="No matches with these filters"
-            body="Lower the minimum match, choose all types or include both cantons to see results again."
+            body="Lower the minimum match, choose all types or include all regions to see results again."
           />
         </div>
       ) : (

@@ -53,6 +53,8 @@ export const STAGE_LABEL: Record<Stage, string> = {
 
 export const STAGES = Object.keys(STAGE_LABEL) as Stage[];
 
+/** Names for the mock data's cantons. With the backend connected, region
+ * names come from GET /regions instead. */
 export const CANTON_LABEL: Record<Canton, string> = {
   BS: "Basel-Stadt",
   BL: "Basel-Landschaft",
