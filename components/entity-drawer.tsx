@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Mail } from "lucide-react";
+import { ExternalLink, Mail, MessageSquare } from "lucide-react";
 import { STAGE_LABEL } from "@/lib/entity-meta";
 import { useNavigator } from "@/lib/store";
 import { Button } from "./ui/button";
@@ -52,12 +52,22 @@ export function EntityDrawer() {
                   </a>
                 </li>
                 <li>
-                  <a className="inline-flex items-center gap-1.5 text-primary underline-offset-2 hover:underline" href={`mailto:${entity.contactEmail}`}>
-                    <Mail className="h-4 w-4" aria-hidden />
-                    {entity.contactEmail}
-                  </a>
+                  {entity.contactEmail ? (
+                    <a className="inline-flex items-center gap-1.5 text-primary underline-offset-2 hover:underline" href={`mailto:${entity.contactEmail}`}>
+                      <Mail className="h-4 w-4" aria-hidden />
+                      {entity.contactEmail}
+                    </a>
+                  ) : (
+                    <a className="inline-flex items-center gap-1.5 text-primary underline-offset-2 hover:underline" href={entity.contactUrl || entity.website} target="_blank" rel="noreferrer">
+                      <MessageSquare className="h-4 w-4" aria-hidden />
+                      Contact them on their website
+                    </a>
+                  )}
                 </li>
               </ul>
+              {!entity.contactEmail && (
+                <p className="mt-2 text-xs text-muted">No email address is published for this organisation.</p>
+              )}
             </div>
 
             <p className="text-xs text-muted">

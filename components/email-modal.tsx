@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, Copy, Send } from "lucide-react";
+import { Check, Copy, ExternalLink, Send } from "lucide-react";
 import { draftIntroEmail } from "@/lib/api";
 import { useNavigator } from "@/lib/store";
 import { Button } from "./ui/button";
@@ -51,7 +51,9 @@ export function EmailModal() {
     }
   };
 
-  const mailto = entity
+  const hasEmail = Boolean(entity?.contactEmail);
+  const contactUrl = entity ? entity.contactUrl || entity.website : "#";
+  const mailto = entity && hasEmail
     ? `mailto:${entity.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     : "#";
 
@@ -102,9 +104,23 @@ export function EmailModal() {
             <div className="flex flex-wrap gap-2 pt-1">
               <Button onClick={copy} variant="outline">
                 {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
-                {copied ? "Copied" : "Copy"}
+                {copied ? "Copied" : hasEmail ? "Copy" : "Copy draft"}
               </Button>
-              {approved ? (
+              {!hasEmail ? (
+                approved ? (
+                  <Button asChild>
+                    <a href={contactUrl} target="_blank" rel="noreferrer">
+                      <ExternalLink className="h-4 w-4" aria-hidden />
+                      Contact their website
+                    </a>
+                  </Button>
+                ) : (
+                  <Button disabled>
+                    <ExternalLink className="h-4 w-4" aria-hidden />
+                    Contact their website
+                  </Button>
+                )
+              ) : approved ? (
                 <Button asChild>
                   <a href={mailto}>
                     <Send className="h-4 w-4" aria-hidden />
@@ -118,6 +134,11 @@ export function EmailModal() {
                 </Button>
               )}
             </div>
+            {!hasEmail && (
+              <p className="text-xs text-muted">
+                This organisation publishes no email address. Copy the draft and paste it into the contact form on their website.
+              </p>
+            )}
           </div>
         )}
       </DialogContent>
