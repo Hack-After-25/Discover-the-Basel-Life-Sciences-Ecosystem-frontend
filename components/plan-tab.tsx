@@ -149,9 +149,15 @@ export function PlanTab() {
                 >
                   {e.name}
                 </button>
-                <a href={`mailto:${e.contactEmail}`} className="block break-all text-muted hover:text-ink">
-                  {e.contactEmail}
-                </a>
+                {e.contactEmail ? (
+                  <a href={`mailto:${e.contactEmail}`} className="block break-all text-muted hover:text-ink">
+                    {e.contactEmail}
+                  </a>
+                ) : (
+                  <a href={e.contactUrl || e.website} target="_blank" rel="noreferrer" className="block break-all text-muted hover:text-ink">
+                    Contact via their website
+                  </a>
+                )}
               </li>
             ))}
           </ol>

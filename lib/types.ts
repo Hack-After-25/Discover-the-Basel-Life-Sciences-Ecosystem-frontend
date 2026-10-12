@@ -77,7 +77,10 @@ export interface Entity {
   /** Lab space only, e.g. "Benches free from November 2026". */
   availability?: string;
   website: string;
-  contactEmail: string;
+  /** A real address from the organisation's own site, or null when none is published. */
+  contactEmail: string | null;
+  /** Their contact page if known, else their website. Optional for older backends. */
+  contactUrl?: string;
   sourceUrl: string;
   lastVerified: string;
 }

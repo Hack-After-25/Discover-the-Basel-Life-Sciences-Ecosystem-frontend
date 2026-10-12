@@ -41,7 +41,8 @@ const make = (s: Seed): Entity => ({
   ...s,
   source: s.source ?? defaultSource(s),
   facilities: s.facilities ?? [],
-  contactEmail: `contact+${s.id}@example.org`,
+  contactEmail: null,
+  contactUrl: s.website,
   sourceUrl: s.website,
   lastVerified: "2026-09-01",
 });
