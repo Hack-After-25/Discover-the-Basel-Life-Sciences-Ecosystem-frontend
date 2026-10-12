@@ -29,6 +29,7 @@ export default function MapView({ entities, matchedIds, selectedId, onSelect }: 
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {entities.map((entity) => {
+        if (entity.lat == null || entity.lng == null) return null;
         const matched = matchedIds.has(entity.id);
         const selected = entity.id === selectedId;
         return (

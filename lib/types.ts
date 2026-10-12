@@ -28,7 +28,14 @@ export type DataSource =
   | "BaseLaunch"
   | "DayOne"
   | "Startup.ch"
-  | "Switzerland Innovation Park Basel";
+  | "Switzerland Innovation Park Basel"
+  | "Swiss Biotech Association"
+  | "Basel Area guides"
+  | "SECA"
+  | "Sachs Biotech Forum"
+  | "Company registers"
+  | "ROR / Wikidata"
+  | "Official websites";
 
 export type Stage = "academic" | "pre-seed" | "seed" | "series-a" | "series-b" | "growth";
 
@@ -52,8 +59,9 @@ export interface Entity {
   name: string;
   type: EntityType;
   canton: Canton;
-  lat: number;
-  lng: number;
+  /** null when nothing places the entity, e.g. an investor outside Switzerland. */
+  lat: number | null;
+  lng: number | null;
   description: string;
   /** Therapeutic or technology areas. "all" means generalist. */
   focusAreas: string[];
