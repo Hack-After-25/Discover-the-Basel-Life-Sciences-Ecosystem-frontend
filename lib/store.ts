@@ -152,6 +152,10 @@ export const useNavigator = create<NavigatorState>()(
         notes: s.notes,
         chat: s.chat,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.profile) state.profile = api.withKnownNeeds(state.profile);
+        if (state?.matches) state.matches = api.knownMatches(state.matches);
+      },
     },
   ),
 );
