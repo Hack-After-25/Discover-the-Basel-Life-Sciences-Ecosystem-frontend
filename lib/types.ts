@@ -76,6 +76,10 @@ export interface Entity {
   source: DataSource;
   /** Lab space only, e.g. "Benches free from November 2026". */
   availability?: string;
+  /** Funding programmes only: the most a venture can get, in CHF. */
+  fundingMaxChf?: number | null;
+  /** How the money is paid out, e.g. "Convertible loan", "Voucher". */
+  fundingType?: string | null;
   website: string;
   /** A real address from the organisation's own site, or null when none is published. */
   contactEmail: string | null;

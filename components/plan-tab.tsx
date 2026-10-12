@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarClock, Download, FlaskConical, Loader2, Square, Users, Volume2 } from "lucide-react";
-import { PERIODS, topContacts } from "@/lib/api";
+import { CircleDollarSign, Download, FlaskConical, Loader2, Square, Users, Volume2 } from "lucide-react";
+import { PERIODS, fundingMatches, topContacts } from "@/lib/api";
 import { STAGE_LABEL, THERAPEUTIC_AREA_LABELS } from "@/lib/entity-meta";
 import { HORIZON_LABEL, LOCALE } from "@/lib/i18n";
 import { useNavigator } from "@/lib/store";
-import type { Horizon, RoadmapStep } from "@/lib/types";
+import type { Horizon, NeedCategory, RoadmapStep } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { speak, stopSpeaking } from "@/lib/voice";
 import { Button } from "./ui/button";
@@ -14,7 +14,10 @@ import { EmptyState } from "./empty-state";
 
 const HORIZONS: Horizon[] = ["12m", "90d"];
 
-export function PlanTab() {
+const CHF = new Intl.NumberFormat("de-CH", { maximumFractionDigits: 0 });
+const FUNDING_NEEDS: NeedCategory[] = ["grants", "acceleration", "investors"];
+
+export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) => void }) {
   const plan = useNavigator((s) => s.plan);
   const profile = useNavigator((s) => s.profile);
   const matches = useNavigator((s) => s.matches);
@@ -44,15 +47,15 @@ export function PlanTab() {
   const gridStyle = { gridTemplateColumns: `260px repeat(${count}, minmax(0, 1fr))` };
   const selected = steps.find((s) => s.id === selectedId) ?? steps[0];
   const contacts = topContacts(matches, 5);
-  const lab = matches.find((m) => m.needCategory === "lab_space" && m.entity.availability)?.entity;
+  const funders = fundingMatches(matches, profile.stage, 3);
+  const fundingNeed = profile.needs.find((n) => FUNDING_NEEDS.includes(n.category))?.category;
+  const lab = matches.find((m) => m.needCategory === "lab_space")?.entity;
   const monthNames = periods.map((m) => {
     const d = new Date();
     d.setDate(1);
     d.setMonth(d.getMonth() + m - 1);
     return d.toLocaleDateString(LOCALE[profile.language], { month: "short" });
   });
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString(LOCALE[profile.language], { day: "numeric", month: "short", year: "numeric" });
 
   const readAloud = async () => {
     if (speaking !== "idle") {
@@ -165,29 +168,60 @@ export function PlanTab() {
 
         <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-5">
           <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
-            <CalendarClock className="h-4 w-4 text-accent" aria-hidden />
-            Funding deadlines
+            <CircleDollarSign className="h-4 w-4 text-accent" aria-hidden />
+            Funding and grants
           </h3>
-          {plan.deadlines.length === 0 ? (
-            <p className="mt-3 text-sm text-muted">No upcoming deadlines for your stage.</p>
+          {funders.length === 0 ? (
+            <p className="mt-3 text-sm text-muted">
+              {fundingNeed
+                ? "No funding match fits your stage yet."
+                : "Funding is not among your needs. Open Refine results and write \u201cadd grants\u201d to include it."}
+            </p>
           ) : (
-            <ul className="mt-3 space-y-3 text-sm">
-              {plan.deadlines.map((d) => (
-                <li key={d.id}>
-                  <time dateTime={d.date} className="font-semibold tabular-nums text-primary">
-                    {formatDate(d.date)}
-                  </time>
-                  <button
-                    type="button"
-                    onClick={() => openDetail(d.entityId)}
-                    className="block text-left font-medium underline-offset-2 hover:underline"
-                  >
-                    {d.title}
-                  </button>
-                  <span className="text-muted">{d.note}</span>
-                </li>
-              ))}
-            </ul>
+            <>
+              <ol className="mt-3 space-y-3.5 text-sm">
+                {funders.map((e) => (
+                  <li key={e.id}>
+                    <button
+                      type="button"
+                      onClick={() => openDetail(e.id)}
+                      className="text-left font-medium text-primary underline-offset-2 hover:underline"
+                    >
+                      {e.name}
+                    </button>
+                    {e.fundingMaxChf ? (
+                      <p className="font-mono text-[13px] tabular-nums">up to CHF {CHF.format(e.fundingMaxChf)}</p>
+                    ) : null}
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {e.fundingType && (
+                        <span className="rounded-md border border-line px-2 py-0.5 text-xs text-muted">{e.fundingType}</span>
+                      )}
+                      {e.stageFit.length > 0 && e.stageFit.length < 6 && (
+                        <span className="rounded-md border border-line px-2 py-0.5 text-xs text-muted">
+                          {e.stageFit.map((st) => STAGE_LABEL[st]).join(", ")}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 line-clamp-2 text-[13px] text-muted">{e.description}</p>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-3 border-t border-line pt-2.5 text-xs text-muted">
+                Dates change often, so check each programme&rsquo;s website for the next call.
+                {fundingNeed && onJumpToNeed && (
+                  <>
+                    {" "}
+                    <button
+                      type="button"
+                      onClick={() => onJumpToNeed(fundingNeed)}
+                      className="no-print font-semibold text-accent underline-offset-2 hover:underline"
+                    >
+                      See all funding matches
+                    </button>
+                  </>
+                )}
+              </p>
+            </>
           )}
         </section>
 
@@ -205,7 +239,7 @@ export function PlanTab() {
               >
                 {lab.name}
               </button>
-              <p className="mt-1 font-semibold">{lab.availability}</p>
+              <p className="mt-1 font-semibold">{lab.availability ?? "Availability: ask them directly"}</p>
               <p className="mt-1 text-muted">{lab.facilities.slice(0, 3).join(", ")}</p>
             </div>
           ) : (

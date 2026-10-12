@@ -1,4 +1,4 @@
-import type { Canton, DataSource, Deadline, Entity, EntityType, NeedCategory, Relation, Stage } from "./types";
+import type { Canton, DataSource, Entity, EntityType, NeedCategory, Relation, Stage } from "./types";
 
 /**
  * MOCK DATA. Organisation names are real members of the Basel ecosystem, but
@@ -26,6 +26,8 @@ interface Seed {
   tags?: string[];
   source?: DataSource;
   availability?: string;
+  fundingMaxChf?: number;
+  fundingType?: string;
   website: string;
 }
 
@@ -386,6 +388,8 @@ export const ENTITIES: Entity[] = [
     name: "BaseLaunch",
     type: "accelerator",
     canton: "BS",
+    fundingMaxChf: 500000,
+    fundingType: "Convertible loan",
     lat: 47.5548,
     lng: 7.5945,
     description:
@@ -401,6 +405,8 @@ export const ENTITIES: Entity[] = [
     name: "DayOne",
     type: "accelerator",
     canton: "BS",
+    fundingMaxChf: 50000,
+    fundingType: "Non-dilutive",
     lat: 47.5553,
     lng: 7.5962,
     description:
@@ -624,34 +630,3 @@ export const RELATIONS: Relation[] = [
   { source: "arcondis", target: "dayone", type: "partners_with" },
 ];
 
-/** MOCK funding deadlines. Dates are invented for the demo. */
-export const DEADLINES: Deadline[] = [
-  {
-    id: "dl-venture-kick",
-    title: "Venture Kick, stage 1 application",
-    entityId: "venture-kick",
-    date: "2026-10-26",
-    note: "Short pitch deck and video. Open to university spin-offs before incorporation.",
-  },
-  {
-    id: "dl-baselaunch",
-    title: "BaseLaunch, next application review",
-    entityId: "baselaunch",
-    date: "2026-11-15",
-    note: "Therapeutics ventures. Non-confidential summary of the science and team.",
-  },
-  {
-    id: "dl-dayone",
-    title: "DayOne accelerator call",
-    entityId: "dayone",
-    date: "2026-11-30",
-    note: "Digital-health and medtech projects with a clinical partner.",
-  },
-  {
-    id: "dl-innosuisse",
-    title: "Innosuisse innovation project submission",
-    entityId: "innosuisse",
-    date: "2026-12-01",
-    note: "Joint application with a research partner. Plan four weeks for the budget.",
-  },
-];
