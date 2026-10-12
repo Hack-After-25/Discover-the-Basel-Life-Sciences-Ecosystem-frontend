@@ -43,7 +43,8 @@ export type NeedCategory =
   | "grants"
   | "manufacturing"
   | "legal_ip"
-  | "clinical";
+  | "clinical"
+  | "consulting";
 
 export interface Entity {
   id: string;
