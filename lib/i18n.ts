@@ -42,13 +42,14 @@ export const NEED_I18N: Record<NeedCategory, Record<Language, string>> = {
   lab_space: { en: "lab space", de: "Laborfläche", fr: "espace de laboratoire" },
   investors: { en: "investors", de: "Investoren", fr: "investisseurs" },
   regulatory: { en: "regulatory questions", de: "regulatorische Fragen", fr: "questions réglementaires" },
-  pharma_partners: { en: "pharma partnering", de: "Pharma-Partnerschaften", fr: "partenariats pharma" },
+  pharma_partners: { en: "pharma and biotech partnering", de: "Pharma- und Biotech-Partnerschaften", fr: "partenariats pharma et biotech" },
   acceleration: { en: "mentoring", de: "Mentoring", fr: "accompagnement" },
   research: { en: "research collaboration", de: "Forschungskooperation", fr: "collaboration de recherche" },
   grants: { en: "grants", de: "Fördergelder", fr: "subventions" },
   manufacturing: { en: "manufacturing", de: "Herstellung", fr: "production" },
   legal_ip: { en: "legal and IP", de: "Recht und IP", fr: "droit et propriété intellectuelle" },
   clinical: { en: "clinical trials", de: "klinische Studien", fr: "essais cliniques" },
+  consulting: { en: "consulting", de: "Beratung", fr: "conseil" },
 };
 
 export const REASON_I18N = {
@@ -230,6 +231,22 @@ export const STEP_I18N: Record<StepKey, Record<Language, StepText>> = {
       title: "Choisir un partenaire de production",
       description:
         "Menez les discussions techniques, comparez les offres et les délais, et réservez de la capacité pour vos premiers lots.",
+    },
+  },
+  consulting: {
+    en: {
+      title: "Bring in specialist advisers",
+      description: "Brief two or three consultancies on your strategy, business development or regulatory questions and compare their scope and fees.",
+    },
+    de: {
+      title: "Fachberatung hinzuziehen",
+      description:
+        "Briefen Sie zwei oder drei Beratungen zu Strategie, Business Development oder regulatorischen Fragen und vergleichen Sie Umfang und Honorare.",
+    },
+    fr: {
+      title: "Faire appel à des conseillers spécialisés",
+      description:
+        "Présentez vos questions de stratégie, de développement commercial ou de réglementation à deux ou trois cabinets et comparez périmètre et honoraires.",
     },
   },
   clinical: {

@@ -17,13 +17,14 @@ export const NEED_META: Record<NeedCategory, { label: string; defaultDetail: str
   lab_space: { label: "Lab space", defaultDetail: "Laboratory space" },
   investors: { label: "Investors", defaultDetail: "Investors for the next round" },
   regulatory: { label: "Regulatory", defaultDetail: "Regulatory strategy and expertise" },
-  pharma_partners: { label: "Pharma partners", defaultDetail: "Pharma partnering and licensing" },
+  pharma_partners: { label: "Pharma and biotech partners", defaultDetail: "Pharma and biotech partnering and licensing" },
   acceleration: { label: "Mentoring", defaultDetail: "Acceleration and mentoring" },
   research: { label: "Research collaboration", defaultDetail: "Academic research collaboration" },
   grants: { label: "Grants", defaultDetail: "Non-dilutive funding" },
   manufacturing: { label: "Manufacturing", defaultDetail: "Process development and manufacturing" },
   legal_ip: { label: "Legal and IP", defaultDetail: "IP and legal counsel" },
   clinical: { label: "Clinical trials", defaultDetail: "Clinical trial support" },
+  consulting: { label: "Consulting", defaultDetail: "Strategy and business development advice" },
 };
 
 export const NEED_CATEGORIES = Object.keys(NEED_META) as NeedCategory[];
@@ -40,6 +41,7 @@ export const NEED_TO_ENTITY_TYPE: Record<NeedCategory, EntityType> = {
   manufacturing: "service_provider",
   legal_ip: "service_provider",
   clinical: "service_provider",
+  consulting: "service_provider",
 };
 
 export const STAGE_LABEL: Record<Stage, string> = {
