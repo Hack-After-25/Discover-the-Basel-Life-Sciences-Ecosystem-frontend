@@ -203,8 +203,8 @@ export function PlanTab() {
       </div>
 
       {/* Timeline */}
-      <div className="print-plain mt-5 overflow-x-auto rounded-2xl border border-line bg-white p-4 shadow-card">
-        <div className="min-w-[760px]">
+      <div className="print-plain print-timeline mt-5 overflow-x-auto rounded-2xl border border-line bg-white p-4 shadow-card">
+        <div className="print-timeline-inner min-w-[760px]">
           <div className="grid text-xs text-muted" style={gridStyle}>
             <div>{yearly ? "Month" : "Week"}</div>
             {periods.map((w) => (
