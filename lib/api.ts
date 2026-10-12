@@ -6,9 +6,9 @@
  * this file. See README's "Connect the backend" section for the endpoint
  * contract this was built against.
  */
-import { DEADLINES, ENTITIES, RELATIONS } from "./mock-data";
+import { ENTITIES, RELATIONS } from "./mock-data";
 import { CANTON_LABEL, NEED_META, STAGE_LABEL } from "./entity-meta";
-import { AREA_I18N, LOCALE, NEED_I18N, REASON_I18N, STAGE_I18N, STEP_I18N, STEP_I18N_12M, planSummary, type StepKey } from "./i18n";
+import { AREA_I18N, NEED_I18N, REASON_I18N, STAGE_I18N, STEP_I18N, STEP_I18N_12M, planSummary, type StepKey } from "./i18n";
 import type {
   Citation,
   Entity,
@@ -361,35 +361,28 @@ function buildPlan(profile: Profile, matches: Match[], horizon: Horizon): Plan {
   });
   steps.sort((a, b) => a.start - b.start || a.end - b.end);
 
-  // Deadlines of matched programmes first, then others open to this stage. Three at most.
-  const matchedIds = new Set(matches.map((m) => m.entity.id));
-  const byDate = [...DEADLINES].sort((a, b) => a.date.localeCompare(b.date));
-  const fitsStage = (entityId: string) =>
-    ENTITIES.find((e) => e.id === entityId)?.stageFit.includes(profile.stage) ?? false;
-  const deadlines = [
-    ...byDate.filter((d) => matchedIds.has(d.entityId)),
-    ...byDate.filter((d) => !matchedIds.has(d.entityId) && fitsStage(d.entityId)),
-  ]
-    .slice(0, 3)
-    .sort((a, b) => a.date.localeCompare(b.date));
-
   const contacts = topContacts(matches, 3).map((e) => e.name);
-  const next = deadlines[0];
-  const summary = planSummary(lang, {
-    horizon,
-    steps: steps.length,
-    first: steps[0].title,
-    contacts,
-    deadline: next && {
-      title: next.title,
-      date: new Date(next.date).toLocaleDateString(LOCALE[lang], { day: "numeric", month: "long" }),
-    },
-  });
+  const summary = planSummary(lang, { horizon, steps: steps.length, first: steps[0].title, contacts });
 
-  return { horizon, summary, steps, deadlines };
+  // No real deadline data exists yet (the backend returns none either), so none are invented here.
+  return { horizon, summary, steps, deadlines: [] };
 }
 
 /** Best-scoring distinct entities across all needs. */
+const FUNDING_NEEDS: NeedCategory[] = ["grants", "acceleration", "investors"];
+
+/** Funding matches open to this stage, those with a known amount first. */
+export function fundingMatches(matches: Match[], stage: Stage, limit: number): Entity[] {
+  const seen = new Set<string>();
+  return matches
+    .filter((m) => FUNDING_NEEDS.includes(m.needCategory))
+    .filter((m) => m.entity.stageFit.length === 0 || m.entity.stageFit.includes(stage))
+    .sort((a, b) => Number(!!b.entity.fundingMaxChf) - Number(!!a.entity.fundingMaxChf) || b.score - a.score)
+    .filter((m) => (seen.has(m.entity.id) ? false : (seen.add(m.entity.id), true)))
+    .slice(0, limit)
+    .map((m) => m.entity);
+}
+
 export function topContacts(matches: Match[], limit: number): Entity[] {
   const seen = new Set<string>();
   return [...matches]

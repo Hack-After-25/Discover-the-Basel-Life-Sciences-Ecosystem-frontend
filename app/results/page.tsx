@@ -127,7 +127,7 @@ export default function ResultsPage() {
           ) : (
             <div className={cn("transition-opacity", analysing && "opacity-60")}>
               {tab === "matches" && <MatchesTab />}
-              {tab === "plan" && <PlanTab />}
+              {tab === "plan" && <PlanTab onJumpToNeed={jumpToNeed} />}
               {tab === "map" && <MapTab />}
               {tab === "graph" && <GraphTab />}
             </div>
