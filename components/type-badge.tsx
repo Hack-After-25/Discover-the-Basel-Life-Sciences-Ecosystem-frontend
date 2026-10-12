@@ -1,4 +1,7 @@
-import { CANTON_LABEL, TYPE_META } from "@/lib/entity-meta";
+"use client";
+
+import { TYPE_META } from "@/lib/entity-meta";
+import { useRegionName } from "@/lib/store";
 import type { Canton, EntityType } from "@/lib/types";
 import { Badge } from "./ui/badge";
 
@@ -13,9 +16,10 @@ export function TypeBadge({ type }: { type: EntityType }) {
 }
 
 export function CantonBadge({ canton }: { canton: Canton }) {
+  const name = useRegionName()(canton);
   return (
-    <Badge className="border-transparent bg-surface text-muted" title={CANTON_LABEL[canton]}>
-      {CANTON_LABEL[canton]}
+    <Badge className="border-transparent bg-surface text-muted" title={name}>
+      {name}
     </Badge>
   );
 }

@@ -8,7 +8,8 @@ import type { Canton, EntityType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "@/components/empty-state";
 import { MatchCard } from "@/components/match-card";
-import { Input, Select } from "@/components/ui/input";
+import { RegionSelect } from "@/components/region-select";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /** Every organisation in the graph, browsable by type. No match cap. */
@@ -87,12 +88,8 @@ function Directory() {
           />
         </div>
         <div>
-          <label htmlFor="d-canton" className="sr-only">Canton</label>
-          <Select id="d-canton" value={canton} onChange={(e) => setCanton(e.target.value as Canton | "")}>
-            <option value="">Both cantons</option>
-            <option value="BS">Basel-Stadt</option>
-            <option value="BL">Basel-Landschaft</option>
-          </Select>
+          <label htmlFor="d-canton" className="sr-only">Region</label>
+          <RegionSelect id="d-canton" value={canton} onChange={setCanton} />
         </div>
       </div>
 
@@ -102,7 +99,7 @@ function Directory() {
 
       {shown.length === 0 ? (
         <div className="mt-4">
-          <EmptyState title="Nothing matches" body="Clear the search, choose another type or include both cantons." />
+          <EmptyState title="Nothing matches" body="Clear the search, choose another type or include all regions." />
         </div>
       ) : (
         <ul className="mt-4 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">

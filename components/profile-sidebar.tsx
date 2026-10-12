@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { Bookmark, Pencil } from "lucide-react";
-import { CANTON_LABEL, NEED_META, STAGE_LABEL, THERAPEUTIC_AREA_LABELS } from "@/lib/entity-meta";
+import { NEED_META, STAGE_LABEL, THERAPEUTIC_AREA_LABELS } from "@/lib/entity-meta";
 import { LANGUAGE_LABEL } from "@/lib/i18n";
-import { useNavigator } from "@/lib/store";
+import { useNavigator, useRegionName } from "@/lib/store";
 
 export function ProfileSidebar() {
   const profile = useNavigator((s) => s.profile);
   const shortlistCount = useNavigator((s) => s.shortlist.length);
+  const regionName = useRegionName();
   if (!profile) return null;
 
   return (
@@ -40,7 +41,7 @@ export function ProfileSidebar() {
         <>
           <h3 className="mt-4 text-sm font-semibold">Refinements</h3>
           <ul className="mt-2 space-y-1 text-sm text-muted">
-            {profile.cantonFilter && <li>Only {CANTON_LABEL[profile.cantonFilter]}</li>}
+            {profile.cantonFilter && <li>Only {regionName(profile.cantonFilter)}</li>}
             {profile.constraints?.map((c) => <li key={c}>Investors: {c}</li>)}
           </ul>
         </>

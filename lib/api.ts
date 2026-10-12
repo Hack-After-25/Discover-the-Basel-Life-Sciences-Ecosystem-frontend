@@ -7,7 +7,7 @@
  * contract this was built against.
  */
 import { DEADLINES, ENTITIES, RELATIONS } from "./mock-data";
-import { NEED_META, STAGE_LABEL } from "./entity-meta";
+import { CANTON_LABEL, NEED_META, STAGE_LABEL } from "./entity-meta";
 import { AREA_I18N, LOCALE, NEED_I18N, REASON_I18N, STAGE_I18N, STEP_I18N, STEP_I18N_12M, planSummary, type StepKey } from "./i18n";
 import type {
   Citation,
@@ -21,6 +21,7 @@ import type {
   Plan,
   Profile,
   RefineResult,
+  Region,
   Relation,
   RoadmapStep,
   Stage,
@@ -509,6 +510,19 @@ export async function refine(profile: Profile, message: string): Promise<RefineR
 export async function getEntities(): Promise<Entity[]> {
   if (API_BASE) return apiGet<Entity[]>("/entities");
   return delay(ENTITIES, 300);
+}
+
+/** Regions that have organisations in them, most populated first. */
+export async function getRegions(): Promise<Region[]> {
+  if (API_BASE) return apiGet<Region[]>("/regions");
+  const counts = new Map<string, number>();
+  for (const e of ENTITIES) counts.set(e.canton, (counts.get(e.canton) ?? 0) + 1);
+  return delay(
+    Array.from(counts, ([code, count]) => ({ code, name: CANTON_LABEL[code] ?? code, count })).sort(
+      (a, b) => b.count - a.count,
+    ),
+    300,
+  );
 }
 
 /** Knowledge-graph edges (backend: graph_traverse). */
