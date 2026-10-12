@@ -9,7 +9,7 @@ import { EmptyState } from "./empty-state";
 import { MatchCard } from "./match-card";
 import { RegionSelect } from "./region-select";
 import { Button } from "./ui/button";
-import { Select } from "./ui/input";
+import { Dropdown } from "./ui/dropdown";
 
 export function MatchesTab() {
   const matches = useNavigator((s) => s.matches);
@@ -32,16 +32,16 @@ export function MatchesTab() {
         <legend className="sr-only">Filter matches</legend>
         <span className="text-[13px] text-muted">Filters</span>
         <label htmlFor="f-type" className="sr-only">Type</label>
-        <Select id="f-type" className="h-10 w-auto text-[13px] font-medium" value={type} onChange={(e) => setType(e.target.value as EntityType | "")}>
-          <option value="">All types</option>
-          {ENTITY_TYPES.map((t) => (
-            <option key={t} value={t}>{TYPE_META[t].label}</option>
-          ))}
-        </Select>
+        <Dropdown
+          id="f-type"
+          size="sm"
+          className="w-auto"
+          value={type}
+          onChange={(v) => setType(v as EntityType | "")}
+          options={[{ value: "", label: "All types" }, ...ENTITY_TYPES.map((t) => ({ value: t, label: TYPE_META[t].label }))]}
+        />
         <label htmlFor="f-canton" className="sr-only">Region</label>
-        <div className="[&>select]:h-10 [&>select]:w-auto [&>select]:text-[13px] [&>select]:font-medium">
-          <RegionSelect id="f-canton" value={canton} onChange={setCanton} />
-        </div>
+        <RegionSelect id="f-canton" size="sm" className="w-auto" value={canton} onChange={setCanton} />
         <label htmlFor="f-score" className="ml-1 flex h-10 items-center gap-2 rounded-[10px] border border-[#D9DDE3] bg-white px-3 text-[13px] font-medium">
           Minimum match <span className="w-6 font-mono tabular-nums">{minScore}</span>
           <input

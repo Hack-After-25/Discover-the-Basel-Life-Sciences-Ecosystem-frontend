@@ -20,6 +20,13 @@ const config: Config = {
         card: "0 1px 2px rgba(11, 18, 32, 0.04)",
         lift: "0 1px 2px rgba(11, 18, 32, 0.06), 0 12px 32px -16px rgba(11, 18, 32, 0.18)",
         hero: "0 30px 60px -30px rgba(0, 0, 0, 0.6)",
+        menu: "0 1px 2px rgba(11, 18, 32, 0.06), 0 18px 40px -12px rgba(11, 18, 32, 0.22)",
+      },
+      keyframes: {
+        "menu-in": { from: { opacity: "0", transform: "translateY(-4px) scale(0.98)" }, to: { opacity: "1", transform: "none" } },
+      },
+      animation: {
+        "menu-in": "menu-in 120ms ease-out",
       },
     },
   },
