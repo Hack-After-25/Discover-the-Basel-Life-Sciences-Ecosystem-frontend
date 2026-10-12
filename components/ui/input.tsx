@@ -2,10 +2,10 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const field =
-  "w-full rounded-lg border border-line bg-white px-3 text-sm text-ink placeholder:text-muted/70 focus-visible:border-accent";
+  "w-full rounded-[10px] border border-[#D9DDE3] bg-white px-3 text-[15px] text-ink placeholder:text-muted/70 focus-visible:border-accent";
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  ({ className, ...props }, ref) => <input ref={ref} className={cn(field, "h-10", className)} {...props} />,
+  ({ className, ...props }, ref) => <input ref={ref} className={cn(field, "h-11", className)} {...props} />,
 );
 Input.displayName = "Input";
 
@@ -15,6 +15,6 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
 Textarea.displayName = "Textarea";
 
 export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
-  ({ className, ...props }, ref) => <select ref={ref} className={cn(field, "h-10 pr-8", className)} {...props} />,
+  ({ className, ...props }, ref) => <select ref={ref} className={cn(field, "h-11 pr-8", className)} {...props} />,
 );
 Select.displayName = "Select";

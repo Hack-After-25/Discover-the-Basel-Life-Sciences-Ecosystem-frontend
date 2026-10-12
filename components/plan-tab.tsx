@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarClock, FlaskConical, Loader2, Printer, Square, Users, Volume2 } from "lucide-react";
+import { CalendarClock, Download, FlaskConical, Loader2, Square, Users, Volume2 } from "lucide-react";
 import { PERIODS, topContacts } from "@/lib/api";
 import { STAGE_LABEL, THERAPEUTIC_AREA_LABELS } from "@/lib/entity-meta";
 import { HORIZON_LABEL, LOCALE } from "@/lib/i18n";
@@ -41,10 +41,16 @@ export function PlanTab() {
   const yearly = plan.horizon === "12m";
   const count = PERIODS[plan.horizon];
   const periods = Array.from({ length: count }, (_, i) => i + 1);
-  const gridStyle = { gridTemplateColumns: `220px repeat(${count}, minmax(0, 1fr))` };
+  const gridStyle = { gridTemplateColumns: `260px repeat(${count}, minmax(0, 1fr))` };
   const selected = steps.find((s) => s.id === selectedId) ?? steps[0];
   const contacts = topContacts(matches, 5);
   const lab = matches.find((m) => m.needCategory === "lab_space" && m.entity.availability)?.entity;
+  const monthNames = periods.map((m) => {
+    const d = new Date();
+    d.setDate(1);
+    d.setMonth(d.getMonth() + m - 1);
+    return d.toLocaleDateString(LOCALE[profile.language], { month: "short" });
+  });
   const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString(LOCALE[profile.language], { day: "numeric", month: "short", year: "numeric" });
 
@@ -71,14 +77,14 @@ export function PlanTab() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold">Your next {yearly ? "12 months" : "90 days"} in Basel</h2>
+          <h2 className="text-[26px] font-semibold sm:text-[30px]">Your next {yearly ? "12 months" : "90 days"} in Basel</h2>
           <p className="print-only mt-1 text-sm text-muted">
             {profile.companyName ?? "Your team"}: {profile.teamSize} people, {STAGE_LABEL[profile.stage]},{" "}
             {THERAPEUTIC_AREA_LABELS[profile.therapeuticArea]}
           </p>
         </div>
         <div className="no-print flex flex-wrap items-center gap-2">
-          <div role="group" aria-label="Plan length" className="inline-flex rounded-lg border border-line p-0.5">
+          <div role="group" aria-label="Plan length" className="inline-flex gap-0.5 rounded-xl bg-[#EAECEF] p-[3px]">
             {HORIZONS.map((h) => (
               <button
                 key={h}
@@ -90,15 +96,17 @@ export function PlanTab() {
                   void setHorizon(h);
                 }}
                 className={cn(
-                  "rounded-md px-3 py-1.5 text-sm font-medium",
-                  plan.horizon === h ? "bg-primary text-white" : "text-muted hover:text-ink",
+                  "h-[38px] rounded-[9px] px-3.5 text-sm",
+                  plan.horizon === h
+                    ? "bg-white font-semibold text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
+                    : "font-medium text-muted hover:text-ink",
                 )}
               >
                 {HORIZON_LABEL[h]}
               </button>
             ))}
           </div>
-          <Button variant={speaking === "idle" ? "primary" : "accent"} onClick={readAloud} aria-pressed={speaking !== "idle"}>
+          <Button variant={speaking === "idle" ? "outline" : "accent"} onClick={readAloud} aria-pressed={speaking !== "idle"}>
             {speaking === "loading" ? (
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
             ) : speaking === "playing" ? (
@@ -108,14 +116,14 @@ export function PlanTab() {
             )}
             {speaking === "idle" ? "Read plan aloud" : "Stop reading"}
           </Button>
-          <Button variant="outline" onClick={() => window.print()}>
-            <Printer className="h-4 w-4" aria-hidden />
+          <Button onClick={() => window.print()}>
+            <Download className="h-4 w-4" aria-hidden />
             Export as PDF
           </Button>
         </div>
       </div>
 
-      <p lang={profile.language} className="mt-4 max-w-prose rounded-xl bg-primary-soft p-4 leading-relaxed text-primary-dark">
+      <p lang={profile.language} className="mt-4 max-w-[820px] text-base leading-[1.65] text-[#26303F]">
         {plan.summary}
       </p>
       {voiceError && (
@@ -125,9 +133,9 @@ export function PlanTab() {
       )}
 
       {/* What to act on first */}
-      <div className="mt-5 grid gap-4 lg:grid-cols-3">
-        <section className="print-plain print-avoid-break rounded-2xl border border-line bg-white p-4">
-          <h3 className="flex items-center gap-2 text-sm font-semibold">
+      <div className="mt-6 grid gap-3.5 lg:grid-cols-3">
+        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-5">
+          <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <Users className="h-4 w-4 text-accent" aria-hidden />
             Contacts to reach first
           </h3>
@@ -149,8 +157,8 @@ export function PlanTab() {
           </ol>
         </section>
 
-        <section className="print-plain print-avoid-break rounded-2xl border border-line bg-white p-4">
-          <h3 className="flex items-center gap-2 text-sm font-semibold">
+        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-5">
+          <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <CalendarClock className="h-4 w-4 text-accent" aria-hidden />
             Funding deadlines
           </h3>
@@ -177,8 +185,8 @@ export function PlanTab() {
           )}
         </section>
 
-        <section className="print-plain print-avoid-break rounded-2xl border border-line bg-white p-4">
-          <h3 className="flex items-center gap-2 text-sm font-semibold">
+        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-5">
+          <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <FlaskConical className="h-4 w-4 text-accent" aria-hidden />
             Lab space
           </h3>
@@ -203,13 +211,20 @@ export function PlanTab() {
       </div>
 
       {/* Timeline */}
-      <div className="print-plain print-timeline mt-5 overflow-x-auto rounded-2xl border border-line bg-white p-4 shadow-card">
-        <div className="print-timeline-inner min-w-[760px]">
-          <div className="grid text-xs text-muted" style={gridStyle}>
-            <div>{yearly ? "Month" : "Week"}</div>
-            {periods.map((w) => (
-              <div key={w} className="border-l border-line pb-2 pl-1.5 tabular-nums">
-                {w}
+      <div className="print-plain print-timeline mt-5 overflow-x-auto rounded-[18px] border border-line bg-white p-5">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <h3 className="text-lg font-semibold">Timeline</h3>
+          <span className="no-print flex gap-3.5 text-[13px] text-muted">
+            <span className="flex items-center gap-1.5"><span aria-hidden className="h-2 w-[18px] rounded bg-primary" />Step</span>
+            <span className="flex items-center gap-1.5"><span aria-hidden className="h-2 w-[18px] rounded bg-accent" />Selected</span>
+          </span>
+        </div>
+        <div className="print-timeline-inner min-w-[900px]">
+          <div className="grid font-mono text-xs text-muted" style={gridStyle}>
+            <div className="font-sans">{yearly ? "Month" : "Week"}</div>
+            {periods.map((w, i) => (
+              <div key={w} className="border-l border-[#EEF0F3] pb-2 pl-1.5 tabular-nums">
+                {yearly ? monthNames[i] : `W${w}`}
               </div>
             ))}
           </div>
@@ -217,7 +232,7 @@ export function PlanTab() {
             {steps.map((step, index) => {
               const active = selected.id === step.id;
               return (
-                <li key={step.id} className="grid items-center border-t border-line" style={gridStyle}>
+                <li key={step.id} className="grid min-h-12 items-center border-t border-[#EEF0F3]" style={gridStyle}>
                   <button
                     type="button"
                     lang={profile.language}
@@ -225,10 +240,10 @@ export function PlanTab() {
                     aria-pressed={active}
                     className={cn(
                       "flex items-baseline gap-2 py-2.5 pr-3 text-left text-sm leading-snug",
-                      active ? "font-semibold text-primary" : "text-ink hover:text-primary",
+                      active ? "font-semibold text-accent" : "text-ink hover:text-primary",
                     )}
                   >
-                    <span className="tabular-nums text-muted">{index + 1}</span>
+                    <span className="font-mono text-xs tabular-nums text-muted">{index + 1}</span>
                     {step.title}
                   </button>
                   <div
@@ -237,7 +252,7 @@ export function PlanTab() {
                     aria-label={`${yearly ? "Month" : "Week"} ${step.start} to ${step.end}`}
                   >
                     {periods.map((w) => (
-                      <div key={w} className="border-l border-line" />
+                      <div key={w} className="border-l border-[#EEF0F3]" />
                     ))}
                     <button
                       type="button"
@@ -245,8 +260,8 @@ export function PlanTab() {
                       aria-hidden
                       onClick={() => setSelectedId(step.id)}
                       className={cn(
-                        "absolute top-1/2 h-5 -translate-y-1/2 rounded-full",
-                        active ? "bg-accent" : "bg-primary/80 hover:bg-primary",
+                        "absolute top-1/2 h-[22px] -translate-y-1/2 rounded-full",
+                        active ? "bg-accent" : "bg-primary hover:bg-primary-dark",
                       )}
                       style={{
                         left: `calc(${((step.start - 1) / count) * 100}% + 3px)`,
@@ -294,15 +309,15 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
     .sort((a, b) => a - b);
 
   return (
-    <section className="print-plain print-avoid-break rounded-2xl border border-line bg-white p-5 shadow-card">
-      <p className="text-sm text-muted">
-        Step {number},{" "}
+    <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-6">
+      <p className="font-mono text-xs uppercase text-accent">
+        Step {number} ·{" "}
         {step.start === step.end ? `${unit} ${step.start}` : `${unit}s ${step.start} to ${step.end}`}
       </p>
-      <h3 lang={language} className="mt-1 text-lg font-semibold">
+      <h3 lang={language} className="mt-2 text-[22px] font-semibold">
         {step.title}
       </h3>
-      <p lang={language} className="mt-2 max-w-prose text-sm leading-relaxed">
+      <p lang={language} className="mt-2.5 max-w-prose text-[15px] leading-[1.65] text-[#26303F]">
         {step.description}
       </p>
       {prerequisites.length > 0 && (
@@ -320,7 +335,7 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
                   <button
                     type="button"
                     onClick={() => openDetail(e.id)}
-                    className="rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-primary hover:border-accent"
+                    className="inline-flex h-10 items-center rounded-xl border border-line bg-white px-3.5 text-sm font-medium text-ink hover:border-accent hover:text-accent"
                   >
                     {e.name}
                   </button>
