@@ -48,4 +48,18 @@
   .print-avoid-break {
     break-inside: avoid;
   }
+  /* Gantt bars are background colours, which browsers drop when printing
+     unless told to keep them. */
+  .print-timeline,
+  .print-timeline * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* Fit the whole timeline on the page instead of clipping the last columns. */
+  .print-timeline {
+    overflow: visible !important;
+  }
+  .print-timeline-inner {
+    min-width: 0 !important;
+  }
 }
