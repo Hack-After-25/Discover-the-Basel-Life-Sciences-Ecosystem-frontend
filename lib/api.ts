@@ -158,9 +158,22 @@ function needDetail(category: NeedCategory, text: string, stage: Stage): string 
 /* parseNeed                                                           */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Drops needs this build has no label for. A backend deployed ahead of the
+ * frontend (or an old saved profile) can name a need the UI doesn't know yet.
+ */
+export function withKnownNeeds(profile: Profile): Profile {
+  const needs = profile.needs.filter((n) => n.category in NEED_META);
+  return needs.length === profile.needs.length ? profile : { ...profile, needs };
+}
+
+export function knownMatches(matches: Match[]): Match[] {
+  return matches.filter((m) => m.needCategory in NEED_META);
+}
+
 /** `language` is the user's explicit choice. Leave it out to detect it from the text. */
 export async function parseNeed(text: string, language?: Language): Promise<Profile> {
-  if (API_BASE) return apiPost<Profile>("/parse-need", { text, language });
+  if (API_BASE) return withKnownNeeds(await apiPost<Profile>("/parse-need", { text, language }));
   return mockParseNeed(text, language);
 }
 
@@ -283,7 +296,7 @@ function computeMatches(profile: Profile): Match[] {
 }
 
 export async function getMatches(profile: Profile): Promise<Match[]> {
-  if (API_BASE) return apiPost<Match[]>("/match", { profile });
+  if (API_BASE) return knownMatches(await apiPost<Match[]>("/match", { profile }));
   return delay(computeMatches(profile));
 }
 
@@ -430,7 +443,10 @@ export async function draftIntroEmail(profile: Profile, entityId: string): Promi
 /* ------------------------------------------------------------------ */
 
 export async function refine(profile: Profile, message: string): Promise<RefineResult> {
-  if (API_BASE) return apiPost<RefineResult>("/refine", { profile, message });
+  if (API_BASE) {
+    const result = await apiPost<RefineResult>("/refine", { profile, message });
+    return { ...result, profile: withKnownNeeds(result.profile) };
+  }
 
   const next: Profile = {
     ...profile,
