@@ -25,6 +25,7 @@ export const NEED_META: Record<NeedCategory, { label: string; defaultDetail: str
   legal_ip: { label: "Legal and IP", defaultDetail: "IP and legal counsel" },
   clinical: { label: "Clinical trials", defaultDetail: "Clinical trial support" },
   consulting: { label: "Consulting", defaultDetail: "Strategy and business development advice" },
+  clients: { label: "Clients", defaultDetail: "Companies that may need your services" },
 };
 
 export const NEED_CATEGORIES = Object.keys(NEED_META) as NeedCategory[];
@@ -42,6 +43,7 @@ export const NEED_TO_ENTITY_TYPE: Record<NeedCategory, EntityType> = {
   legal_ip: "service_provider",
   clinical: "service_provider",
   consulting: "service_provider",
+  clients: "pharma",
 };
 
 export const STAGE_LABEL: Record<Stage, string> = {

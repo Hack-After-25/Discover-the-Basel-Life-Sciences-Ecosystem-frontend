@@ -18,7 +18,9 @@ export function ProfileSidebar() {
         <div>
           <h2 className="text-base font-semibold">{profile.companyName ?? "Your team"}</h2>
           <p className="mt-0.5 text-sm text-muted">
-            {profile.teamSize} people, {STAGE_LABEL[profile.stage]}, {THERAPEUTIC_AREA_LABELS[profile.therapeuticArea]}
+            {profile.teamSize} people,{" "}
+            {profile.userKind === "service_provider" ? "Service provider" : STAGE_LABEL[profile.stage]},{" "}
+            {THERAPEUTIC_AREA_LABELS[profile.therapeuticArea]}
           </p>
           <p className="mt-0.5 text-sm text-muted">Answers in {LANGUAGE_LABEL[profile.language]}</p>
         </div>

@@ -44,7 +44,8 @@ export type NeedCategory =
   | "manufacturing"
   | "legal_ip"
   | "clinical"
-  | "consulting";
+  | "consulting"
+  | "clients";
 
 export interface Entity {
   id: string;
@@ -89,6 +90,8 @@ export interface Profile {
   language: Language;
   /** Optional refinements set through the chat panel. */
   cantonFilter?: Canton;
+  /** "service_provider": a consultancy, CRO or law firm looking for clients and partners. */
+  userKind?: "startup" | "service_provider";
   constraints?: string[];
 }
 
