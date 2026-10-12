@@ -515,13 +515,16 @@ export async function getEntities(): Promise<Entity[]> {
 /** Regions that have organisations in them, most populated first. */
 export async function getRegions(): Promise<Region[]> {
   if (API_BASE) return apiGet<Region[]>("/regions");
+  return delay(regionsFromEntities(ENTITIES), 300);
+}
+
+/** Regions derived from a list of entities, named from the built-in labels.
+ * Used for the mocks, and when a backend without GET /regions is deployed. */
+export function regionsFromEntities(entities: Entity[]): Region[] {
   const counts = new Map<string, number>();
-  for (const e of ENTITIES) counts.set(e.canton, (counts.get(e.canton) ?? 0) + 1);
-  return delay(
-    Array.from(counts, ([code, count]) => ({ code, name: CANTON_LABEL[code] ?? code, count })).sort(
-      (a, b) => b.count - a.count,
-    ),
-    300,
+  for (const e of entities) counts.set(e.canton, (counts.get(e.canton) ?? 0) + 1);
+  return Array.from(counts, ([code, count]) => ({ code, name: CANTON_LABEL[code] ?? code, count })).sort(
+    (a, b) => b.count - a.count,
   );
 }
 

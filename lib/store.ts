@@ -96,9 +96,10 @@ export const useNavigator = create<NavigatorState>()(
         const [entities, relations, regions] = await Promise.all([
           api.getEntities(),
           api.getRelations(),
-          api.getRegions(),
+          // Regions must not block the entities: an older backend has no /regions.
+          api.getRegions().catch(() => null),
         ]);
-        set({ entities, relations, regions });
+        set({ entities, relations, regions: regions ?? api.regionsFromEntities(entities) });
       },
 
       toggleShortlist: (id) =>
