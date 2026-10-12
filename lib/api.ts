@@ -97,6 +97,7 @@ const NEED_KEYWORDS: [NeedCategory, RegExp][] = [
   ["manufacturing", /manufactur|cdmo|\bgmp\b|scale-up|process development|herstell|production/i],
   ["legal_ip", /\bip\b|patent|brevet|legal|lawyer|counsel|anwalt|juridique/i],
   ["clinical", /clinical trial|klinische studie|essais? cliniques?|phase [1-3i]+|\bcro\b|first-in-human/i],
+  ["clients", /\bclients?\b|\bcustomers?\b|kunden|clientèle/i],
   // "consulting firm/company" describes the user, not what they need.
   [
     "consulting",
@@ -305,6 +306,7 @@ const STEP_TIMING: Record<NeedCategory, { "12m": Span; "90d": Span; after?: Need
   clinical: { "12m": [6, 11], "90d": [8, 13], after: ["regulatory"] },
   pharma_partners: { "12m": [7, 12], "90d": [10, 13], after: ["investors"] },
   consulting: { "12m": [1, 4], "90d": [1, 6] },
+  clients: { "12m": [1, 12], "90d": [1, 13] },
 };
 
 export const PERIODS: Record<Horizon, number> = { "12m": 12, "90d": 13 };

@@ -50,6 +50,7 @@ export const NEED_I18N: Record<NeedCategory, Record<Language, string>> = {
   legal_ip: { en: "legal and IP", de: "Recht und IP", fr: "droit et propriété intellectuelle" },
   clinical: { en: "clinical trials", de: "klinische Studien", fr: "essais cliniques" },
   consulting: { en: "consulting", de: "Beratung", fr: "conseil" },
+  clients: { en: "clients", de: "Kunden", fr: "clients" },
 };
 
 export const REASON_I18N = {
@@ -231,6 +232,20 @@ export const STEP_I18N: Record<StepKey, Record<Language, StepText>> = {
       title: "Choisir un partenaire de production",
       description:
         "Menez les discussions techniques, comparez les offres et les délais, et réservez de la capacité pour vos premiers lots.",
+    },
+  },
+  clients: {
+    en: {
+      title: "Win your first clients",
+      description: "Contact the companies shortlisted here with a concrete offer and ask for a first scoping call.",
+    },
+    de: {
+      title: "Erste Kunden gewinnen",
+      description: "Kontaktieren Sie die hier ausgewählten Firmen mit einem konkreten Angebot und bitten Sie um ein erstes Gespräch.",
+    },
+    fr: {
+      title: "Gagner vos premiers clients",
+      description: "Contactez les entreprises sélectionnées ici avec une offre concrète et proposez un premier entretien de cadrage.",
     },
   },
   consulting: {
