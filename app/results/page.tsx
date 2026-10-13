@@ -84,7 +84,7 @@ export default function ResultsPage() {
             role="tablist"
             aria-label="Results"
             onKeyDown={onTabKey}
-            className="fixed inset-x-0 bottom-0 z-[800] grid grid-cols-4 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:static lg:inline-flex lg:gap-0.5 lg:rounded-xl lg:border-0 lg:bg-[#EAECEF] lg:p-1"
+            className="fixed inset-x-0 bottom-0 z-[800] grid grid-cols-4 border-t border-line bg-card pb-[env(safe-area-inset-bottom)] lg:static lg:inline-flex lg:gap-0.5 lg:rounded-xl lg:border-0 lg:bg-subtle lg:p-1"
           >
             {TABS.map(({ id, label, icon: Icon }) => (
               <button
@@ -99,7 +99,7 @@ export default function ResultsPage() {
                 className={cn(
                   "flex min-h-14 flex-col items-center justify-center gap-1 px-2 text-[11px] font-medium lg:min-h-10 lg:flex-row lg:gap-2 lg:rounded-[10px] lg:px-3.5 lg:text-sm",
                   tab === id
-                    ? "font-semibold text-primary lg:bg-white lg:text-ink lg:shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
+                    ? "font-semibold text-primary lg:bg-card lg:text-ink lg:shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
                     : "text-muted hover:text-ink",
                 )}
               >

@@ -77,10 +77,10 @@ export default function ProfilePage() {
 
       <div className="mt-7 flex flex-wrap items-start gap-5">
         <div className="flex min-w-0 flex-[999_1_600px] flex-col gap-5">
-          <section className="rounded-[18px] border border-line bg-white p-5 sm:p-6">
+          <section className="rounded-[18px] border border-line bg-card p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-lg font-semibold">Your team</h2>
-              <div role="group" aria-label="You are" className="inline-flex gap-0.5 rounded-xl bg-[#EEF0F3] p-[3px]">
+              <div role="group" aria-label="You are" className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
                 {(
                   [
                     ["startup", "Startup or company"],
@@ -95,7 +95,7 @@ export default function ProfilePage() {
                     className={cn(
                       "h-9 rounded-[9px] px-3 text-[13px]",
                       kind === value
-                        ? "bg-white font-semibold text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
+                        ? "bg-card font-semibold text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
                         : "font-medium text-muted hover:text-ink",
                     )}
                   >
@@ -153,7 +153,7 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          <section className="rounded-[18px] border border-line bg-white p-5 sm:p-6">
+          <section className="rounded-[18px] border border-line bg-card p-5 sm:p-6">
             <div className="flex items-baseline justify-between gap-3">
               <h2 className="text-lg font-semibold">What you need</h2>
               <span className="font-mono text-[13px] text-muted">
@@ -169,9 +169,9 @@ export default function ProfilePage() {
                 {profile.needs.map((need) => (
                   <li
                     key={need.id}
-                    className="flex flex-col gap-2.5 rounded-[14px] border border-[#EEF0F3] bg-[#F8F9FB] p-2.5 sm:flex-row sm:items-center"
+                    className="flex flex-col gap-2.5 rounded-[14px] border border-line bg-card-2 p-2.5 sm:flex-row sm:items-center"
                   >
-                    <span className="inline-flex shrink-0 items-center gap-2 rounded-[10px] border border-line bg-white px-3 py-2 text-sm font-semibold sm:w-52">
+                    <span className="inline-flex shrink-0 items-center gap-2 rounded-[10px] border border-line bg-card px-3 py-2 text-sm font-semibold sm:w-52">
                       <span
                         aria-hidden
                         className="h-2 w-2 rounded-sm"
@@ -206,14 +206,14 @@ export default function ProfilePage() {
 
             {unused.length > 0 && (
               <div className="mt-5">
-                <h3 className="text-[13px] font-semibold text-[#3A4352]">Add a need</h3>
+                <h3 className="text-[13px] font-semibold text-ink-3">Add a need</h3>
                 <ul className="mt-2 flex flex-wrap gap-2">
                   {unused.map((c) => (
                     <li key={c}>
                       <button
                         type="button"
                         onClick={() => addNeed(c)}
-                        className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-dashed border-[#C9CED6] bg-white px-3 text-[13px] font-medium hover:border-accent hover:text-accent"
+                        className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-dashed border-field-hover bg-card px-3 text-[13px] font-medium hover:border-accent hover:text-accent"
                       >
                         <Plus className="h-3.5 w-3.5" aria-hidden />
                         {NEED_META[c].label}
@@ -244,7 +244,7 @@ export default function ProfilePage() {
               <p className="mt-2.5 text-[15px] leading-relaxed text-[#E2E4DB]">“{needText.trim()}”</p>
             </div>
           )}
-          <div className="rounded-[18px] border border-line bg-white p-6">
+          <div className="rounded-[18px] border border-line bg-card p-6">
             <h2 className="text-sm font-semibold">How matching works</h2>
             <ul className="mt-2.5 list-disc space-y-1 pl-[18px] text-sm leading-relaxed text-muted">
               <li>Each need is matched to organisations that offer it.</li>
@@ -271,7 +271,7 @@ function Field({
 }) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-1.5 block text-[13px] font-semibold text-[#3A4352]">
+      <label htmlFor={id} className="mb-1.5 block text-[13px] font-semibold text-ink-3">
         {label}
       </label>
       {children}

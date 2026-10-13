@@ -7,7 +7,7 @@ export function ScoreRing({ score, size = 52 }: { score: number; size?: number }
   return (
     <div role="img" aria-label={`Match score ${score} out of 100`} className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox="0 0 44 44" aria-hidden>
-        <circle cx="22" cy="22" r={R} stroke="#E9EEF3" strokeWidth="4" fill="none" />
+        <circle cx="22" cy="22" r={R} stroke="rgb(var(--line))" strokeWidth="4" fill="none" />
         <circle
           cx="22"
           cy="22"

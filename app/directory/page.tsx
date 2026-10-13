@@ -59,12 +59,12 @@ function Directory() {
   const pill = (active: boolean) =>
     cn(
       "inline-flex h-10 items-center gap-2 rounded-full border px-3.5 text-sm font-medium",
-      active ? "border-primary bg-primary text-white" : "border-line bg-white text-[#3A4352] hover:border-[#C9CED6] hover:text-ink",
+      active ? "border-primary bg-primary text-on-primary" : "border-line bg-card text-ink-3 hover:border-field-hover hover:text-ink",
     );
   const viewButton = (active: boolean) =>
     cn(
       "inline-flex h-[42px] w-11 items-center justify-center rounded-[9px]",
-      active ? "bg-white text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
+      active ? "bg-card text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
     );
 
   return (
@@ -75,7 +75,7 @@ function Directory() {
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2.5">
-        <div className="flex min-h-12 flex-[1_1_360px] items-center gap-2.5 rounded-xl border border-[#D9DDE3] bg-white px-3.5 focus-within:border-accent">
+        <div className="flex min-h-12 flex-[1_1_360px] items-center gap-2.5 rounded-xl border border-field bg-card px-3.5 focus-within:border-accent">
           <Search className="h-[18px] w-[18px] shrink-0 text-muted" aria-hidden />
           <label htmlFor="d-search" className="sr-only">Search the directory</label>
           <input
@@ -91,7 +91,7 @@ function Directory() {
           <label htmlFor="d-canton" className="sr-only">Region</label>
           <RegionSelect id="d-canton" className="h-12 rounded-xl font-medium" value={canton} onChange={setCanton} />
         </div>
-        <div role="group" aria-label="View" className="inline-flex gap-0.5 rounded-xl bg-[#EAECEF] p-[3px]">
+        <div role="group" aria-label="View" className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
           <button type="button" aria-label="Table view" aria-pressed={view === "table"} className={viewButton(view === "table")} onClick={() => setView("table")}>
             <List className="h-[18px] w-[18px]" aria-hidden />
           </button>
@@ -141,10 +141,10 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
   const shortlist = useNavigator((s) => s.shortlist);
   const toggleShortlist = useNavigator((s) => s.toggleShortlist);
   const regionName = useRegionName();
-  const th = "border-b border-line bg-[#FAFBFC] px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.05em] text-muted";
+  const th = "border-b border-line bg-card-2 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.05em] text-muted";
 
   return (
-    <div className="mt-4 overflow-hidden rounded-[18px] border border-line bg-white">
+    <div className="mt-4 overflow-hidden rounded-[18px] border border-line bg-card">
       <div className="relative overflow-x-auto">
         <table className="w-full min-w-[820px] border-collapse text-sm">
           <caption className="sr-only">Organisations in the directory</caption>
@@ -162,7 +162,7 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
               const meta = TYPE_META[e.type];
               const saved = shortlist.includes(e.id);
               return (
-                <tr key={e.id} className="border-b border-[#EEF0F3] last:border-0 hover:bg-[#FAFBFC]">
+                <tr key={e.id} className="border-b border-line last:border-0 hover:bg-card-2">
                   <td className="px-4 py-3.5">
                     <div className="flex items-center gap-3">
                       <span
@@ -183,7 +183,7 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
                       {meta.label}
                     </span>
                   </td>
-                  <td className="px-4 py-3.5 text-[#3A4352]">{regionName(e.canton)}</td>
+                  <td className="px-4 py-3.5 text-ink-3">{regionName(e.canton)}</td>
                   <td className="max-w-[320px] px-4 py-3.5 text-muted">
                     {e.focusAreas.slice(0, 3).map((a) => (a === "all" ? "all fields" : a)).join(", ")}
                   </td>

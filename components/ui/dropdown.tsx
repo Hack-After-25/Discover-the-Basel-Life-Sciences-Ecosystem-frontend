@@ -28,8 +28,8 @@ export function Dropdown({ id, value, onChange, options, size = "md", className,
         id={id}
         aria-label={rest["aria-label"]}
         className={cn(
-          "group inline-flex w-full items-center justify-between gap-2 rounded-[10px] border border-[#D9DDE3] bg-white px-3 text-left text-ink transition-colors",
-          "hover:border-[#C5CBD3] focus-visible:border-accent data-[state=open]:border-accent data-[state=open]:ring-4 data-[state=open]:ring-accent/10",
+          "group inline-flex w-full items-center justify-between gap-2 rounded-[10px] border border-field bg-card px-3 text-left text-ink transition-colors",
+          "hover:border-field-hover focus-visible:border-accent data-[state=open]:border-accent data-[state=open]:ring-4 data-[state=open]:ring-accent/10",
           size === "md" ? "h-11 text-[15px]" : "h-10 text-[13px] font-medium",
           className,
         )}
@@ -45,7 +45,7 @@ export function Dropdown({ id, value, onChange, options, size = "md", className,
         <SelectPrimitive.Content
           position="popper"
           sideOffset={6}
-          className="z-[1000] max-h-[min(360px,var(--radix-select-content-available-height))] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-2xl border border-line bg-white p-1.5 shadow-menu data-[state=open]:animate-menu-in"
+          className="z-[1000] max-h-[min(360px,var(--radix-select-content-available-height))] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-2xl border border-line bg-card p-1.5 shadow-menu data-[state=open]:animate-menu-in"
         >
           <SelectPrimitive.Viewport>
             {options.map((o) => (

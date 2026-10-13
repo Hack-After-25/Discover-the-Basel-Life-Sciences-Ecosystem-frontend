@@ -81,14 +81,14 @@ export default function ShortlistPage() {
 
       {compareMode && compared.length >= 2 && <CompareTable entities={compared} notes={notes} />}
       {compareMode && compared.length < 2 && (
-        <p className="mt-5 rounded-xl border border-dashed border-[#D9DDE3] bg-white p-4 text-sm text-muted">Select at least two entries below to see them side by side.</p>
+        <p className="mt-5 rounded-xl border border-dashed border-field bg-card p-4 text-sm text-muted">Select at least two entries below to see them side by side.</p>
       )}
 
       <ul className="mt-6 space-y-3.5">
         {saved.map((entity) => {
           const checked = selected.includes(entity.id);
           return (
-            <li key={entity.id} className="rounded-[18px] border border-line bg-white p-5 sm:p-6">
+            <li key={entity.id} className="rounded-[18px] border border-line bg-card p-5 sm:p-6">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex flex-wrap gap-1.5">
@@ -112,7 +112,7 @@ export default function ShortlistPage() {
               </div>
               <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">{entity.description}</p>
 
-              <label htmlFor={`note-${entity.id}`} className="mt-4 block text-[13px] font-semibold text-[#3A4352]">
+              <label htmlFor={`note-${entity.id}`} className="mt-4 block text-[13px] font-semibold text-ink-3">
                 Notes
               </label>
               <Textarea
@@ -165,12 +165,12 @@ function CompareTable({ entities, notes }: { entities: Entity[]; notes: Record<s
   ];
 
   return (
-    <div className="mt-6 overflow-x-auto rounded-[18px] border border-line bg-white">
+    <div className="mt-6 overflow-x-auto rounded-[18px] border border-line bg-card">
       <table className="w-full min-w-[640px] border-collapse text-left text-sm">
         <caption className="sr-only">Side-by-side comparison of selected shortlist entries</caption>
         <thead>
           <tr>
-            <td className="w-44 bg-[#FAFBFC] p-4" />
+            <td className="w-44 bg-card-2 p-4" />
             {entities.map((e) => (
               <th key={e.id} scope="col" className="p-4 align-top text-[17px] font-semibold leading-snug">
                 {e.name}
@@ -180,8 +180,8 @@ function CompareTable({ entities, notes }: { entities: Entity[]; notes: Record<s
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.label} className="border-t border-[#EEF0F3] align-top">
-              <th scope="row" className="bg-[#FAFBFC] p-4 text-xs font-semibold uppercase tracking-[0.05em] text-muted">
+            <tr key={row.label} className="border-t border-line align-top">
+              <th scope="row" className="bg-card-2 p-4 text-xs font-semibold uppercase tracking-[0.05em] text-muted">
                 {row.label}
               </th>
               {entities.map((e) => (

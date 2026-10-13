@@ -102,7 +102,7 @@ export default function GraphView({ profile, matches, relations, entities, onSel
   };
 
   return (
-    <div ref={wrapper} className="relative overflow-hidden rounded-2xl border border-line bg-white">
+    <div ref={wrapper} className="relative overflow-hidden rounded-2xl border border-line bg-card">
       <ForceGraph3D
         ref={graph}
         graphData={data}
@@ -148,7 +148,7 @@ export default function GraphView({ profile, matches, relations, entities, onSel
         <button
           type="button"
           onClick={() => graph.current?.zoomToFit(600, 60)}
-          className="rounded-lg border border-line bg-white px-3 py-1.5 text-sm font-medium text-ink shadow-card hover:bg-surface"
+          className="rounded-lg border border-line bg-card px-3 py-1.5 text-sm font-medium text-ink shadow-card hover:bg-surface"
         >
           Reset view
         </button>

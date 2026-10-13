@@ -42,7 +42,7 @@ export function MatchesTab() {
         />
         <label htmlFor="f-canton" className="sr-only">Region</label>
         <RegionSelect id="f-canton" size="sm" className="w-auto" value={canton} onChange={setCanton} />
-        <label htmlFor="f-score" className="ml-1 flex h-10 items-center gap-2 rounded-[10px] border border-[#D9DDE3] bg-white px-3 text-[13px] font-medium">
+        <label htmlFor="f-score" className="ml-1 flex h-10 items-center gap-2 rounded-[10px] border border-field bg-card px-3 text-[13px] font-medium">
           Minimum match <span className="w-6 font-mono tabular-nums">{minScore}</span>
           <input
             id="f-score"
@@ -124,7 +124,7 @@ function ProgrammeRow({ match }: { match: Match }) {
     .join("")
     .toUpperCase();
   return (
-    <div className="flex flex-wrap items-center gap-3.5 rounded-xl border border-[#F3E2CC] bg-white px-3.5 py-3">
+    <div className="flex flex-wrap items-center gap-3.5 rounded-xl border border-[#F3E2CC] bg-card px-3.5 py-3">
       <span aria-hidden className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] bg-[#FDEBDD] text-[13px] font-bold text-[#B8430F]">
         {initials}
       </span>

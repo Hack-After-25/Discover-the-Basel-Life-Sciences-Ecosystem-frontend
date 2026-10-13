@@ -10,7 +10,7 @@ interface Props {
 
 export function EmptyState({ title, body, actionLabel, actionHref }: Props) {
   return (
-    <div className="rounded-2xl border border-dashed border-[#D9DDE3] bg-white px-6 py-12 text-center">
+    <div className="rounded-2xl border border-dashed border-field bg-card px-6 py-12 text-center">
       <h2 className="text-lg font-semibold">{title}</h2>
       <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">{body}</p>
       {actionLabel && actionHref && (

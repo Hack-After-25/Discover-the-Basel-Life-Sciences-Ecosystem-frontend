@@ -21,7 +21,7 @@ export const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrim
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "no-print fixed z-[1001] overflow-y-auto bg-white shadow-xl focus:outline-none",
+          "no-print fixed z-[1001] overflow-y-auto bg-card shadow-xl focus:outline-none",
           side === "center" &&
             "left-1/2 top-1/2 max-h-[90vh] w-[calc(100vw-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 rounded-2xl p-6",
           side === "right" && "inset-y-0 right-0 w-full max-w-md p-6",

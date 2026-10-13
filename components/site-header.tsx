@@ -36,13 +36,13 @@ export function SiteHeader() {
 
   return (
     <header className="no-print sticky top-0 z-[900] px-3 pt-3 sm:px-6">
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-2 rounded-full border border-line/70 bg-white/90 py-2 pl-2 pr-2 shadow-[0_2px_12px_-4px_rgba(11,18,32,0.12)] backdrop-blur sm:gap-3 sm:pr-3">
+      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-2 rounded-full border border-line/70 bg-card/90 py-2 pl-2 pr-2 shadow-[0_2px_12px_-4px_rgba(11,18,32,0.12)] backdrop-blur sm:gap-3 sm:pr-3">
         <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-full pr-2 text-ink" aria-label="FadäRhy home">
           <LogoMark round className="h-11 w-11" />
           <Wordmark className="hidden text-[22px] sm:inline" />
         </Link>
 
-        <nav aria-label="Main" className="flex items-center gap-1 rounded-full bg-[#EEF0F3] p-1">
+        <nav aria-label="Main" className="flex items-center gap-1 rounded-full bg-subtle p-1">
           {links.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
             return (
@@ -52,7 +52,7 @@ export function SiteHeader() {
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "inline-flex h-10 items-center gap-2 rounded-full px-3 text-[15px] font-semibold sm:px-4",
-                  active ? "bg-white text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
+                  active ? "bg-card text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
                 )}
               >
                 <Icon className="h-[18px] w-[18px]" aria-hidden />
@@ -76,12 +76,12 @@ export function SiteHeader() {
                 reset();
                 router.push("/");
               }}
-              className="hidden h-10 w-10 items-center justify-center rounded-full text-muted hover:bg-[#F0F2F5] hover:text-ink sm:inline-flex"
+              className="hidden h-10 w-10 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-ink sm:inline-flex"
             >
               <RotateCcw className="h-[18px] w-[18px]" aria-hidden />
             </button>
           )}
-          <div role="group" aria-label="Answer language" className="flex items-center rounded-full bg-[#EEF0F3] p-1">
+          <div role="group" aria-label="Answer language" className="flex items-center rounded-full bg-subtle p-1">
             {LANGUAGES.map((l) => (
               <button
                 key={l}
@@ -90,7 +90,7 @@ export function SiteHeader() {
                 onClick={() => chooseLanguage(l)}
                 className={cn(
                   "h-9 rounded-full px-2.5 text-[13px] font-semibold uppercase sm:h-10 sm:px-4",
-                  current === l ? "bg-white text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
+                  current === l ? "bg-card text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
                 )}
               >
                 {l}

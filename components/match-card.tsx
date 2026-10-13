@@ -23,7 +23,7 @@ export function MatchCard({ entity, match }: Props) {
   const verified = formatVerified(entity.lastVerified);
 
   return (
-    <article className="flex h-full flex-col gap-3 rounded-[18px] border border-line bg-white p-[18px] shadow-card transition-shadow hover:shadow-lift">
+    <article className="flex h-full flex-col gap-3 rounded-[18px] border border-line bg-card p-[18px] shadow-card transition-shadow hover:shadow-lift">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap gap-1.5">
@@ -39,7 +39,7 @@ export function MatchCard({ entity, match }: Props) {
         {match && <ScoreRing score={match.score} />}
       </div>
 
-      <p className="text-sm leading-relaxed text-[#26303F]">{match ? match.reason : entity.description}</p>
+      <p className="text-sm leading-relaxed text-ink-2">{match ? match.reason : entity.description}</p>
 
       {(entity.facilities.length > 0 || entity.focusAreas.length > 0) && (
         <ul className="flex flex-wrap gap-1.5" aria-label="Facilities and focus areas">
