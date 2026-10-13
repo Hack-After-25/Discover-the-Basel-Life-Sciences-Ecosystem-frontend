@@ -5,6 +5,7 @@ import "@fontsource/space-mono/700.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { Overlays } from "@/components/overlays";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "FadäRhy — The ecosystem navigator",
@@ -16,7 +17,10 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-screen">
         <a
           href="#main"

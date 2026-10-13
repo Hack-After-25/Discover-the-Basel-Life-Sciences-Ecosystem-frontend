@@ -8,6 +8,7 @@ import { useHydrated, useNavigator } from "@/lib/store";
 import type { Language } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { LogoMark, Wordmark } from "./logo";
+import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader() {
   const hydrated = useHydrated();
@@ -81,6 +82,7 @@ export function SiteHeader() {
               <RotateCcw className="h-[18px] w-[18px]" aria-hidden />
             </button>
           )}
+          <ThemeToggle />
           <div role="group" aria-label="Answer language" className="flex items-center rounded-full bg-subtle p-1">
             {LANGUAGES.map((l) => (
               <button

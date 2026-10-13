@@ -4,7 +4,7 @@
 
 @layer base {
   /* FadäRhy palette as RGB channels, so Tailwind opacity modifiers work.
-     Light by default; dark follows the system setting. */
+     Light by default; dark follows the system setting or the navbar toggle. */
   :root {
     color-scheme: light;
     --card: 255 255 255; --card-2: 248 249 245; --surface: 246 247 242;
@@ -13,8 +13,9 @@
     --primary: 17 18 15; --primary-dark: 17 18 15; --primary-soft: 238 240 232; --on-primary: 255 255 255;
     --accent: 36 70 245; --accent-dark: 26 53 209; --accent-soft: 233 237 254;
   }
+  /* No saved choice: follow the system. The navbar toggle sets data-theme. */
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       color-scheme: dark;
       --card: 27 28 24; --card-2: 33 35 30; --surface: 17 18 15;
       --ink: 238 240 232; --ink-2: 214 216 206; --ink-3: 190 193 182; --muted: 154 157 146;
@@ -22,6 +23,14 @@
       --primary: 238 240 232; --primary-dark: 36 38 31; --primary-soft: 38 40 34; --on-primary: 17 18 15;
       --accent: 92 118 255; --accent-dark: 36 70 245; --accent-soft: 30 37 77;
     }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --card: 27 28 24; --card-2: 33 35 30; --surface: 17 18 15;
+    --ink: 238 240 232; --ink-2: 214 216 206; --ink-3: 190 193 182; --muted: 154 157 146;
+    --line: 46 48 42; --field: 62 65 57; --field-hover: 84 87 78; --subtle: 38 40 34;
+    --primary: 238 240 232; --primary-dark: 36 38 31; --primary-soft: 38 40 34; --on-primary: 17 18 15;
+    --accent: 92 118 255; --accent-dark: 36 70 245; --accent-soft: 30 37 77;
   }
   html {
     -webkit-text-size-adjust: 100%;
