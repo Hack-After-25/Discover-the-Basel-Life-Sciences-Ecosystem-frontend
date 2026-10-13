@@ -240,8 +240,8 @@ export default function ProfilePage() {
         <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-4">
           {needText.trim() && (
             <div className="rounded-[18px] bg-primary-dark p-6 text-white">
-              <h2 className="text-sm font-semibold text-[#99F6E4]">What you wrote</h2>
-              <p className="mt-2.5 text-[15px] leading-relaxed text-[#DCE4F3]">“{needText.trim()}”</p>
+              <h2 className="text-sm font-semibold text-[#D6FF3F]">What you wrote</h2>
+              <p className="mt-2.5 text-[15px] leading-relaxed text-[#E2E4DB]">“{needText.trim()}”</p>
             </div>
           )}
           <div className="rounded-[18px] border border-line bg-white p-6">

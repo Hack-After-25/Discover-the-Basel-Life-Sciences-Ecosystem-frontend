@@ -5,16 +5,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: { DEFAULT: "#0E2A5E", dark: "#0A1F47", soft: "#E9EEF8" },
-        accent: { DEFAULT: "#0F766E", dark: "#0B5F58", soft: "#E3F3F1", bright: "#5EEAD4" },
-        ink: "#0B1220",
-        muted: "#566070",
-        line: "#E4E7EC",
-        surface: "#F5F6F8",
+        primary: { DEFAULT: "#11120F", dark: "#11120F", soft: "#EEF0E8" },
+        accent: { DEFAULT: "#2446F5", dark: "#1A35D1", soft: "#E9EDFE" },
+        lime: "#D6FF3F",
+        mist: "#EEF0E8",
+        ink: "#11120F",
+        muted: "#5C5F57",
+        line: "#E2E4DB",
+        surface: "#F6F7F2",
       },
       fontFamily: {
-        sans: ['"Geist Variable"', "system-ui", "Helvetica Neue", "Arial", "sans-serif"],
-        mono: ['"Geist Mono Variable"', "ui-monospace", "SFMono-Regular", "monospace"],
+        sans: ['"Manrope Variable"', "system-ui", "Helvetica Neue", "Arial", "sans-serif"],
+        mono: ['"Space Mono"', "ui-monospace", "SFMono-Regular", "monospace"],
       },
       boxShadow: {
         card: "0 1px 2px rgba(11, 18, 32, 0.04)",

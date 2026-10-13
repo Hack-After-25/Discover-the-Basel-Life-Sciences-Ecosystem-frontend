@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/input";
 
 const STEPS = [
   { title: "Describe", body: "Type or speak a few sentences about your team, stage and what you need." },
-  { title: "Check", body: "ARIADNE turns it into a profile. Fix anything it got wrong before matching." },
+  { title: "Check", body: "FadäRhy turns it into a profile. Fix anything it got wrong before matching." },
   { title: "Act", body: "Get ranked matches with sources, a 12-month plan and draft intro emails." },
 ];
 
@@ -84,31 +84,28 @@ export default function IntakePage() {
         <svg
           aria-hidden
           viewBox="0 0 1440 560"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute inset-0 h-full w-full opacity-35"
+          preserveAspectRatio="xMidYMid slice"
+          className="pointer-events-none absolute inset-0 h-full w-full"
         >
           <path
-            d="M-20 420 C 220 300, 360 520, 560 380 S 900 120, 1100 260 S 1380 420, 1480 300"
-            stroke="#5EEAD4"
-            strokeWidth="1.5"
+            d="M-40 470 C 160 470, 220 300, 330 300 S 470 420, 600 400 M 1160 600 C 1220 470, 1280 380, 1340 390 S 1420 450, 1480 400"
+            stroke="#2446F5"
+            strokeWidth="7"
+            strokeLinecap="round"
             fill="none"
           />
-          <path
-            d="M-20 470 C 260 360, 420 560, 640 430 S 960 200, 1160 320 S 1400 470, 1480 380"
-            stroke="#3B6FD8"
-            strokeWidth="1"
-            fill="none"
-          />
+          <circle cx="330" cy="300" r="13" fill="#D6FF3F" />
+          <circle cx="1340" cy="390" r="13" fill="#D6FF3F" />
         </svg>
         <div className="relative mx-auto flex max-w-[1240px] flex-col items-center px-4 pb-16 pt-14 text-center sm:px-8 sm:pb-24 sm:pt-20">
-          <span className="rounded-full border border-accent-bright/30 bg-accent-bright/10 px-3 py-1.5 text-[13px] font-medium text-[#99F6E4]">
-            Basel life-sciences navigator
+          <span className="rounded-full border border-lime/30 bg-lime/10 px-3 py-1.5 font-mono text-[12px] uppercase tracking-[0.14em] text-[#D6FF3F]">
+            The ecosystem navigator<span className="hidden sm:inline"> · Basel · Upper Rhine</span>
           </span>
           <h1 className="mt-5 max-w-[880px] text-[38px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[56px]">
-            Your thread through Basel’s life-sciences labyrinth.
+            Find your next right connection<span className="text-lime">.</span>
           </h1>
-          <p className="mt-5 max-w-[680px] text-lg leading-relaxed text-[#C7D2E8]">
-            Tell ARIADNE what your team needs, in English, Deutsch, Français or Baseldütsch. Get matched labs,
+          <p className="mt-5 max-w-[680px] text-lg leading-relaxed text-[#C9CCC0]">
+            Tell FadäRhy what your team needs, in English, Deutsch, Français or Baseldütsch. Get matched labs,
             investors, partners and experts across the region, each with a reason and its source, plus a 12-month
             plan.
           </p>
@@ -177,7 +174,7 @@ export default function IntakePage() {
           </form>
 
           <div className="mt-5 flex max-w-[820px] flex-wrap justify-center gap-2">
-            <span className="self-center text-[13px] text-[#9FB0D0]">Try an example:</span>
+            <span className="self-center text-[13px] text-[#A3A69B]">Try an example:</span>
             {EXAMPLES.map((example) => (
               <button
                 key={example.label}
@@ -188,7 +185,7 @@ export default function IntakePage() {
                   setError(null);
                   document.getElementById("need")?.focus();
                 }}
-                className="min-h-9 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-[13px] font-medium text-[#E6ECF7] hover:border-accent-bright/60 hover:bg-white/10"
+                className="min-h-9 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-[13px] font-medium text-[#EEF0E8] hover:border-lime/60 hover:bg-white/10"
               >
                 {example.label}
               </button>

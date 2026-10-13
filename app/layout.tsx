@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/geist";
-import "@fontsource-variable/geist-mono";
+import "@fontsource-variable/manrope";
+import "@fontsource/space-mono/400.css";
+import "@fontsource/space-mono/700.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { Overlays } from "@/components/overlays";
 
 export const metadata: Metadata = {
-  title: "ARIADNE — De Fadä durch Basel",
+  title: "FadäRhy — The ecosystem navigator",
   description:
-    "AI-powered Research, Innovation And Discovery Navigator for Entrepreneurs. Your thread through Basel’s life-sciences labyrinth.",
+    "FadäRhy helps founders navigate the Basel and Upper Rhine innovation ecosystem: programmes, expertise, laboratory access, funding pathways and partners.",
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };

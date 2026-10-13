@@ -52,7 +52,7 @@ export function MatchesTab() {
             step={5}
             value={minScore}
             onChange={(e) => setMinScore(Number(e.target.value))}
-            className="w-24 accent-[#0F766E]"
+            className="w-24 accent-[#2446F5]"
           />
         </label>
       </fieldset>

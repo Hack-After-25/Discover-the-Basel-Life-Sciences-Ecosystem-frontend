@@ -104,9 +104,9 @@ export function ProfileSidebar({
 
       {next && (
         <div className="rounded-[18px] bg-primary-dark p-[18px] text-white">
-          <p className="text-[13px] font-semibold text-[#99F6E4]">Next deadline</p>
+          <p className="text-[13px] font-semibold text-[#D6FF3F]">Next deadline</p>
           <p className="mt-1.5 text-[15px] font-semibold">{next.title}</p>
-          <p className="mt-0.5 font-mono text-[13px] text-[#C7D2E8]">
+          <p className="mt-0.5 font-mono text-[13px] text-[#C9CCC0]">
             {new Date(next.date).toLocaleDateString(LOCALE[profile.language], { day: "numeric", month: "short", year: "numeric" })}
             {" · "}
             {daysLeft === 0 ? "today" : `in ${daysLeft} ${daysLeft === 1 ? "day" : "days"}`}

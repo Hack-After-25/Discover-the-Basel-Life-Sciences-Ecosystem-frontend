@@ -10,7 +10,7 @@
     @apply bg-surface font-sans text-ink antialiased;
   }
   :focus-visible {
-    outline: 2px solid #0f766e;
+    outline: 2px solid #2446f5;
     outline-offset: 2px;
   }
   h1, h2, h3 {
