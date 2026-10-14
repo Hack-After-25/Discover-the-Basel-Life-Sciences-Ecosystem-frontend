@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { applyTheme, currentTheme, type Theme } from "@/lib/theme";
+import { useT } from "./site-provider";
 
 /** Navbar button that switches between light and dark mode and remembers the choice. */
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme | null>(null);
+  const t = useT();
 
   useEffect(() => {
     setTheme(currentTheme());
@@ -18,7 +20,7 @@ export function ThemeToggle() {
   }, []);
 
   const next: Theme = theme === "dark" ? "light" : "dark";
-  const label = `Switch to ${next} mode`;
+  const label = t(next === "dark" ? "nav.darkMode" : "nav.lightMode");
 
   return (
     <button

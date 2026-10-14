@@ -13,6 +13,7 @@
     --primary: 17 18 15; --primary-dark: 17 18 15; --primary-soft: 238 240 232; --on-primary: 255 255 255;
     --accent: 36 70 245; --accent-dark: 26 53 209; --accent-soft: 233 237 254;
     --cta: 214 255 63; --cta-hover: 199 240 46; --on-cta: 17 18 15;
+    --hero: 17 18 15;
   }
   /* No saved choice: follow the system. The navbar toggle sets data-theme. */
   @media (prefers-color-scheme: dark) {
@@ -24,6 +25,7 @@
       --primary: 238 240 232; --primary-dark: 36 38 31; --primary-soft: 38 40 34; --on-primary: 17 18 15;
       --accent: 92 118 255; --accent-dark: 36 70 245; --accent-soft: 30 37 77;
       --cta: 214 255 63; --cta-hover: 228 255 128; --on-cta: 17 18 15;
+      --hero: 17 18 15;
     }
   }
   :root[data-theme="dark"] {
@@ -34,9 +36,17 @@
     --primary: 238 240 232; --primary-dark: 36 38 31; --primary-soft: 38 40 34; --on-primary: 17 18 15;
     --accent: 92 118 255; --accent-dark: 36 70 245; --accent-soft: 30 37 77;
     --cta: 214 255 63; --cta-hover: 228 255 128; --on-cta: 17 18 15;
+    --hero: 17 18 15;
   }
   html {
     -webkit-text-size-adjust: 100%;
+  }
+  /* Uploaded light and dark logos: show the one for the current theme. */
+  :root[data-theme="dark"] .dark-logo-hide { display: none; }
+  :root[data-theme="dark"] .dark-logo-show { display: block; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .dark-logo-hide { display: none; }
+    :root:not([data-theme="light"]) .dark-logo-show { display: block; }
   }
   body {
     @apply bg-surface font-sans text-ink antialiased;

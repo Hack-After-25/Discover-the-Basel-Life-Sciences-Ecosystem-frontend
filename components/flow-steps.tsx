@@ -1,12 +1,17 @@
+"use client";
+
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useT } from "./site-provider";
 
-const STEPS = ["Describe", "Check profile", "Matches and plan"];
+
+const STEPS = ["steps.1", "steps.2", "steps.3"] as const;
 
 /** Where the user is in describe → check → results. `current` is 0-based. */
 export function FlowSteps({ current }: { current: number }) {
+  const t = useT();
   return (
-    <ol aria-label="Progress" className="flex items-center gap-2 text-sm sm:flex-wrap sm:gap-2.5">
+    <ol aria-label={t("steps.label")} className="flex items-center gap-2 text-sm sm:flex-wrap sm:gap-2.5">
       {STEPS.map((label, i) => (
         <li key={label} className="flex min-w-0 items-center gap-2 sm:gap-2.5" aria-current={i === current ? "step" : undefined}>
           {i > 0 && (
@@ -24,7 +29,7 @@ export function FlowSteps({ current }: { current: number }) {
               {i < current ? <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden /> : i + 1}
             </span>
             {/* On phones only the current step keeps its name, so the bar fits one line. */}
-            <span className={cn(i !== current && "sr-only sm:not-sr-only")}>{label}</span>
+            <span className={cn(i !== current && "sr-only sm:not-sr-only")}>{t(label)}</span>
           </span>
         </li>
       ))}

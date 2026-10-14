@@ -7,9 +7,10 @@ import { LANGUAGE_LABEL, LANGUAGES } from "@/lib/i18n";
 import { useHydrated, useNavigator } from "@/lib/store";
 import type { Language } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { LogoMark, Wordmark } from "./logo";
+import { SiteLogo, Wordmark } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
 import { Dropdown } from "./ui/dropdown";
+import { useT } from "./site-provider";
 
 export function SiteHeader() {
   const hydrated = useHydrated();
@@ -22,6 +23,7 @@ export function SiteHeader() {
   const setProfile = useNavigator((s) => s.setProfile);
   const language = useNavigator((s) => s.language);
   const setLanguage = useNavigator((s) => s.setLanguage);
+  const t = useT();
 
   // With a profile, the answer language lives there; before that, it is the intake choice.
   const current: Language | null = hydrated ? (profile?.language ?? language) : null;
@@ -31,20 +33,20 @@ export function SiteHeader() {
   };
 
   const links = [
-    ...(hydrated && hasResults ? [{ href: "/results", label: "Results", icon: LayoutGrid }] : []),
-    { href: "/directory", label: "Directory", icon: Compass },
-    { href: "/shortlist", label: "Shortlist", icon: Bookmark },
+    ...(hydrated && hasResults ? [{ href: "/results", label: t("nav.results"), icon: LayoutGrid }] : []),
+    { href: "/directory", label: t("nav.directory"), icon: Compass },
+    { href: "/shortlist", label: t("nav.shortlist"), icon: Bookmark },
   ];
 
   return (
     <header className="no-print sticky top-0 z-[900] px-2 pt-2 sm:px-6 sm:pt-3">
       <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-1.5 rounded-full border border-line/70 bg-card/90 px-1.5 shadow-[0_2px_12px_-4px_rgba(11,18,32,0.12)] backdrop-blur sm:h-16 sm:gap-3 sm:pl-2 sm:pr-3">
-        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-full text-ink sm:pr-2" aria-label="FadäRhy home">
-          <LogoMark className="h-10 w-10 sm:h-11 sm:w-11" />
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-full text-ink sm:pr-2" aria-label={t("nav.home")}>
+          <SiteLogo className="h-10 w-10 sm:h-11 sm:w-11" />
           <Wordmark className="hidden text-[22px] sm:inline" />
         </Link>
 
-        <nav aria-label="Main" className="flex min-w-0 items-center gap-0.5 rounded-full bg-subtle p-1 sm:gap-1">
+        <nav aria-label={t("nav.main")} className="flex min-w-0 items-center gap-0.5 rounded-full bg-subtle p-1 sm:gap-1">
           {links.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
             return (
@@ -74,8 +76,8 @@ export function SiteHeader() {
           {hydrated && hasResults && (
             <button
               type="button"
-              aria-label="Start over"
-              title="Start over"
+              aria-label={t("nav.startOver")}
+              title={t("nav.startOver")}
               onClick={() => {
                 reset();
                 router.push("/");
@@ -88,7 +90,7 @@ export function SiteHeader() {
           <ThemeToggle />
           {/* Phones and tablets: one compact menu; wide screens: the EN DE FR switch. */}
           <Dropdown
-            aria-label="Answer language"
+            aria-label={t("nav.language")}
             value={current ?? ""}
             onChange={(v) => chooseLanguage(v as Language)}
             options={LANGUAGES.map((l) => ({ value: l, label: l.toUpperCase() }))}
@@ -96,7 +98,7 @@ export function SiteHeader() {
             itemLabel={(o) => LANGUAGE_LABEL[o.value as Language]}
             placeholder={<Languages className="h-4 w-4" aria-hidden />}
           />
-          <div role="group" aria-label="Answer language" className="hidden items-center rounded-full bg-subtle p-1 lg:flex">
+          <div role="group" aria-label={t("nav.language")} className="hidden items-center rounded-full bg-subtle p-1 lg:flex">
             {LANGUAGES.map((l) => (
               <button
                 key={l}

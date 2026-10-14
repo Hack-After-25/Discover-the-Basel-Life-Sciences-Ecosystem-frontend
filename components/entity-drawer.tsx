@@ -1,7 +1,8 @@
 "use client";
 
 import { ExternalLink, Mail, MessageSquare } from "lucide-react";
-import { STAGE_LABEL } from "@/lib/entity-meta";
+import { useStageLabel } from "@/lib/labels";
+import { useT } from "./site-provider";
 import { useNavigator } from "@/lib/store";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
@@ -15,6 +16,8 @@ export function EntityDrawer() {
   const hasProfile = useNavigator((s) => s.profile !== null);
   const shortlisted = useNavigator((s) => (s.detailId ? s.shortlist.includes(s.detailId) : false));
   const toggleShortlist = useNavigator((s) => s.toggleShortlist);
+  const t = useT();
+  const stageLabel = useStageLabel();
 
   return (
     <Dialog open={detailId !== null} onOpenChange={(open) => !open && openDetail(null)}>
@@ -32,18 +35,18 @@ export function EntityDrawer() {
               </DialogDescription>
             </div>
 
-            <Section title="Focus areas" items={entity.focusAreas.map((a) => (a === "all" ? "All life-sciences fields" : a))} />
-            <Section title="Stage fit" items={entity.stageFit.map((s) => STAGE_LABEL[s])} />
-            <Section title="Facilities" items={entity.facilities} empty="No facilities listed." />
+            <Section title={t("drawer.focus")} items={entity.focusAreas.map((a) => (a === "all" ? t("drawer.allFields") : a))} />
+            <Section title={t("drawer.stage")} items={entity.stageFit.map((s) => stageLabel(s))} />
+            <Section title={t("drawer.facilities")} items={entity.facilities} empty={t("drawer.noFacilities")} />
             {entity.availability && (
               <div>
-                <h3 className="text-sm font-semibold">Availability</h3>
+                <h3 className="text-sm font-semibold">{t("drawer.availability")}</h3>
                 <p className="mt-2 text-sm">{entity.availability}</p>
               </div>
             )}
 
             <div>
-              <h3 className="text-sm font-semibold">Contact</h3>
+              <h3 className="text-sm font-semibold">{t("drawer.contact")}</h3>
               <ul className="mt-2 space-y-1.5 text-sm">
                 <li>
                   <a className="inline-flex items-center gap-1.5 text-primary underline-offset-2 hover:underline" href={entity.website} target="_blank" rel="noreferrer">
@@ -60,27 +63,27 @@ export function EntityDrawer() {
                   ) : (
                     <a className="inline-flex items-center gap-1.5 text-primary underline-offset-2 hover:underline" href={entity.contactUrl || entity.website} target="_blank" rel="noreferrer">
                       <MessageSquare className="h-4 w-4" aria-hidden />
-                      Contact them on their website
+                      {t("drawer.contactWebsite")}
                     </a>
                   )}
                 </li>
               </ul>
               {!entity.contactEmail && (
-                <p className="mt-2 text-xs text-muted">No email address is published for this organisation.</p>
+                <p className="mt-2 text-xs text-muted">{t("drawer.noEmail")}</p>
               )}
             </div>
 
             <p className="text-xs text-muted">
-              Source: {entity.source},{" "}
+              {t("drawer.source", { source: entity.source })}{" "}
               <a className="underline" href={entity.sourceUrl} target="_blank" rel="noreferrer">
                 {entity.sourceUrl.replace(/^https?:\/\//, "")}
               </a>
-              . Last verified {entity.lastVerified}.
+              {t("drawer.verified", { date: entity.lastVerified ?? "" })}
             </p>
 
             <div className="flex flex-wrap gap-2 border-t border-line pt-4">
               <Button variant={shortlisted ? "accent" : "primary"} onClick={() => toggleShortlist(entity.id)}>
-                {shortlisted ? "Remove from shortlist" : "Add to shortlist"}
+                {shortlisted ? t("drawer.remove") : t("drawer.add")}
               </Button>
               {hasProfile && (
                 <Button
@@ -90,16 +93,16 @@ export function EntityDrawer() {
                     openEmail(entity.id);
                   }}
                 >
-                  Draft intro email
+                  {t("shortlist.draftEmail")}
                 </Button>
               )}
             </div>
           </div>
         ) : (
           <>
-            <DialogTitle className="text-lg font-semibold">Organisation not found</DialogTitle>
+            <DialogTitle className="text-lg font-semibold">{t("drawer.notFound.title")}</DialogTitle>
             <DialogDescription className="mt-2 text-sm text-muted">
-              This entry is no longer in the dataset. Close this panel and pick another one.
+              {t("drawer.notFound.body")}
             </DialogDescription>
           </>
         )}

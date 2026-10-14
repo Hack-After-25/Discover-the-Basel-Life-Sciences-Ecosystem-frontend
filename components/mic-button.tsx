@@ -5,6 +5,7 @@ import { Loader2, Mic, Square } from "lucide-react";
 import { browserRecognition, hasElevenLabs, transcribe } from "@/lib/voice";
 import type { Language } from "@/lib/types";
 import { Button } from "./ui/button";
+import { useT } from "./site-provider";
 
 interface Props {
   /** Used only by the browser fallback. ElevenLabs detects the language itself. */
@@ -20,6 +21,7 @@ export function MicButton({ language, onTranscript, onError }: Props) {
   const [mode, setMode] = useState<"elevenlabs" | "browser" | "none" | null>(null);
   const recorder = useRef<MediaRecorder | null>(null);
   const recognition = useRef<ReturnType<typeof browserRecognition>>(null);
+  const t = useT();
 
   useEffect(() => {
     let cancelled = false;
@@ -49,9 +51,9 @@ export function MicButton({ language, onTranscript, onError }: Props) {
         try {
           const text = await transcribe(new Blob(chunks, { type: rec.mimeType || "audio/webm" }));
           if (text) onTranscript(text);
-          else onError("Nothing was heard. Record again and speak closer to the microphone.");
+          else onError(t("mic.nothing"));
         } catch {
-          onError("The recording could not be transcribed. Record again or type your description.");
+          onError(t("mic.failed"));
         } finally {
           setState("idle");
         }
@@ -60,7 +62,7 @@ export function MicButton({ language, onTranscript, onError }: Props) {
       rec.start();
       setState("recording");
     } catch {
-      onError("Microphone access was blocked. Allow it in your browser settings, or type your description.");
+      onError(t("mic.blocked"));
     }
   };
 
@@ -73,7 +75,7 @@ export function MicButton({ language, onTranscript, onError }: Props) {
         .map((r) => r[0].transcript)
         .join(" ");
     };
-    rec.onerror = () => onError("Speech recognition stopped. Record again or type your description.");
+    rec.onerror = () => onError(t("mic.stopped"));
     rec.onend = () => {
       setState("idle");
       if (heard.trim()) onTranscript(heard.trim());
@@ -108,7 +110,7 @@ export function MicButton({ language, onTranscript, onError }: Props) {
       ) : (
         <Mic className="h-[18px] w-[18px]" aria-hidden />
       )}
-      {state === "transcribing" ? "Transcribing" : state === "recording" ? "Stop recording" : "Speak"}
+      {state === "transcribing" ? t("mic.transcribing") : state === "recording" ? t("mic.stop") : t("mic.speak")}
     </Button>
   );
 }

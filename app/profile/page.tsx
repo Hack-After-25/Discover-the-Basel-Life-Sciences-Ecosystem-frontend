@@ -2,16 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowRight, Loader2, Plus, X } from "lucide-react";
-import {
-  NEED_CATEGORIES,
-  NEED_META,
-  NEED_TO_ENTITY_TYPE,
-  STAGES,
-  STAGE_LABEL,
-  THERAPEUTIC_AREAS,
-  THERAPEUTIC_AREA_LABELS,
-  TYPE_META,
-} from "@/lib/entity-meta";
+import { NEED_CATEGORIES, NEED_TO_ENTITY_TYPE, STAGES, THERAPEUTIC_AREAS, TYPE_META } from "@/lib/entity-meta";
+import { useAreaLabel, useNeedDetail, useNeedLabel, useStageLabel } from "@/lib/labels";
+import { useT } from "@/components/site-provider";
 import { useHydrated, useNavigator } from "@/lib/store";
 import { LANGUAGES, LANGUAGE_LABEL } from "@/lib/i18n";
 import type { Language, NeedCategory, Profile, Stage } from "@/lib/types";
@@ -32,6 +25,11 @@ export default function ProfilePage() {
   const runAnalysis = useNavigator((s) => s.runAnalysis);
   const analysing = useNavigator((s) => s.analysing);
   const needText = useNavigator((s) => s.needText);
+  const t = useT();
+  const needLabel = useNeedLabel();
+  const needDetail = useNeedDetail();
+  const stageLabel = useStageLabel();
+  const areaLabel = useAreaLabel();
 
   if (!hydrated) {
     return (
@@ -46,9 +44,9 @@ export default function ProfilePage() {
     return (
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
         <EmptyState
-          title="No profile yet"
-          body="Describe your team and needs first. Your profile appears here for you to check."
-          actionLabel="Describe your needs"
+          title={t("profile.empty.title")}
+          body={t("profile.empty.body")}
+          actionLabel={t("common.describeNeeds")}
           actionHref="/"
         />
       </div>
@@ -61,7 +59,7 @@ export default function ProfilePage() {
 
   const addNeed = (category: NeedCategory) =>
     update({
-      needs: [...profile.needs, { id: uid("need"), category, detail: NEED_META[category].defaultDetail }],
+      needs: [...profile.needs, { id: uid("need"), category, detail: needDetail(category) }],
     });
 
   const confirm = async () => {
@@ -72,19 +70,19 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-[1240px] px-4 pb-20 pt-7 sm:px-8">
       <FlowSteps current={1} />
-      <h1 className="mt-7 text-[30px] font-semibold sm:text-4xl">Check what we understood</h1>
-      <p className="mt-2 text-base text-muted">Correct anything that is off. Your matches and plan are built from this profile.</p>
+      <h1 className="mt-7 text-[30px] font-semibold sm:text-4xl">{t("profile.title")}</h1>
+      <p className="mt-2 text-base text-muted">{t("profile.intro")}</p>
 
       <div className="mt-7 flex flex-wrap items-start gap-5">
         <div className="flex min-w-0 flex-[999_1_600px] flex-col gap-5">
           <section className="rounded-[18px] border border-line bg-card p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold">Your team</h2>
-              <div role="group" aria-label="You are" className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
+              <h2 className="text-lg font-semibold">{t("profile.team.title")}</h2>
+              <div role="group" aria-label={t("profile.team.youAre")} className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
                 {(
                   [
-                    ["startup", "Startup or company"],
-                    ["service_provider", "Service provider"],
+                    ["startup", t("profile.team.startup")],
+                    ["service_provider", t("profile.team.serviceProvider")],
                   ] as const
                 ).map(([value, label]) => (
                   <button
@@ -105,15 +103,15 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Field label="Company name (optional)" id="company">
+              <Field label={t("profile.field.company")} id="company">
                 <Input
                   id="company"
                   value={profile.companyName ?? ""}
-                  placeholder="e.g. Helix Bio"
+                  placeholder={t("profile.field.companyPlaceholder")}
                   onChange={(e) => update({ companyName: e.target.value || undefined })}
                 />
               </Field>
-              <Field label="Team size" id="team">
+              <Field label={t("profile.field.teamSize")} id="team">
                 <Input
                   id="team"
                   type="number"
@@ -124,25 +122,25 @@ export default function ProfilePage() {
                   onChange={(e) => update({ teamSize: Math.max(1, Number(e.target.value) || 1) })}
                 />
               </Field>
-              <Field label="Stage" id="stage">
-                <Dropdown id="stage" value={profile.stage} onChange={(v) => update({ stage: v as Stage })} options={STAGES.map((s) => ({ value: s, label: STAGE_LABEL[s] }))} />
+              <Field label={t("profile.field.stage")} id="stage">
+                <Dropdown id="stage" value={profile.stage} onChange={(v) => update({ stage: v as Stage })} options={STAGES.map((s) => ({ value: s, label: stageLabel(s) }))} />
               </Field>
-              <Field label="Field" id="area">
+              <Field label={t("profile.field.area")} id="area">
                 <Dropdown
                   id="area"
                   value={profile.therapeuticArea}
                   onChange={(v) => update({ therapeuticArea: v })}
-                  options={THERAPEUTIC_AREAS.map((a) => ({ value: a, label: THERAPEUTIC_AREA_LABELS[a] }))}
+                  options={THERAPEUTIC_AREAS.map((a) => ({ value: a, label: areaLabel(a) }))}
                 />
               </Field>
-              <Field label="Where to look" id="region">
+              <Field label={t("profile.field.region")} id="region">
                 <RegionSelect
                   id="region"
                   value={profile.cantonFilter ?? ""}
                   onChange={(value) => update({ cantonFilter: value || undefined })}
                 />
               </Field>
-              <Field label="Answer language" id="language">
+              <Field label={t("profile.field.language")} id="language">
                 <Dropdown
                   id="language"
                   value={profile.language}
@@ -155,14 +153,14 @@ export default function ProfilePage() {
 
           <section className="rounded-[18px] border border-line bg-card p-5 sm:p-6">
             <div className="flex items-baseline justify-between gap-3">
-              <h2 className="text-lg font-semibold">What you need</h2>
+              <h2 className="text-lg font-semibold">{t("profile.needs.title")}</h2>
               <span className="font-mono text-[13px] text-muted">
-                {profile.needs.length} {profile.needs.length === 1 ? "need" : "needs"}
+                {t(profile.needs.length === 1 ? "profile.needs.one" : "profile.needs.many", { count: profile.needs.length })}
               </span>
             </div>
             {profile.needs.length === 0 ? (
               <p className="mt-4 rounded-xl bg-surface p-4 text-sm text-muted">
-                No needs listed. Add at least one below to get matches.
+                {t("profile.needs.none")}
               </p>
             ) : (
               <ul className="mt-4 space-y-2.5">
@@ -177,11 +175,11 @@ export default function ProfilePage() {
                         className="h-2 w-2 rounded-sm"
                         style={{ backgroundColor: TYPE_META[NEED_TO_ENTITY_TYPE[need.category]].color }}
                       />
-                      {NEED_META[need.category].label}
+                      {needLabel(need.category)}
                     </span>
                     <div className="flex flex-1 items-center gap-2">
                       <Input
-                        aria-label={`Detail for ${NEED_META[need.category].label}`}
+                        aria-label={t("profile.needs.detailFor", { need: needLabel(need.category) })}
                         value={need.detail}
                         onChange={(e) =>
                           update({
@@ -193,7 +191,7 @@ export default function ProfilePage() {
                         variant="outline"
                         size="icon"
                         className="shrink-0"
-                        aria-label={`Remove ${NEED_META[need.category].label}`}
+                        aria-label={t("profile.needs.remove", { need: needLabel(need.category) })}
                         onClick={() => update({ needs: profile.needs.filter((n) => n.id !== need.id) })}
                       >
                         <X className="h-4 w-4" aria-hidden />
@@ -206,7 +204,7 @@ export default function ProfilePage() {
 
             {unused.length > 0 && (
               <div className="mt-5">
-                <h3 className="text-[13px] font-semibold text-ink-3">Add a need</h3>
+                <h3 className="text-[13px] font-semibold text-ink-3">{t("profile.needs.add")}</h3>
                 <ul className="mt-2 flex flex-wrap gap-2">
                   {unused.map((c) => (
                     <li key={c}>
@@ -216,7 +214,7 @@ export default function ProfilePage() {
                         className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-dashed border-field-hover bg-card px-3 text-[13px] font-medium hover:border-accent hover:text-accent"
                       >
                         <Plus className="h-3.5 w-3.5" aria-hidden />
-                        {NEED_META[c].label}
+                        {needLabel(c)}
                       </button>
                     </li>
                   ))}
@@ -228,11 +226,11 @@ export default function ProfilePage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <Button size="lg" onClick={confirm} disabled={analysing || profile.needs.length === 0}>
               {analysing && <Loader2 className="h-5 w-5 animate-spin" aria-hidden />}
-              {analysing ? "Finding matches" : "Show my matches"}
+              {analysing ? t("profile.busy") : t("profile.submit")}
               {!analysing && <ArrowRight className="h-[18px] w-[18px]" aria-hidden />}
             </Button>
             <Button variant="outline" size="lg" onClick={() => router.push("/")}>
-              Edit description
+              {t("profile.edit")}
             </Button>
           </div>
         </div>
@@ -240,16 +238,16 @@ export default function ProfilePage() {
         <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-4">
           {needText.trim() && (
             <div className="rounded-[18px] bg-primary-dark p-6 text-white">
-              <h2 className="text-sm font-semibold text-[#D6FF3F]">What you wrote</h2>
+              <h2 className="text-sm font-semibold text-[#D6FF3F]">{t("profile.wrote")}</h2>
               <p className="mt-2.5 text-[15px] leading-relaxed text-[#E2E4DB]">“{needText.trim()}”</p>
             </div>
           )}
           <div className="rounded-[18px] border border-line bg-card p-6">
-            <h2 className="text-sm font-semibold">How matching works</h2>
+            <h2 className="text-sm font-semibold">{t("profile.how.title")}</h2>
             <ul className="mt-2.5 list-disc space-y-1 pl-[18px] text-sm leading-relaxed text-muted">
-              <li>Each need is matched to organisations that offer it.</li>
-              <li>Your field and stage raise the score.</li>
-              <li>Every match shows its reason and source.</li>
+              <li>{t("profile.how.1")}</li>
+              <li>{t("profile.how.2")}</li>
+              <li>{t("profile.how.3")}</li>
             </ul>
           </div>
         </aside>

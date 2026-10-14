@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { CircleDollarSign, Download, FlaskConical, Loader2, Square, Users, Volume2 } from "lucide-react";
 import { PERIODS, fundingMatches, topContacts } from "@/lib/api";
-import { STAGE_LABEL, THERAPEUTIC_AREA_LABELS } from "@/lib/entity-meta";
-import { HORIZON_LABEL, LOCALE } from "@/lib/i18n";
+import { LOCALE } from "@/lib/i18n";
+import { useAreaLabel, useStageLabel } from "@/lib/labels";
+import type { TextKey } from "@/lib/texts";
+import { useT } from "./site-provider";
 import { useNavigator } from "@/lib/store";
 import type { Horizon, NeedCategory, RoadmapStep } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -26,15 +28,18 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [speaking, setSpeaking] = useState<"idle" | "loading" | "playing">("idle");
   const [voiceError, setVoiceError] = useState<string | null>(null);
+  const t = useT();
+  const stageLabel = useStageLabel();
+  const areaLabel = useAreaLabel();
 
   useEffect(() => stopSpeaking, []);
 
   if (!plan || plan.steps.length === 0 || !profile) {
     return (
       <EmptyState
-        title="No plan yet"
-        body="Add at least one need to your profile to generate a plan."
-        actionLabel="Edit profile"
+        title={t("plan.empty.title")}
+        body={t("plan.empty.body")}
+        actionLabel={t("results.none.action")}
         actionHref="/profile"
       />
     );
@@ -70,7 +75,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
       setSpeaking("playing");
       await playing;
     } catch {
-      setVoiceError("Voice output is not available in this browser. The summary is shown below.");
+      setVoiceError(t("plan.voiceError"));
     } finally {
       setSpeaking("idle");
     }
@@ -80,14 +85,18 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-[26px] font-semibold sm:text-[30px]">Your next {yearly ? "12 months" : "90 days"} in Basel</h2>
+          <h2 className="text-[26px] font-semibold sm:text-[30px]">{t(yearly ? "plan.title12m" : "plan.title90d")}</h2>
           <p className="print-only mt-1 text-sm text-muted">
-            {profile.companyName ?? "Your team"}: {profile.teamSize} people, {STAGE_LABEL[profile.stage]},{" "}
-            {THERAPEUTIC_AREA_LABELS[profile.therapeuticArea]}
+            {t("plan.printProfile", {
+              team: profile.companyName ?? t("sidebar.team"),
+              count: profile.teamSize,
+              stage: stageLabel(profile.stage),
+              area: areaLabel(profile.therapeuticArea),
+            })}
           </p>
         </div>
         <div className="no-print flex flex-wrap items-center gap-2">
-          <div role="group" aria-label="Plan length" className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
+          <div role="group" aria-label={t("plan.length")} className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
             {HORIZONS.map((h) => (
               <button
                 key={h}
@@ -105,7 +114,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                     : "font-medium text-muted hover:text-ink",
                 )}
               >
-                {HORIZON_LABEL[h]}
+                {t(`plan.horizon.${h}` as TextKey)}
               </button>
             ))}
           </div>
@@ -117,11 +126,11 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
             ) : (
               <Volume2 className="h-4 w-4" aria-hidden />
             )}
-            {speaking === "idle" ? "Read plan aloud" : "Stop reading"}
+            {speaking === "idle" ? t("plan.read") : t("plan.stopRead")}
           </Button>
           <Button onClick={() => window.print()}>
             <Download className="h-4 w-4" aria-hidden />
-            Export as PDF
+            {t("plan.pdf")}
           </Button>
         </div>
       </div>
@@ -140,7 +149,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
         <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
           <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <Users className="h-4 w-4 text-accent" aria-hidden />
-            Contacts to reach first
+            {t("plan.contacts")}
           </h3>
           <ol className="mt-3 space-y-2.5 text-sm">
             {contacts.map((e) => (
@@ -158,7 +167,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                   </a>
                 ) : (
                   <a href={e.contactUrl || e.website} target="_blank" rel="noreferrer" className="block break-all text-muted hover:text-ink">
-                    Contact via their website
+                    {t("plan.contactWebsite")}
                   </a>
                 )}
               </li>
@@ -169,13 +178,13 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
         <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
           <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <CircleDollarSign className="h-4 w-4 text-accent" aria-hidden />
-            Funding and grants
+            {t("plan.funding")}
           </h3>
           {funders.length === 0 ? (
             <p className="mt-3 text-sm text-muted">
               {fundingNeed
-                ? "No funding match fits your stage yet."
-                : "Funding is not among your needs. Open Refine results and write \u201cadd grants\u201d to include it."}
+                ? t("plan.noFunding")
+                : t("plan.fundingNotNeeded")}
             </p>
           ) : (
             <>
@@ -190,7 +199,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                       {e.name}
                     </button>
                     {e.fundingMaxChf ? (
-                      <p className="font-mono text-[13px] tabular-nums">up to CHF {CHF.format(e.fundingMaxChf)}</p>
+                      <p className="font-mono text-[13px] tabular-nums">{t("plan.upTo", { amount: CHF.format(e.fundingMaxChf) })}</p>
                     ) : null}
                     <div className="mt-1 flex flex-wrap gap-1.5">
                       {e.fundingType && (
@@ -198,7 +207,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                       )}
                       {e.stageFit.length > 0 && e.stageFit.length < 6 && (
                         <span className="rounded-md border border-line px-2 py-0.5 text-xs text-muted">
-                          {e.stageFit.map((st) => STAGE_LABEL[st]).join(", ")}
+                          {e.stageFit.map((st) => stageLabel(st)).join(", ")}
                         </span>
                       )}
                     </div>
@@ -207,7 +216,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                 ))}
               </ol>
               <p className="mt-3 border-t border-line pt-2.5 text-xs text-muted">
-                Dates change often, so check each programme&rsquo;s website for the next call.
+                {t("plan.datesChange")}
                 {fundingNeed && onJumpToNeed && (
                   <>
                     {" "}
@@ -216,7 +225,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                       onClick={() => onJumpToNeed(fundingNeed)}
                       className="no-print font-semibold text-accent underline-offset-2 hover:underline"
                     >
-                      See all funding matches
+                      {t("plan.allFunding")}
                     </button>
                   </>
                 )}
@@ -228,7 +237,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
         <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
           <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <FlaskConical className="h-4 w-4 text-accent" aria-hidden />
-            Lab space
+            {t("plan.lab")}
           </h3>
           {lab ? (
             <div className="mt-3 text-sm">
@@ -239,12 +248,12 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
               >
                 {lab.name}
               </button>
-              <p className="mt-1 font-semibold">{lab.availability ?? "Availability: ask them directly"}</p>
+              <p className="mt-1 font-semibold">{lab.availability ?? t("plan.askAvailability")}</p>
               <p className="mt-1 text-muted">{lab.facilities.slice(0, 3).join(", ")}</p>
             </div>
           ) : (
             <p className="mt-3 text-sm text-muted">
-              Lab space is not among your needs. Open Refine results and write “add lab space” to include it.
+              {t("plan.labNotNeeded")}
             </p>
           )}
         </section>
@@ -253,18 +262,18 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
       {/* Timeline */}
       <div className="print-plain print-timeline mt-5 overflow-x-auto rounded-[18px] border border-line bg-card p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">Timeline</h3>
+          <h3 className="text-lg font-semibold">{t("plan.timeline")}</h3>
           <span className="no-print flex gap-3.5 text-[13px] text-muted">
-            <span className="flex items-center gap-1.5"><span aria-hidden className="h-2 w-[18px] rounded bg-primary" />Step</span>
-            <span className="flex items-center gap-1.5"><span aria-hidden className="h-2 w-[18px] rounded bg-accent" />Selected</span>
+            <span className="flex items-center gap-1.5"><span aria-hidden className="h-2 w-[18px] rounded bg-primary" />{t("plan.legendStep")}</span>
+            <span className="flex items-center gap-1.5"><span aria-hidden className="h-2 w-[18px] rounded bg-accent" />{t("plan.legendSelected")}</span>
           </span>
         </div>
         <div className="print-timeline-inner min-w-[900px]">
           <div className="grid font-mono text-xs text-muted" style={gridStyle}>
-            <div className="font-sans">{yearly ? "Month" : "Week"}</div>
+            <div className="font-sans">{yearly ? t("plan.month") : t("plan.week")}</div>
             {periods.map((w, i) => (
               <div key={w} className="border-l border-line pb-2 pl-1.5 tabular-nums">
-                {yearly ? monthNames[i] : `W${w}`}
+                {yearly ? monthNames[i] : t("plan.weekShort", { n: w })}
               </div>
             ))}
           </div>
@@ -289,7 +298,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                   <div
                     className="relative grid h-full"
                     style={{ gridColumn: `span ${count} / span ${count}`, gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
-                    aria-label={`${yearly ? "Month" : "Week"} ${step.start} to ${step.end}`}
+                    aria-label={t(yearly ? "plan.monthRange" : "plan.weekRange", { start: step.start, end: step.end })}
                   >
                     {periods.map((w) => (
                       <div key={w} className="border-l border-line" />
@@ -338,6 +347,8 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
   const entities = useNavigator((s) => s.entities);
   const matches = useNavigator((s) => s.matches);
   const openDetail = useNavigator((s) => s.openDetail);
+  const t = useT();
+  const weeks = unit === "week";
 
   const related = step.relatedEntityIds
     .map((id) => entities.find((e) => e.id === id) ?? matches.find((m) => m.entity.id === id)?.entity)
@@ -351,8 +362,10 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
   return (
     <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-6">
       <p className="font-mono text-xs uppercase text-accent">
-        Step {number} ·{" "}
-        {step.start === step.end ? `${unit} ${step.start}` : `${unit}s ${step.start} to ${step.end}`}
+        {t("plan.stepNo", { n: number })} ·{" "}
+        {step.start === step.end
+          ? t(weeks ? "plan.oneWeek" : "plan.oneMonth", { n: step.start })
+          : t(weeks ? "plan.weeks" : "plan.months", { start: step.start, end: step.end })}
       </p>
       <h3 lang={language} className="mt-2 text-[22px] font-semibold">
         {step.title}
@@ -362,12 +375,12 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
       </p>
       {prerequisites.length > 0 && (
         <p className="mt-3 text-sm text-muted">
-          Do first: {prerequisites.length === 1 ? "step" : "steps"} {prerequisites.join(", ")}
+          {t(prerequisites.length === 1 ? "plan.doFirstOne" : "plan.doFirstMany", { steps: prerequisites.join(", ") })}
         </p>
       )}
       {related.length > 0 && (
         <div className="mt-4">
-          <h4 className="text-sm font-semibold">Who to contact</h4>
+          <h4 className="text-sm font-semibold">{t("plan.whoToContact")}</h4>
           <ul className="mt-2 flex flex-wrap gap-2">
             {related.map((e) => (
               <li key={e.id}>

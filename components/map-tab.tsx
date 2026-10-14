@@ -6,6 +6,7 @@ import { useNavigator } from "@/lib/store";
 import { MatchCard } from "./match-card";
 import { TypeLegend } from "./type-legend";
 import { Skeleton } from "./ui/skeleton";
+import { useT } from "./site-provider";
 
 const MapView = dynamic(() => import("./map-view"), {
   ssr: false,
@@ -17,6 +18,7 @@ export function MapTab() {
   const allEntities = useNavigator((s) => s.entities);
   const [showAll, setShowAll] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const t = useT();
 
   const matchedIds = useMemo(() => new Set(matches.map((m) => m.entity.id)), [matches]);
   const matchedEntities = useMemo(
@@ -41,7 +43,7 @@ export function MapTab() {
             checked={showAll}
             onChange={(e) => setShowAll(e.target.checked)}
           />
-          Show the whole ecosystem
+          {t("map.showAll")}
         </label>
       </div>
 
@@ -52,7 +54,7 @@ export function MapTab() {
             <MatchCard entity={selectedEntity} match={selectedMatch} />
           ) : (
             <div className="rounded-2xl border border-dashed border-line bg-surface p-5 text-sm text-muted">
-              Select a pin to see why it matches and what to do next. Larger pins are your matches.
+              {t("map.hint")}
             </div>
           )}
         </div>

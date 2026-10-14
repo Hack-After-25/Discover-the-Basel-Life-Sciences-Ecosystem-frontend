@@ -8,12 +8,14 @@ import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { Input, Textarea } from "./ui/input";
 import { Skeleton } from "./ui/skeleton";
+import { useT } from "./site-provider";
 
 export function EmailModal() {
   const emailId = useNavigator((s) => s.emailId);
   const entity = useNavigator((s) => s.entities.find((e) => e.id === s.emailId));
   const profile = useNavigator((s) => s.profile);
   const openEmail = useNavigator((s) => s.openEmail);
+  const t = useT();
 
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
@@ -60,13 +62,13 @@ export function EmailModal() {
   return (
     <Dialog open={emailId !== null} onOpenChange={(open) => !open && openEmail(null)}>
       <DialogContent>
-        <DialogTitle className="pr-8 text-lg font-semibold">Intro email{entity ? ` to ${entity.name}` : ""}</DialogTitle>
+        <DialogTitle className="pr-8 text-lg font-semibold">{entity ? t("email.titleTo", { org: entity.name }) : t("email.title")}</DialogTitle>
         <DialogDescription className="mt-1 text-sm text-muted">
-          Edit the draft and approve it, then open it in your mail client. Nothing is sent from this app.
+          {t("email.intro")}
         </DialogDescription>
 
         {status === "loading" && (
-          <div className="mt-5 space-y-3" role="status" aria-label="Drafting email">
+          <div className="mt-5 space-y-3" role="status" aria-label={t("email.loading")}>
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-56 w-full" />
           </div>
@@ -74,7 +76,7 @@ export function EmailModal() {
 
         {status === "error" && (
           <p className="mt-5 rounded-lg bg-surface p-4 text-sm">
-            The draft could not be generated. Close this window and choose "Draft intro email" again.
+            {t("email.error")}
           </p>
         )}
 
@@ -82,13 +84,13 @@ export function EmailModal() {
           <div className="mt-5 space-y-3">
             <div>
               <label htmlFor="email-subject" className="mb-1 block text-sm font-medium">
-                Subject
+                {t("email.subject")}
               </label>
               <Input id="email-subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
             </div>
             <div>
               <label htmlFor="email-body" className="mb-1 block text-sm font-medium">
-                Message
+                {t("email.message")}
               </label>
               <Textarea id="email-body" rows={12} value={body} onChange={(e) => setBody(e.target.value)} />
             </div>
@@ -99,44 +101,44 @@ export function EmailModal() {
                 checked={approved}
                 onChange={(e) => setApproved(e.target.checked)}
               />
-              I have read this draft and approve contacting this organisation.
+              {t("email.approve")}
             </label>
             <div className="flex flex-wrap gap-2 pt-1">
               <Button onClick={copy} variant="outline">
                 {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
-                {copied ? "Copied" : hasEmail ? "Copy" : "Copy draft"}
+                {copied ? t("email.copied") : hasEmail ? t("email.copy") : t("email.copyDraft")}
               </Button>
               {!hasEmail ? (
                 approved ? (
                   <Button asChild>
                     <a href={contactUrl} target="_blank" rel="noreferrer">
                       <ExternalLink className="h-4 w-4" aria-hidden />
-                      Contact their website
+                      {t("email.website")}
                     </a>
                   </Button>
                 ) : (
                   <Button disabled>
                     <ExternalLink className="h-4 w-4" aria-hidden />
-                    Contact their website
+                    {t("email.website")}
                   </Button>
                 )
               ) : approved ? (
                 <Button asChild>
                   <a href={mailto}>
                     <Send className="h-4 w-4" aria-hidden />
-                    Open in mail client
+                    {t("email.open")}
                   </a>
                 </Button>
               ) : (
                 <Button disabled>
                   <Send className="h-4 w-4" aria-hidden />
-                  Open in mail client
+                  {t("email.open")}
                 </Button>
               )}
             </div>
             {!hasEmail && (
               <p className="text-xs text-muted">
-                This organisation publishes no email address. Copy the draft and paste it into the contact form on their website.
+                {t("email.noEmail")}
               </p>
             )}
           </div>
