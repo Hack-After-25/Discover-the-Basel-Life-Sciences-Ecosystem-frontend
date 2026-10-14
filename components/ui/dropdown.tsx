@@ -28,7 +28,7 @@ export function Dropdown({ id, value, onChange, options, size = "md", className,
         id={id}
         aria-label={rest["aria-label"]}
         className={cn(
-          "group inline-flex w-full items-center justify-between gap-2 rounded-md border border-field bg-card px-3 text-left text-ink transition-colors",
+          "group inline-flex w-full items-center justify-between gap-2 rounded-[10px] border border-field bg-card px-3 text-left text-ink transition-colors",
           "hover:border-field-hover focus-visible:border-accent data-[state=open]:border-accent data-[state=open]:ring-4 data-[state=open]:ring-accent/10",
           size === "md" ? "h-11 text-[15px]" : "h-10 text-[13px] font-medium",
           className,

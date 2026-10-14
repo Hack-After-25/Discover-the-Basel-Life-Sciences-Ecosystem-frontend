@@ -23,7 +23,7 @@ export function MatchCard({ entity, match }: Props) {
   const verified = formatVerified(entity.lastVerified);
 
   return (
-    <article className="flex h-full flex-col gap-3 rounded-lg border border-line bg-card p-[18px] shadow-card transition-shadow hover:shadow-lift">
+    <article className="flex h-full flex-col gap-3 rounded-[18px] border border-line bg-card p-[18px] shadow-card transition-shadow hover:shadow-lift">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap gap-1.5">
@@ -68,7 +68,7 @@ export function MatchCard({ entity, match }: Props) {
           <summary className="cursor-pointer font-semibold text-primary">Why this match</summary>
           <ul className="mt-2 space-y-2">
             {match.citations.map((c, i) => (
-              <li key={i} className="rounded-md border border-line bg-surface p-2.5">
+              <li key={i} className="rounded-[10px] border border-line bg-surface p-2.5">
                 <a href={c.url} target="_blank" rel="noreferrer" className="font-medium text-ink underline underline-offset-2">
                   {c.source}
                 </a>

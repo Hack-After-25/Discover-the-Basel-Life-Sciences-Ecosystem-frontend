@@ -72,13 +72,12 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-[1240px] px-4 pb-20 pt-7 sm:px-8">
       <FlowSteps current={1} />
-      <p className="label-mono mt-8">Step 2 · Your profile</p>
-      <h1 className="mt-3 text-[34px] font-bold leading-[1.05] sm:text-[52px]">Check what we understood</h1>
+      <h1 className="mt-7 text-[30px] font-semibold sm:text-4xl">Check what we understood</h1>
       <p className="mt-2 text-base text-muted">Correct anything that is off. Your matches and plan are built from this profile.</p>
 
       <div className="mt-7 flex flex-wrap items-start gap-5">
         <div className="flex min-w-0 flex-[999_1_600px] flex-col gap-5">
-          <section className="rounded-lg border border-line bg-card p-5 sm:p-6">
+          <section className="rounded-[18px] border border-line bg-card p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-lg font-semibold">Your team</h2>
               <div role="group" aria-label="You are" className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
@@ -94,7 +93,7 @@ export default function ProfilePage() {
                     aria-pressed={kind === value}
                     onClick={() => update({ userKind: value })}
                     className={cn(
-                      "h-9 rounded-md px-3 text-[13px]",
+                      "h-9 rounded-[9px] px-3 text-[13px]",
                       kind === value
                         ? "bg-card font-semibold text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
                         : "font-medium text-muted hover:text-ink",
@@ -154,7 +153,7 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          <section className="rounded-lg border border-line bg-card p-5 sm:p-6">
+          <section className="rounded-[18px] border border-line bg-card p-5 sm:p-6">
             <div className="flex items-baseline justify-between gap-3">
               <h2 className="text-lg font-semibold">What you need</h2>
               <span className="font-mono text-[13px] text-muted">
@@ -170,9 +169,9 @@ export default function ProfilePage() {
                 {profile.needs.map((need) => (
                   <li
                     key={need.id}
-                    className="flex flex-col gap-2.5 rounded-md border border-line bg-card-2 p-2.5 sm:flex-row sm:items-center"
+                    className="flex flex-col gap-2.5 rounded-[14px] border border-line bg-card-2 p-2.5 sm:flex-row sm:items-center"
                   >
-                    <span className="inline-flex shrink-0 items-center gap-2 rounded-md border border-line bg-card px-3 py-2 text-sm font-semibold sm:w-52">
+                    <span className="inline-flex shrink-0 items-center gap-2 rounded-[10px] border border-line bg-card px-3 py-2 text-sm font-semibold sm:w-52">
                       <span
                         aria-hidden
                         className="h-2 w-2 rounded-sm"
@@ -214,7 +213,7 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={() => addNeed(c)}
-                        className="inline-flex h-9 items-center gap-1.5 rounded-md border border-dashed border-field-hover bg-card px-3 text-[13px] font-medium hover:border-accent hover:text-accent"
+                        className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-dashed border-field-hover bg-card px-3 text-[13px] font-medium hover:border-accent hover:text-accent"
                       >
                         <Plus className="h-3.5 w-3.5" aria-hidden />
                         {NEED_META[c].label}
@@ -240,12 +239,12 @@ export default function ProfilePage() {
 
         <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-4">
           {needText.trim() && (
-            <div className="rounded-lg bg-primary-dark p-6 text-white">
+            <div className="rounded-[18px] bg-primary-dark p-6 text-white">
               <h2 className="text-sm font-semibold text-[#D6FF3F]">What you wrote</h2>
               <p className="mt-2.5 text-[15px] leading-relaxed text-[#E2E4DB]">“{needText.trim()}”</p>
             </div>
           )}
-          <div className="rounded-lg border border-line bg-card p-6">
+          <div className="rounded-[18px] border border-line bg-card p-6">
             <h2 className="text-sm font-semibold">How matching works</h2>
             <ul className="mt-2.5 list-disc space-y-1 pl-[18px] text-sm leading-relaxed text-muted">
               <li>Each need is matched to organisations that offer it.</li>

@@ -7,33 +7,33 @@
      Light by default; dark follows the system setting or the navbar toggle. */
   :root {
     color-scheme: light;
-    --card: 255 255 255; --card-2: 246 247 241; --surface: 243 244 238;
-    --ink: 17 18 15; --ink-2: 38 40 34; --ink-3: 58 61 54; --muted: 101 104 94;
-    --line: 220 223 212; --field: 210 213 201; --field-hover: 190 194 181; --subtle: 233 235 227;
-    --primary: 17 18 15; --primary-dark: 17 18 15; --primary-soft: 233 235 227; --on-primary: 255 255 255;
+    --card: 255 255 255; --card-2: 248 249 245; --surface: 246 247 242;
+    --ink: 17 18 15; --ink-2: 38 40 34; --ink-3: 58 61 54; --muted: 92 95 87;
+    --line: 226 228 219; --field: 215 218 207; --field-hover: 196 200 188; --subtle: 235 237 229;
+    --primary: 17 18 15; --primary-dark: 17 18 15; --primary-soft: 238 240 232; --on-primary: 255 255 255;
     --accent: 36 70 245; --accent-dark: 26 53 209; --accent-soft: 233 237 254;
-    --cta: 214 255 63; --cta-hover: 199 240 46; --on-cta: 17 18 15; --label: 26 53 209;
+    --cta: 214 255 63; --cta-hover: 199 240 46; --on-cta: 17 18 15;
   }
   /* No saved choice: follow the system. The navbar toggle sets data-theme. */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --card: 30 31 27; --card-2: 36 38 33; --surface: 17 18 15;
-      --ink: 238 240 232; --ink-2: 214 216 206; --ink-3: 190 193 182; --muted: 160 163 152;
-      --line: 52 54 47; --field: 66 69 61; --field-hover: 90 93 84; --subtle: 36 38 33;
-      --primary: 238 240 232; --primary-dark: 36 38 31; --primary-soft: 36 38 33; --on-primary: 17 18 15;
-      --accent: 104 128 255; --accent-dark: 36 70 245; --accent-soft: 30 37 77;
-      --cta: 214 255 63; --cta-hover: 228 255 128; --on-cta: 17 18 15; --label: 214 255 63;
+      --card: 27 28 24; --card-2: 33 35 30; --surface: 17 18 15;
+      --ink: 238 240 232; --ink-2: 214 216 206; --ink-3: 190 193 182; --muted: 154 157 146;
+      --line: 46 48 42; --field: 62 65 57; --field-hover: 84 87 78; --subtle: 38 40 34;
+      --primary: 238 240 232; --primary-dark: 36 38 31; --primary-soft: 38 40 34; --on-primary: 17 18 15;
+      --accent: 92 118 255; --accent-dark: 36 70 245; --accent-soft: 30 37 77;
+      --cta: 214 255 63; --cta-hover: 228 255 128; --on-cta: 17 18 15;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --card: 30 31 27; --card-2: 36 38 33; --surface: 17 18 15;
-    --ink: 238 240 232; --ink-2: 214 216 206; --ink-3: 190 193 182; --muted: 160 163 152;
-    --line: 52 54 47; --field: 66 69 61; --field-hover: 90 93 84; --subtle: 36 38 33;
-    --primary: 238 240 232; --primary-dark: 36 38 31; --primary-soft: 36 38 33; --on-primary: 17 18 15;
-    --accent: 104 128 255; --accent-dark: 36 70 245; --accent-soft: 30 37 77;
-    --cta: 214 255 63; --cta-hover: 228 255 128; --on-cta: 17 18 15; --label: 214 255 63;
+    --card: 27 28 24; --card-2: 33 35 30; --surface: 17 18 15;
+    --ink: 238 240 232; --ink-2: 214 216 206; --ink-3: 190 193 182; --muted: 154 157 146;
+    --line: 46 48 42; --field: 62 65 57; --field-hover: 84 87 78; --subtle: 38 40 34;
+    --primary: 238 240 232; --primary-dark: 36 38 31; --primary-soft: 38 40 34; --on-primary: 17 18 15;
+    --accent: 92 118 255; --accent-dark: 36 70 245; --accent-soft: 30 37 77;
+    --cta: 214 255 63; --cta-hover: 228 255 128; --on-cta: 17 18 15;
   }
   html {
     -webkit-text-size-adjust: 100%;
@@ -46,8 +46,7 @@
     outline-offset: 2px;
   }
   h1, h2, h3 {
-    letter-spacing: -0.02em;
-    text-wrap: balance;
+    letter-spacing: -0.025em;
   }
 }
 
@@ -96,45 +95,3 @@
     min-width: 0 !important;
   }
 }
-
-/* Space Mono section labels, as on fadarhy.ch. */
-.label-mono {
-  font-family: "Space Mono", ui-monospace, monospace;
-  font-size: 11px;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: rgb(var(--label));
-}
-/* Hairline grid laid over the hero photo. */
-.hero-grid {
-  background-image: linear-gradient(rgb(var(--hero-grid)) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(var(--hero-grid)) 1px, transparent 1px);
-  background-size: 56px 56px;
-}
-:root { --hero-grid: 17 18 15 / 0.06; }
-:root[data-theme="dark"] { --hero-grid: 238 240 232 / 0.09; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hero-grid: 238 240 232 / 0.09; } }
-
-/* Hero photo and Rhine thread swap with the theme. */
-.theme-dark-only { display: none; }
-:root[data-theme="dark"] .theme-dark-only { display: block; }
-:root[data-theme="dark"] .theme-light-only { display: none; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-dark-only { display: block; }
-  :root:not([data-theme="light"]) .theme-light-only { display: none; }
-}
-.hero-scrim { background: linear-gradient(90deg, rgb(243 244 238 / .97), rgb(243 244 238 / .82) 46%, rgb(243 244 238 / .08)); }
-:root[data-theme="dark"] .hero-scrim { background: linear-gradient(90deg, rgb(17 18 15 / .96), rgb(17 18 15 / .78) 46%, rgb(17 18 15 / .12)); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero-scrim { background: linear-gradient(90deg, rgb(17 18 15 / .96), rgb(17 18 15 / .78) 46%, rgb(17 18 15 / .12)); } }
-@media (max-width: 767px) {
-  .hero-scrim { background: rgb(243 244 238 / .9) !important; }
-  :root[data-theme="dark"] .hero-scrim { background: rgb(17 18 15 / .86) !important; }
-}
-@media (max-width: 767px) and (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero-scrim { background: rgb(17 18 15 / .86) !important; } }
-
-.rhine-line { fill: none; stroke-width: 5px; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; }
-.rhine-node { fill: #D6FF3F; stroke: #fff; stroke-width: 2px; vector-effect: non-scaling-stroke; }
-@keyframes rhine-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@media (prefers-reduced-motion: no-preference) { .rhine-line { animation: rhine-draw 2.5s ease-out both; } }
-.rhine-mask { -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / .18), rgb(0 0 0 / .4) 48%, #000); mask-image: linear-gradient(90deg, rgb(0 0 0 / .18), rgb(0 0 0 / .4) 48%, #000); }

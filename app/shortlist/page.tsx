@@ -61,8 +61,7 @@ export default function ShortlistPage() {
     <div className="mx-auto max-w-[1240px] px-4 pb-20 pt-8 sm:px-8">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="label-mono">Saved for later</p>
-          <h1 className="mt-3 text-[34px] font-bold leading-[1.05] sm:text-[52px]">Shortlist</h1>
+          <h1 className="text-[30px] font-semibold sm:text-4xl">Shortlist</h1>
           <p className="mt-1.5 text-base text-muted">
             {saved.length} saved. {compareMode ? `Select up to ${MAX_COMPARE} to compare.` : "Add notes as you talk to each one."}
           </p>
@@ -89,7 +88,7 @@ export default function ShortlistPage() {
         {saved.map((entity) => {
           const checked = selected.includes(entity.id);
           return (
-            <li key={entity.id} className="rounded-lg border border-line bg-card p-5 sm:p-6">
+            <li key={entity.id} className="rounded-[18px] border border-line bg-card p-5 sm:p-6">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex flex-wrap gap-1.5">
@@ -166,7 +165,7 @@ function CompareTable({ entities, notes }: { entities: Entity[]; notes: Record<s
   ];
 
   return (
-    <div className="mt-6 overflow-x-auto rounded-lg border border-line bg-card">
+    <div className="mt-6 overflow-x-auto rounded-[18px] border border-line bg-card">
       <table className="w-full min-w-[640px] border-collapse text-left text-sm">
         <caption className="sr-only">Side-by-side comparison of selected shortlist entries</caption>
         <thead>
@@ -182,7 +181,7 @@ function CompareTable({ entities, notes }: { entities: Entity[]; notes: Record<s
         <tbody>
           {rows.map((row) => (
             <tr key={row.label} className="border-t border-line align-top">
-              <th scope="row" className="bg-card-2 p-4 font-mono text-[11px] font-normal uppercase tracking-[0.02em] text-muted">
+              <th scope="row" className="bg-card-2 p-4 text-xs font-semibold uppercase tracking-[0.05em] text-muted">
                 {row.label}
               </th>
               {entities.map((e) => (

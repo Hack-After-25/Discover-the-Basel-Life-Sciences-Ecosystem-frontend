@@ -1,23 +1,28 @@
 import { cn } from "@/lib/utils";
 
 /**
- * FadäRhy's mark: a Rhine Blue tile with the thread running through it and
- * Thread Lime dots at its stops. `round` gives a disc, `light` a white tile
- * with a blue thread (the light app icon).
+ * FadäRhy's mark, the same drawing as the fadarhy.ch logo: a Rhine Blue tile
+ * with the white thread and three Thread Lime stops. `round` gives a disc,
+ * `light` a white tile with a blue thread.
  */
 export function LogoMark({ className, round = false, light = false }: { className?: string; round?: boolean; light?: boolean }) {
+  const tile = light ? "#FFFFFF" : "#2446F5";
+  const thread = light ? "#2446F5" : "#FFFFFF";
   return (
-    <svg viewBox="0 0 48 48" aria-hidden className={className}>
-      <rect width="48" height="48" rx={round ? 24 : 12} fill={light ? "#FFFFFF" : "#2446F5"} />
-      <path
-        d="M10.5 31.5C14.5 24 18 16.5 22.5 16.5S28 27 32 29.5 36.5 30.5 38 29"
-        stroke={light ? "#2446F5" : "#FFFFFF"}
-        strokeWidth="3.4"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <circle cx="10.5" cy="31.5" r="3.6" fill="#D6FF3F" stroke={light ? "#2446F5" : "#FFFFFF"} strokeWidth="1.2" />
-      <circle cx="38" cy="29" r="3.6" fill="#D6FF3F" stroke={light ? "#2446F5" : "#FFFFFF"} strokeWidth="1.2" />
+    <svg viewBox="0 0 512 512" aria-hidden className={className}>
+      <rect width="512" height="512" rx={round ? 256 : 112} fill={tile} />
+      <g transform="translate(64 196) scale(0.507)">
+        <path
+          d="M0,137 C110,120 220,0 303,0 C350,0 370,40 393,66 C440,118 480,141 538,141 C620,141 700,100 757,100"
+          fill="none"
+          stroke={thread}
+          strokeWidth="56"
+          strokeLinecap="round"
+        />
+        <circle cx="0" cy="137" r="52" fill="#D6FF3F" stroke={tile} strokeWidth="14" />
+        <circle cx="393" cy="66" r="52" fill="#D6FF3F" stroke={tile} strokeWidth="14" />
+        <circle cx="757" cy="100" r="52" fill="#D6FF3F" stroke={tile} strokeWidth="14" />
+      </g>
     </svg>
   );
 }

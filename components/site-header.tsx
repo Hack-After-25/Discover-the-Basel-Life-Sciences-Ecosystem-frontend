@@ -7,6 +7,7 @@ import { LANGUAGES } from "@/lib/i18n";
 import { useHydrated, useNavigator } from "@/lib/store";
 import type { Language } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { LogoMark, Wordmark } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader() {
@@ -35,14 +36,14 @@ export function SiteHeader() {
   ];
 
   return (
-    <header className="no-print sticky top-0 z-[900] border-b border-line bg-surface/90 backdrop-blur-md">
-      <div className="mx-auto flex h-[72px] max-w-[1400px] items-center justify-between gap-3 px-4 sm:px-8">
-        <Link href="/" className="flex shrink-0 items-center gap-3 text-ink" aria-label="FadäRhy home">
-          <img src="/brand/logo.png" alt="" className="h-9 w-9 rounded-md" />
-          <span className="hidden text-[20px] font-extrabold tracking-[-0.01em] sm:inline">FadäRhy</span>
+    <header className="no-print sticky top-0 z-[900] px-3 pt-3 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-2 rounded-full border border-line/70 bg-card/90 py-2 pl-2 pr-2 shadow-[0_2px_12px_-4px_rgba(11,18,32,0.12)] backdrop-blur sm:gap-3 sm:pr-3">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-full pr-2 text-ink" aria-label="FadäRhy home">
+          <LogoMark className="h-11 w-11" />
+          <Wordmark className="hidden text-[22px] sm:inline" />
         </Link>
 
-        <nav aria-label="Main" className="flex items-center gap-1 sm:gap-2">
+        <nav aria-label="Main" className="flex items-center gap-1 rounded-full bg-subtle p-1">
           {links.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
             return (
@@ -51,23 +52,22 @@ export function SiteHeader() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative inline-flex h-10 items-center gap-2 px-2.5 text-[14px] font-semibold sm:px-3",
-                  active ? "text-ink" : "text-muted hover:text-ink",
+                  "inline-flex h-10 items-center gap-2 rounded-full px-3 text-[15px] font-semibold sm:px-4",
+                  active ? "bg-card text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
                 )}
               >
-                <Icon className="h-[17px] w-[17px] sm:hidden" aria-hidden />
+                <Icon className="h-[18px] w-[18px]" aria-hidden />
                 <span className={cn(href === "/results" ? "hidden md:inline" : "hidden sm:inline")}>{label}</span>
                 <span className={cn("sr-only", href === "/results" ? "md:hidden" : "sm:hidden")}>{label}</span>
                 {href === "/shortlist" && hydrated && shortlistCount > 0 && (
-                  <span className="rounded-full bg-cta px-[7px] font-mono text-[11px] font-bold text-on-cta">{shortlistCount}</span>
+                  <span className="rounded-full bg-accent px-[7px] font-mono text-xs text-white">{shortlistCount}</span>
                 )}
-                {active && <span aria-hidden className="absolute inset-x-2.5 -bottom-[15px] h-[2px] bg-accent sm:inset-x-3" />}
               </Link>
             );
           })}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           {hydrated && hasResults && (
             <button
               type="button"
@@ -77,12 +77,13 @@ export function SiteHeader() {
                 reset();
                 router.push("/");
               }}
-              className="hidden h-10 w-10 items-center justify-center rounded-md text-muted hover:bg-subtle hover:text-ink sm:inline-flex"
+              className="hidden h-10 w-10 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-ink sm:inline-flex"
             >
               <RotateCcw className="h-[18px] w-[18px]" aria-hidden />
             </button>
           )}
-          <div role="group" aria-label="Answer language" className="flex items-center rounded-md border border-line p-[3px]">
+          <ThemeToggle />
+          <div role="group" aria-label="Answer language" className="flex items-center rounded-full bg-subtle p-1">
             {LANGUAGES.map((l) => (
               <button
                 key={l}
@@ -90,15 +91,14 @@ export function SiteHeader() {
                 aria-pressed={current === l}
                 onClick={() => chooseLanguage(l)}
                 className={cn(
-                  "h-8 rounded px-2 font-mono text-[11px] uppercase sm:px-2.5",
-                  current === l ? "bg-ink text-surface" : "text-muted hover:text-ink",
+                  "h-9 rounded-full px-2.5 text-[13px] font-semibold uppercase sm:h-10 sm:px-4",
+                  current === l ? "bg-card text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
                 )}
               >
                 {l}
               </button>
             ))}
           </div>
-          <ThemeToggle />
         </div>
       </div>
     </header>
