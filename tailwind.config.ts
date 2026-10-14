@@ -18,6 +18,9 @@ const config: Config = {
         field: { DEFAULT: "rgb(var(--field) / <alpha-value>)", hover: "rgb(var(--field-hover) / <alpha-value>)" },
         subtle: "rgb(var(--subtle) / <alpha-value>)",
         surface: "rgb(var(--surface) / <alpha-value>)",
+        // Thread Lime call-to-action buttons, as on fadarhy.ch.
+        cta: { DEFAULT: "rgb(var(--cta) / <alpha-value>)", hover: "rgb(var(--cta-hover) / <alpha-value>)" },
+        "on-cta": "rgb(var(--on-cta) / <alpha-value>)",
       },
       fontFamily: {
         sans: ['"Manrope Variable"', "system-ui", "Helvetica Neue", "Arial", "sans-serif"],

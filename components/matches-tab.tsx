@@ -89,10 +89,10 @@ export function MatchesTab() {
                 <p className="mt-3 text-sm text-muted">No direct matches yet for this need.</p>
               )}
               {programmes.length > 0 && (
-                <div className="mt-4 rounded-2xl border border-[#FDE3C4] bg-[#FFF7ED] p-4">
+                <div className="mt-4 rounded-2xl border border-cta/50 bg-cta/10 p-4">
                   <h3 className="text-[15px] font-semibold">
                     Programmes that can help{" "}
-                    <span className="text-[13px] font-normal text-[#7A4A12]">
+                    <span className="text-[13px] font-normal text-muted">
                       They can arrange this for you but are not providers themselves.
                     </span>
                   </h3>

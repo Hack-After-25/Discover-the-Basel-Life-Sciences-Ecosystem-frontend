@@ -39,7 +39,7 @@ export function SiteHeader() {
     <header className="no-print sticky top-0 z-[900] px-3 pt-3 sm:px-6">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-2 rounded-full border border-line/70 bg-card/90 py-2 pl-2 pr-2 shadow-[0_2px_12px_-4px_rgba(11,18,32,0.12)] backdrop-blur sm:gap-3 sm:pr-3">
         <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-full pr-2 text-ink" aria-label="FadäRhy home">
-          <LogoMark round className="h-11 w-11" />
+          <LogoMark className="h-11 w-11" />
           <Wordmark className="hidden text-[22px] sm:inline" />
         </Link>
 
