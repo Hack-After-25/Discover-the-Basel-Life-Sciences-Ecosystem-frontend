@@ -1,11 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { RELATION_LABEL } from "@/lib/i18n";
 import { useNavigator } from "@/lib/store";
 import { EmptyState } from "./empty-state";
 import { TypeLegend } from "./type-legend";
 import { Skeleton } from "./ui/skeleton";
+import { useT } from "./site-provider";
+import type { TextKey } from "@/lib/texts";
 
 const GraphView = dynamic(() => import("./graph-view"), {
   ssr: false,
@@ -18,13 +19,14 @@ export function GraphTab() {
   const relations = useNavigator((s) => s.relations);
   const entities = useNavigator((s) => s.entities);
   const openDetail = useNavigator((s) => s.openDetail);
+  const t = useT();
 
   if (!profile || matches.length === 0) {
     return (
       <EmptyState
-        title="Nothing to connect yet"
-        body="The graph appears once you have matches."
-        actionLabel="Edit profile"
+        title={t("graph.empty.title")}
+        body={t("graph.empty.body")}
+        actionLabel={t("results.none.action")}
         actionHref="/profile"
       />
     );
@@ -40,10 +42,7 @@ export function GraphTab() {
     <div>
       <TypeLegend />
       <p className="mt-2 max-w-prose text-sm text-muted">
-        Drag to rotate, scroll to zoom, right-drag to pan. Grey lines link you to your matches. Teal arrows are
-        relationships from the knowledge graph, such as who funds or hosts whom. Small nodes with grey names are not
-        matches themselves but connect to one. Hover a line to read the relationship, select a node to fly to it and
-        open its details.
+        {t("graph.help")}
       </p>
       <div className="mt-4">
         <GraphView profile={profile} matches={matches} relations={relations} entities={entities} onSelect={openDetail} />
@@ -51,9 +50,9 @@ export function GraphTab() {
 
       {/* Text alternative for keyboard and screen-reader users */}
       <details className="mt-4 rounded-xl border border-line p-4 text-sm">
-        <summary className="cursor-pointer font-medium">Show the relationships as a list</summary>
+        <summary className="cursor-pointer font-medium">{t("graph.list")}</summary>
         {visible.length === 0 ? (
-          <p className="mt-3 text-muted">No known relationships between these organisations.</p>
+          <p className="mt-3 text-muted">{t("graph.noRelations")}</p>
         ) : (
           <ul className="mt-3 space-y-1.5">
             {visible.map((r) => (
@@ -61,7 +60,7 @@ export function GraphTab() {
                 <button type="button" className="text-left text-primary underline-offset-2 hover:underline" onClick={() => openDetail(r.source)}>
                   {name(r.source)}
                 </button>{" "}
-                <span className="text-muted">{RELATION_LABEL[r.type]}</span>{" "}
+                <span className="text-muted">{t(`relations.${r.type}` as TextKey)}</span>{" "}
                 <button type="button" className="text-left text-primary underline-offset-2 hover:underline" onClick={() => openDetail(r.target)}>
                   {name(r.target)}
                 </button>

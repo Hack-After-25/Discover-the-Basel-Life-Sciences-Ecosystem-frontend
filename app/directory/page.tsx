@@ -3,6 +3,8 @@
 import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ENTITY_TYPES, TYPE_META } from "@/lib/entity-meta";
+import { useTypeLabel } from "@/lib/labels";
+import { useT } from "@/components/site-provider";
 import { LayoutGrid, List, Search } from "lucide-react";
 import { useNavigator, useRegionName } from "@/lib/store";
 import type { Canton, Entity, EntityType } from "@/lib/types";
@@ -31,6 +33,8 @@ function Directory() {
   const [query, setQuery] = useState("");
   const [canton, setCanton] = useState<Canton | "">("");
   const [view, setView] = useState<"table" | "cards">("table");
+  const t = useT();
+  const typeLabel = useTypeLabel();
 
   const counts = useMemo(() => {
     const c = new Map<EntityType, number>();
@@ -69,57 +73,57 @@ function Directory() {
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 pb-20 pt-8 sm:px-8">
-      <h1 className="text-[30px] font-semibold sm:text-4xl">Directory</h1>
+      <h1 className="text-[30px] font-semibold sm:text-4xl">{t("directory.title")}</h1>
       <p className="mt-1.5 text-base text-muted">
-        Every organisation in the Basel life-sciences graph, {entities.length} in total. Filter by category, region or focus.
+        {t("directory.intro", { count: entities.length })}
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2.5">
         <div className="flex min-h-12 flex-[1_1_360px] items-center gap-2.5 rounded-xl border border-field bg-card px-3.5 focus-within:border-accent">
           <Search className="h-[18px] w-[18px] shrink-0 text-muted" aria-hidden />
-          <label htmlFor="d-search" className="sr-only">Search the directory</label>
+          <label htmlFor="d-search" className="sr-only">{t("directory.search")}</label>
           <input
             id="d-search"
             type="search"
-            placeholder="Search by name, description or focus area"
+            placeholder={t("directory.searchPlaceholder")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="min-h-11 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted/80"
           />
         </div>
         <div className="w-full sm:w-[220px]">
-          <label htmlFor="d-canton" className="sr-only">Region</label>
+          <label htmlFor="d-canton" className="sr-only">{t("directory.region")}</label>
           <RegionSelect id="d-canton" className="h-12 rounded-xl font-medium" value={canton} onChange={setCanton} />
         </div>
-        <div role="group" aria-label="View" className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
-          <button type="button" aria-label="Table view" aria-pressed={view === "table"} className={viewButton(view === "table")} onClick={() => setView("table")}>
+        <div role="group" aria-label={t("directory.view")} className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
+          <button type="button" aria-label={t("directory.tableView")} aria-pressed={view === "table"} className={viewButton(view === "table")} onClick={() => setView("table")}>
             <List className="h-[18px] w-[18px]" aria-hidden />
           </button>
-          <button type="button" aria-label="Card view" aria-pressed={view === "cards"} className={viewButton(view === "cards")} onClick={() => setView("cards")}>
+          <button type="button" aria-label={t("directory.cardView")} aria-pressed={view === "cards"} className={viewButton(view === "cards")} onClick={() => setView("cards")}>
             <LayoutGrid className="h-[18px] w-[18px]" aria-hidden />
           </button>
         </div>
       </div>
 
-      <div role="group" aria-label="Filter by category" className="mt-3.5 flex flex-wrap gap-2">
+      <div role="group" aria-label={t("directory.filter")} className="mt-3.5 flex flex-wrap gap-2">
         <button type="button" className={pill(!type)} aria-pressed={!type} onClick={() => setType(null)}>
-          All <span className="font-mono text-xs opacity-80">{entities.length}</span>
+          {t("directory.all")} <span className="font-mono text-xs opacity-80">{entities.length}</span>
         </button>
-        {ENTITY_TYPES.filter((t) => counts.get(t)).map((t) => (
-          <button key={t} type="button" className={pill(type === t)} aria-pressed={type === t} onClick={() => setType(t)}>
-            <span aria-hidden className="h-2 w-2 rounded-sm" style={{ backgroundColor: TYPE_META[t].color }} />
-            {TYPE_META[t].label} <span className="font-mono text-xs opacity-80">{counts.get(t)}</span>
+        {ENTITY_TYPES.filter((et) => counts.get(et)).map((et) => (
+          <button key={et} type="button" className={pill(type === et)} aria-pressed={type === et} onClick={() => setType(et)}>
+            <span aria-hidden className="h-2 w-2 rounded-sm" style={{ backgroundColor: TYPE_META[et].color }} />
+            {typeLabel(et)} <span className="font-mono text-xs opacity-80">{counts.get(et)}</span>
           </button>
         ))}
       </div>
 
       <p className="mt-4 text-sm text-muted" aria-live="polite">
-        {shown.length} {shown.length === 1 ? "organisation" : "organisations"}, sorted A to Z
+        {t(shown.length === 1 ? "directory.count.one" : "directory.count.many", { count: shown.length })}
       </p>
 
       {shown.length === 0 ? (
         <div className="mt-4">
-          <EmptyState title="Nothing matches" body="Clear the search, choose another type or include all regions." />
+          <EmptyState title={t("directory.none.title")} body={t("directory.none.body")} />
         </div>
       ) : view === "cards" ? (
         <ul className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(290px,1fr))] gap-3.5">
@@ -141,20 +145,22 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
   const shortlist = useNavigator((s) => s.shortlist);
   const toggleShortlist = useNavigator((s) => s.toggleShortlist);
   const regionName = useRegionName();
+  const t = useT();
+  const typeLabel = useTypeLabel();
   const th = "border-b border-line bg-card-2 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.05em] text-muted";
 
   return (
     <div className="mt-4 overflow-hidden rounded-[18px] border border-line bg-card">
       <div className="relative overflow-x-auto">
         <table className="w-full border-collapse text-sm md:min-w-[820px]">
-          <caption className="sr-only">Organisations in the directory</caption>
+          <caption className="sr-only">{t("directory.table")}</caption>
           <thead>
             <tr>
-              <th scope="col" className={th}>Organisation</th>
-              <th scope="col" className={cn(th, "hidden md:table-cell")}>Category</th>
-              <th scope="col" className={cn(th, "hidden md:table-cell")}>Region</th>
-              <th scope="col" className={cn(th, "hidden md:table-cell")}>Focus</th>
-              <th scope="col" className={th}><span className="sr-only">Actions</span></th>
+              <th scope="col" className={th}>{t("directory.col.org")}</th>
+              <th scope="col" className={cn(th, "hidden md:table-cell")}>{t("directory.col.category")}</th>
+              <th scope="col" className={cn(th, "hidden md:table-cell")}>{t("directory.col.region")}</th>
+              <th scope="col" className={cn(th, "hidden md:table-cell")}>{t("directory.col.focus")}</th>
+              <th scope="col" className={th}><span className="sr-only">{t("directory.col.actions")}</span></th>
             </tr>
           </thead>
           <tbody>
@@ -179,7 +185,7 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
                         {/* Phones drop the Category and Region columns, so they sit under the name. */}
                         <p className="mt-0.5 flex items-start gap-1.5 text-xs text-muted md:hidden">
                           <span aria-hidden className="mt-[5px] h-2 w-2 shrink-0 rounded-sm" style={{ backgroundColor: meta.color }} />
-                          {meta.label} · {regionName(e.canton)}
+                          {typeLabel(e.type)} · {regionName(e.canton)}
                         </p>
                       </div>
                     </div>
@@ -187,16 +193,16 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
                   <td className="hidden px-4 py-3.5 md:table-cell">
                     <span className="inline-flex items-center gap-2">
                       <span aria-hidden className="h-2 w-2 rounded-sm" style={{ backgroundColor: meta.color }} />
-                      {meta.label}
+                      {typeLabel(e.type)}
                     </span>
                   </td>
                   <td className="hidden px-4 py-3.5 text-ink-3 md:table-cell">{regionName(e.canton)}</td>
                   <td className="hidden max-w-[320px] px-4 py-3.5 text-muted md:table-cell">
-                    {e.focusAreas.slice(0, 3).map((a) => (a === "all" ? "all fields" : a)).join(", ")}
+                    {e.focusAreas.slice(0, 3).map((a) => (a === "all" ? t("common.allFields") : a)).join(", ")}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3.5 text-right">
                     <Button size="sm" variant={saved ? "accent" : "outline"} aria-pressed={saved} onClick={() => toggleShortlist(e.id)}>
-                      {saved ? "Saved" : "Save"}
+                      {saved ? t("directory.saved") : t("directory.save")}
                     </Button>
                   </td>
                 </tr>
@@ -220,8 +226,9 @@ function initials(name: string) {
 }
 
 function DirectorySkeleton() {
+  const t = useT();
   return (
-    <div className="mx-auto max-w-[1400px] space-y-4 px-4 py-10 sm:px-8" role="status" aria-label="Loading directory">
+    <div className="mx-auto max-w-[1400px] space-y-4 px-4 py-10 sm:px-8" role="status" aria-label={t("directory.loading")}>
       <Skeleton className="h-10 w-1/3" />
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-40 w-full rounded-2xl" />

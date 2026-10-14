@@ -6,6 +6,7 @@ import type { Entity, Match } from "@/lib/types";
 import { ScoreRing } from "./score-ring";
 import { Button } from "./ui/button";
 import { CantonBadge, TypeBadge } from "./type-badge";
+import { useT } from "./site-provider";
 
 interface Props {
   entity: Entity;
@@ -19,6 +20,7 @@ export function MatchCard({ entity, match }: Props) {
   const openDetail = useNavigator((s) => s.openDetail);
   const openEmail = useNavigator((s) => s.openEmail);
   const hasProfile = useNavigator((s) => s.profile !== null);
+  const t = useT();
 
   const verified = formatVerified(entity.lastVerified);
 
@@ -42,10 +44,10 @@ export function MatchCard({ entity, match }: Props) {
       <p className="text-sm leading-relaxed text-ink-2">{match ? match.reason : entity.description}</p>
 
       {(entity.facilities.length > 0 || entity.focusAreas.length > 0) && (
-        <ul className="flex flex-wrap gap-1.5" aria-label="Facilities and focus areas">
+        <ul className="flex flex-wrap gap-1.5" aria-label={t("card.tags")}>
           {(entity.facilities.length > 0 ? entity.facilities.slice(0, 3) : entity.focusAreas.slice(0, 3)).map((item) => (
             <li key={item} className="rounded-md border border-line px-2 py-0.5 text-xs text-muted">
-              {item === "all" ? "all fields" : item}
+              {item === "all" ? t("common.allFields") : item}
             </li>
           ))}
         </ul>
@@ -59,13 +61,13 @@ export function MatchCard({ entity, match }: Props) {
       )}
 
       <p className="text-xs text-muted">
-        Source: {entity.source}
-        {verified && ` · verified ${verified}`}
+        {t("card.source", { source: entity.source })}
+        {verified && t("card.verified", { date: verified })}
       </p>
 
       {match && match.citations.length > 0 && (
         <details className="text-sm">
-          <summary className="cursor-pointer font-semibold text-primary">Why this match</summary>
+          <summary className="cursor-pointer font-semibold text-primary">{t("card.why")}</summary>
           <ul className="mt-2 space-y-2">
             {match.citations.map((c, i) => (
               <li key={i} className="rounded-[10px] border border-line bg-surface p-2.5">
@@ -76,7 +78,7 @@ export function MatchCard({ entity, match }: Props) {
               </li>
             ))}
           </ul>
-          <p className="mt-2 font-mono text-xs text-muted">Audit reference {match.auditId}</p>
+          <p className="mt-2 font-mono text-xs text-muted">{t("card.audit", { id: match.auditId })}</p>
         </details>
       )}
 
@@ -88,16 +90,16 @@ export function MatchCard({ entity, match }: Props) {
           onClick={() => toggleShortlist(entity.id)}
         >
           {shortlisted ? <BookmarkCheck className="h-4 w-4" aria-hidden /> : <Bookmark className="h-4 w-4" aria-hidden />}
-          {shortlisted ? "Saved" : "Save"}
+          {shortlisted ? t("directory.saved") : t("directory.save")}
         </Button>
         {hasProfile && (
           <Button size="sm" variant="outline" onClick={() => openEmail(entity.id)}>
             <Mail className="h-4 w-4" aria-hidden />
-            Draft intro
+            {t("card.draftIntro")}
           </Button>
         )}
         <Button size="sm" variant="ghost" onClick={() => openDetail(entity.id)}>
-          Details
+          {t("common.details")}
         </Button>
       </div>
     </article>

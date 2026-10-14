@@ -14,12 +14,13 @@ import { ProfileSidebar } from "@/components/profile-sidebar";
 import { PlanTab } from "@/components/plan-tab";
 import { RefineBar } from "@/components/refine-bar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useT } from "@/components/site-provider";
 
 const TABS = [
-  { id: "matches", label: "Matches", icon: LayoutGrid },
-  { id: "plan", label: "Plan", icon: CalendarRange },
-  { id: "map", label: "Map", icon: MapPin },
-  { id: "graph", label: "Graph", icon: Share2 },
+  { id: "matches", label: "results.tab.matches", icon: LayoutGrid },
+  { id: "plan", label: "results.tab.plan", icon: CalendarRange },
+  { id: "map", label: "results.tab.map", icon: MapPin },
+  { id: "graph", label: "results.tab.graph", icon: Share2 },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -32,6 +33,7 @@ export default function ResultsPage() {
   const analysing = useNavigator((s) => s.analysing);
   const [tab, setTab] = useState<TabId>("matches");
   const [chatOpen, setChatOpen] = useState(false);
+  const t = useT();
 
   if (!hydrated) return <ResultsSkeleton />;
 
@@ -39,9 +41,9 @@ export default function ResultsPage() {
     return (
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
         <EmptyState
-          title="No results yet"
-          body="Describe your team and what you need. Your matches, 12-month plan, map and graph appear here."
-          actionLabel="Describe your needs"
+          title={t("results.empty.title")}
+          body={t("results.empty.body")}
+          actionLabel={t("common.describeNeeds")}
           actionHref="/"
         />
       </div>
@@ -75,14 +77,17 @@ export default function ResultsPage() {
         <div className="no-print flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-[26px] font-semibold sm:text-[30px]">
-              {providerCount} {providerCount === 1 ? "match" : "matches"} for {needCount} {needCount === 1 ? "need" : "needs"}
+              {t("results.title", {
+                matches: t(providerCount === 1 ? "results.match.one" : "results.match.many", { count: providerCount }),
+                needs: t(needCount === 1 ? "results.need.one" : "results.need.many", { count: needCount }),
+              })}
             </h1>
-            <p className="mt-1 text-sm text-muted">Ranked by fit with your field and stage. Every match shows its reason and source.</p>
+            <p className="mt-1 text-sm text-muted">{t("results.intro")}</p>
           </div>
           {/* Desktop tabs. On mobile the same tabs render as a bottom nav. */}
           <div
             role="tablist"
-            aria-label="Results"
+            aria-label={t("results.tabs")}
             onKeyDown={onTabKey}
             className="fixed inset-x-0 bottom-0 z-[800] grid grid-cols-4 border-t border-line bg-card pb-[env(safe-area-inset-bottom)] lg:static lg:inline-flex lg:gap-0.5 lg:rounded-xl lg:border-0 lg:bg-subtle lg:p-1"
           >
@@ -104,7 +109,7 @@ export default function ResultsPage() {
                 )}
               >
                 <Icon className="h-5 w-5 lg:h-4 lg:w-4" aria-hidden />
-                {label}
+                {t(label)}
               </button>
             ))}
           </div>
@@ -119,9 +124,9 @@ export default function ResultsPage() {
             <CardSkeletons />
           ) : !hasMatches ? (
             <EmptyState
-              title="No matches for this profile"
-              body="Your current needs and refinements return nothing. Add a need, or write “both cantons” in the refine box."
-              actionLabel="Edit profile"
+              title={t("results.none.title")}
+              body={t("results.none.body")}
+              actionLabel={t("results.none.action")}
               actionHref="/profile"
             />
           ) : (
@@ -141,8 +146,9 @@ export default function ResultsPage() {
 }
 
 function CardSkeletons() {
+  const t = useT();
   return (
-    <div className="grid gap-3.5 md:grid-cols-2 2xl:grid-cols-3" role="status" aria-label="Loading matches">
+    <div className="grid gap-3.5 md:grid-cols-2 2xl:grid-cols-3" role="status" aria-label={t("results.loading")}>
       {Array.from({ length: 6 }, (_, i) => (
         <Skeleton key={i} className="h-60 rounded-[18px]" />
       ))}

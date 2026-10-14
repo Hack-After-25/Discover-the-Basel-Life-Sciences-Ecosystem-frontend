@@ -2,8 +2,10 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ENTITY_TYPES, NEED_META, NEED_TO_ENTITY_TYPE, TYPE_META } from "@/lib/entity-meta";
+import { ENTITY_TYPES, NEED_TO_ENTITY_TYPE, TYPE_META } from "@/lib/entity-meta";
 import { useNavigator } from "@/lib/store";
+import { useNeedLabel, useTypeLabel } from "@/lib/labels";
+import { useT } from "./site-provider";
 import type { Canton, EntityType, Match, NeedCategory } from "@/lib/types";
 import { EmptyState } from "./empty-state";
 import { MatchCard } from "./match-card";
@@ -16,6 +18,9 @@ export function MatchesTab() {
   const [type, setType] = useState<EntityType | "">("");
   const [canton, setCanton] = useState<Canton | "">("");
   const [minScore, setMinScore] = useState(0);
+  const t = useT();
+  const typeLabel = useTypeLabel();
+  const needLabel = useNeedLabel();
 
   const groups = useMemo(() => {
     const filtered = matches.filter(
@@ -29,21 +34,21 @@ export function MatchesTab() {
   return (
     <div>
       <fieldset className="flex flex-wrap items-center gap-2">
-        <legend className="sr-only">Filter matches</legend>
-        <span className="text-[13px] text-muted">Filters</span>
-        <label htmlFor="f-type" className="sr-only">Type</label>
+        <legend className="sr-only">{t("matches.filterLegend")}</legend>
+        <span className="text-[13px] text-muted">{t("matches.filters")}</span>
+        <label htmlFor="f-type" className="sr-only">{t("matches.type")}</label>
         <Dropdown
           id="f-type"
           size="sm"
           className="w-auto"
           value={type}
           onChange={(v) => setType(v as EntityType | "")}
-          options={[{ value: "", label: "All types" }, ...ENTITY_TYPES.map((t) => ({ value: t, label: TYPE_META[t].label }))]}
+          options={[{ value: "", label: t("matches.allTypes") }, ...ENTITY_TYPES.map((et) => ({ value: et, label: typeLabel(et) }))]}
         />
-        <label htmlFor="f-canton" className="sr-only">Region</label>
+        <label htmlFor="f-canton" className="sr-only">{t("matches.region")}</label>
         <RegionSelect id="f-canton" size="sm" className="w-auto" value={canton} onChange={setCanton} />
         <label htmlFor="f-score" className="ml-1 flex h-10 items-center gap-2 rounded-[10px] border border-field bg-card px-3 text-[13px] font-medium">
-          Minimum match <span className="w-6 font-mono tabular-nums">{minScore}</span>
+          {t("matches.minScore")} <span className="w-6 font-mono tabular-nums">{minScore}</span>
           <input
             id="f-score"
             type="range"
@@ -60,8 +65,8 @@ export function MatchesTab() {
       {groups.length === 0 ? (
         <div className="mt-6">
           <EmptyState
-            title="No matches with these filters"
-            body="Lower the minimum match, choose all types or include all regions to see results again."
+            title={t("matches.none.title")}
+            body={t("matches.none.body")}
           />
         </div>
       ) : (
@@ -74,26 +79,26 @@ export function MatchesTab() {
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h2 id={`need-${need}-title`} className="flex items-center gap-2.5 text-xl font-semibold">
                   <span aria-hidden className="h-2.5 w-2.5 rounded-[3px]" style={{ backgroundColor: TYPE_META[entityType].color }} />
-                  {NEED_META[need].label}
+                  {needLabel(need)}
                   <span className="text-sm font-normal text-muted">
-                    {providers.length} {providers.length === 1 ? "match" : "matches"}
+                    {t(providers.length === 1 ? "results.match.one" : "results.match.many", { count: providers.length })}
                   </span>
                 </h2>
                 <Link href={`/directory?type=${entityType}`} className="text-sm font-semibold text-primary hover:text-accent">
-                  See every {TYPE_META[entityType].label.toLowerCase()} in the directory
+                  {t("matches.seeAll", { type: typeLabel(entityType).toLowerCase() })}
                 </Link>
               </div>
               {providers.length > 0 ? (
                 <MatchList items={providers} />
               ) : (
-                <p className="mt-3 text-sm text-muted">No direct matches yet for this need.</p>
+                <p className="mt-3 text-sm text-muted">{t("matches.noDirect")}</p>
               )}
               {programmes.length > 0 && (
                 <div className="mt-4 rounded-2xl border border-cta/50 bg-cta/10 p-4">
                   <h3 className="text-[15px] font-semibold">
-                    Programmes that can help{" "}
+                    {t("matches.programmes")}{" "}
                     <span className="text-[13px] font-normal text-muted">
-                      They can arrange this for you but are not providers themselves.
+                      {t("matches.programmesNote")}
                     </span>
                   </h3>
                   <ul className="mt-3 space-y-2">
@@ -116,6 +121,7 @@ export function MatchesTab() {
 function ProgrammeRow({ match }: { match: Match }) {
   const openDetail = useNavigator((s) => s.openDetail);
   const { entity } = match;
+  const t = useT();
   const initials = entity.name
     .split(/[\s,&]+/)
     .filter(Boolean)
@@ -132,11 +138,11 @@ function ProgrammeRow({ match }: { match: Match }) {
         <p className="font-semibold">{entity.name}</p>
         <p className="mt-0.5 text-[13px] text-muted">{match.reason}</p>
       </div>
-      <span className="font-mono text-[13px] text-muted" aria-label={`Match score ${match.score} out of 100`}>
+      <span className="font-mono text-[13px] text-muted" aria-label={t("matches.score", { score: match.score })}>
         {match.score}
       </span>
       <Button size="sm" variant="outline" onClick={() => openDetail(entity.id)}>
-        Details
+        {t("common.details")}
       </Button>
     </div>
   );

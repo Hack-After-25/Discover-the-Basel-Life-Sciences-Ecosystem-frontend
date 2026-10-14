@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useSite } from "./site-provider";
 
 /**
  * FadäRhy's mark, the same drawing as the fadarhy.ch logo: a Rhine Blue tile
@@ -27,8 +30,25 @@ export function LogoMark({ className, round = false, light = false }: { classNam
   );
 }
 
-/** The wordmark: "FadäRhy" with the umlaut's dots in Thread Lime. */
+/** The logo uploaded in the admin panel (its dark version in dark mode), else the built-in mark. */
+export function SiteLogo({ className }: { className?: string }) {
+  const { logo, logoDark } = useSite();
+  if (!logo) return <LogoMark className={className} />;
+  return (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element -- data URL from the admin panel */}
+      <img src={logo} alt="" className={cn("object-contain dark-logo-hide", className)} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={logoDark ?? logo} alt="" className={cn("hidden object-contain dark-logo-show", className)} />
+    </>
+  );
+}
+
+/** The wordmark: "FadäRhy" with the umlaut's dots in Thread Lime, or the
+ * name set in the admin panel as plain text. */
 export function Wordmark({ className }: { className?: string }) {
+  const { name, isDefaultName } = useSite();
+  if (!isDefaultName) return <span className={cn("font-extrabold tracking-[-0.03em]", className)}>{name}</span>;
   return (
     <span className={cn("font-extrabold tracking-[-0.03em]", className)} aria-label="FadäRhy">
       <span aria-hidden>

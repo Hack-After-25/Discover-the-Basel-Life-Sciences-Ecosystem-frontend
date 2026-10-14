@@ -11,6 +11,8 @@ const config: Config = {
         lime: "#D6FF3F",
         mist: "#EEF0E8",
         night: "#11120F",
+        // Dark hero band on the home page; the admin can change it.
+        hero: "rgb(var(--hero) / <alpha-value>)",
         card: { DEFAULT: "rgb(var(--card) / <alpha-value>)", 2: "rgb(var(--card-2) / <alpha-value>)" },
         ink: { DEFAULT: "rgb(var(--ink) / <alpha-value>)", 2: "rgb(var(--ink-2) / <alpha-value>)", 3: "rgb(var(--ink-3) / <alpha-value>)" },
         muted: "rgb(var(--muted) / <alpha-value>)",
@@ -23,8 +25,9 @@ const config: Config = {
         "on-cta": "rgb(var(--on-cta) / <alpha-value>)",
       },
       fontFamily: {
-        sans: ['"Manrope Variable"', "system-ui", "Helvetica Neue", "Arial", "sans-serif"],
-        mono: ['"Space Mono"', "ui-monospace", "SFMono-Regular", "monospace"],
+        // --font-sans / --font-mono are set when the admin picks other fonts.
+        sans: ['var(--font-sans, "Manrope Variable")', "system-ui", "Helvetica Neue", "Arial", "sans-serif"],
+        mono: ['var(--font-mono, "Space Mono")', "ui-monospace", "SFMono-Regular", "monospace"],
       },
       boxShadow: {
         card: "0 1px 2px rgba(11, 18, 32, 0.04)",

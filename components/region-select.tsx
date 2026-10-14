@@ -3,6 +3,7 @@
 import { useNavigator } from "@/lib/store";
 import type { Canton } from "@/lib/types";
 import { Dropdown } from "./ui/dropdown";
+import { useT } from "./site-provider";
 
 /** Region filter whose options are the regions the backend has organisations in. */
 export function RegionSelect({
@@ -19,6 +20,7 @@ export function RegionSelect({
   className?: string;
 }) {
   const regions = useNavigator((s) => s.regions);
+  const t = useT();
   return (
     <Dropdown
       id={id}
@@ -26,7 +28,7 @@ export function RegionSelect({
       onChange={onChange}
       size={size}
       className={className}
-      options={[{ value: "", label: "All regions" }, ...regions.map((r) => ({ value: r.code, label: r.name }))]}
+      options={[{ value: "", label: t("common.allRegions") }, ...regions.map((r) => ({ value: r.code, label: r.name }))]}
     />
   );
 }

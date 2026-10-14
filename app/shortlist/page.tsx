@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
-import { STAGE_LABEL } from "@/lib/entity-meta";
+import { useStageLabel } from "@/lib/labels";
+import { useT } from "@/components/site-provider";
 import { useHydrated, useNavigator } from "@/lib/store";
 import type { Entity } from "@/lib/types";
 import { EmptyState } from "@/components/empty-state";
@@ -27,10 +28,11 @@ export default function ShortlistPage() {
 
   const [compareMode, setCompareMode] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const t = useT();
 
   if (!hydrated || (shortlist.length > 0 && entities.length === 0)) {
     return (
-      <div className="mx-auto max-w-4xl space-y-4 px-4 py-10 sm:px-6" role="status" aria-label="Loading shortlist">
+      <div className="mx-auto max-w-4xl space-y-4 px-4 py-10 sm:px-6" role="status" aria-label={t("shortlist.loading")}>
         <Skeleton className="h-10 w-1/2" />
         <Skeleton className="h-40 w-full rounded-2xl" />
         <Skeleton className="h-40 w-full rounded-2xl" />
@@ -48,9 +50,9 @@ export default function ShortlistPage() {
     return (
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
         <EmptyState
-          title="Your shortlist is empty"
-          body='Choose "Add to shortlist" on any match to keep it here with your notes and compare options side by side.'
-          actionLabel={hasResults ? "Go to results" : "Describe your needs"}
+          title={t("shortlist.empty.title")}
+          body={t("shortlist.empty.body")}
+          actionLabel={hasResults ? t("shortlist.empty.results") : t("common.describeNeeds")}
           actionHref={hasResults ? "/results" : "/"}
         />
       </div>
@@ -61,9 +63,10 @@ export default function ShortlistPage() {
     <div className="mx-auto max-w-[1240px] px-4 pb-20 pt-8 sm:px-8">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-[30px] font-semibold sm:text-4xl">Shortlist</h1>
+          <h1 className="text-[30px] font-semibold sm:text-4xl">{t("shortlist.title")}</h1>
           <p className="mt-1.5 text-base text-muted">
-            {saved.length} saved. {compareMode ? `Select up to ${MAX_COMPARE} to compare.` : "Add notes as you talk to each one."}
+            {t("shortlist.saved", { count: saved.length })}{" "}
+            {compareMode ? t("shortlist.compareHint", { max: MAX_COMPARE }) : t("shortlist.notesHint")}
           </p>
         </div>
         <Button
@@ -75,13 +78,13 @@ export default function ShortlistPage() {
           }}
           disabled={saved.length < 2}
         >
-          {compareMode ? "Exit compare" : "Compare"}
+          {compareMode ? t("shortlist.exitCompare") : t("shortlist.compare")}
         </Button>
       </div>
 
       {compareMode && compared.length >= 2 && <CompareTable entities={compared} notes={notes} />}
       {compareMode && compared.length < 2 && (
-        <p className="mt-5 rounded-xl border border-dashed border-field bg-card p-4 text-sm text-muted">Select at least two entries below to see them side by side.</p>
+        <p className="mt-5 rounded-xl border border-dashed border-field bg-card p-4 text-sm text-muted">{t("shortlist.selectTwo")}</p>
       )}
 
       <ul className="mt-6 space-y-3.5">
@@ -106,36 +109,36 @@ export default function ShortlistPage() {
                       disabled={!checked && selected.length >= MAX_COMPARE}
                       onChange={() => toggleSelected(entity.id)}
                     />
-                    Compare
+                    {t("shortlist.compare")}
                   </label>
                 )}
               </div>
               <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">{entity.description}</p>
 
               <label htmlFor={`note-${entity.id}`} className="mt-4 block text-[13px] font-semibold text-ink-3">
-                Notes
+                {t("shortlist.notes")}
               </label>
               <Textarea
                 id={`note-${entity.id}`}
                 rows={2}
                 className="mt-1"
-                placeholder="e.g. Spoke to them on Tuesday, visit planned for next week"
+                placeholder={t("shortlist.notesPlaceholder")}
                 value={notes[entity.id] ?? ""}
                 onChange={(e) => setNote(entity.id, e.target.value)}
               />
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <Button size="sm" variant="outline" onClick={() => openDetail(entity.id)}>
-                  Details
+                  {t("common.details")}
                 </Button>
                 {hasProfile && (
                   <Button size="sm" variant="outline" onClick={() => openEmail(entity.id)}>
-                    Draft intro email
+                    {t("shortlist.draftEmail")}
                   </Button>
                 )}
                 <Button size="sm" variant="ghost" onClick={() => toggleShortlist(entity.id)}>
                   <Trash2 className="h-4 w-4" aria-hidden />
-                  Remove
+                  {t("shortlist.remove")}
                 </Button>
               </div>
             </li>
@@ -147,27 +150,29 @@ export default function ShortlistPage() {
 }
 
 function CompareTable({ entities, notes }: { entities: Entity[]; notes: Record<string, string> }) {
+  const t = useT();
+  const stageLabel = useStageLabel();
   const rows: { label: string; value: (e: Entity) => React.ReactNode }[] = [
-    { label: "Type", value: (e) => <TypeBadge type={e.type} /> },
-    { label: "Region", value: (e) => <CantonBadge canton={e.canton} /> },
-    { label: "Focus areas", value: (e) => e.focusAreas.map((a) => (a === "all" ? "all fields" : a)).join(", ") },
-    { label: "Stage fit", value: (e) => e.stageFit.map((s) => STAGE_LABEL[s]).join(", ") },
-    { label: "Facilities", value: (e) => e.facilities.join(", ") || "None listed" },
+    { label: t("shortlist.row.type"), value: (e) => <TypeBadge type={e.type} /> },
+    { label: t("shortlist.row.region"), value: (e) => <CantonBadge canton={e.canton} /> },
+    { label: t("shortlist.row.focus"), value: (e) => e.focusAreas.map((a) => (a === "all" ? t("common.allFields") : a)).join(", ") },
+    { label: t("shortlist.row.stage"), value: (e) => e.stageFit.map((s) => stageLabel(s)).join(", ") },
+    { label: t("shortlist.row.facilities"), value: (e) => e.facilities.join(", ") || t("shortlist.row.noFacilities") },
     {
-      label: "Website",
+      label: t("shortlist.row.website"),
       value: (e) => (
         <a className="text-primary underline" href={e.website} target="_blank" rel="noreferrer">
           {e.website.replace(/^https?:\/\//, "")}
         </a>
       ),
     },
-    { label: "Your notes", value: (e) => notes[e.id] || "No notes yet" },
+    { label: t("shortlist.row.notes"), value: (e) => notes[e.id] || t("shortlist.row.noNotes") },
   ];
 
   return (
     <div className="mt-6 overflow-x-auto rounded-[18px] border border-line bg-card">
       <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-        <caption className="sr-only">Side-by-side comparison of selected shortlist entries</caption>
+        <caption className="sr-only">{t("shortlist.table")}</caption>
         <thead>
           <tr>
             <td className="w-44 bg-card-2 p-4" />
