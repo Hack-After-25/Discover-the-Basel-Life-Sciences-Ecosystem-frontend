@@ -38,7 +38,7 @@ export default function MapView({ entities, matchedIds, selectedId, onSelect }: 
             center={[entity.lat, entity.lng]}
             radius={selected ? 12 : matched ? 9 : 6}
             pathOptions={{
-              color: selected ? "#14213D" : "#ffffff",
+              color: selected ? "#11120F" : "#ffffff",
               weight: selected ? 3 : 2,
               fillColor: TYPE_META[entity.type].color,
               fillOpacity: matched ? 0.95 : 0.5,

@@ -33,7 +33,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
     <aside
       aria-label="Refine results"
       className={cn(
-        "no-print flex flex-col bg-white",
+        "no-print flex flex-col bg-card",
         // Mobile: full-screen sheet. Desktop: sticky column.
         "fixed inset-0 z-[950] lg:sticky lg:inset-auto lg:top-24 lg:z-0 lg:h-[calc(100vh-7.5rem)] lg:rounded-2xl lg:border lg:border-line",
       )}
@@ -69,7 +69,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
             <p
               className={cn(
                 "max-w-[85%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
-                m.role === "user" ? "rounded-br-md bg-primary text-white" : "rounded-bl-md bg-surface text-ink",
+                m.role === "user" ? "rounded-br-md bg-primary text-on-primary" : "rounded-bl-md bg-surface text-ink",
               )}
             >
               {m.text}

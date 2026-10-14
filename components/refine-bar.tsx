@@ -25,7 +25,7 @@ export function RefineBar({ onOpenHistory }: { onOpenHistory: () => void }) {
   return (
     <div className="no-print">
       <form
-        className="flex flex-wrap items-center gap-2.5 rounded-[18px] border border-line bg-white py-2 pl-4 pr-2"
+        className="flex flex-wrap items-center gap-2.5 rounded-[18px] border border-line bg-card py-2 pl-4 pr-2"
         onSubmit={(e) => {
           e.preventDefault();
           send(text);
@@ -63,7 +63,7 @@ export function RefineBar({ onOpenHistory }: { onOpenHistory: () => void }) {
                 key={s}
                 type="button"
                 onClick={() => send(s)}
-                className="rounded-full border border-line bg-white px-3 py-1 text-[13px] font-medium text-ink hover:border-accent"
+                className="rounded-full border border-line bg-card px-3 py-1 text-[13px] font-medium text-ink hover:border-accent"
               >
                 {s}
               </button>

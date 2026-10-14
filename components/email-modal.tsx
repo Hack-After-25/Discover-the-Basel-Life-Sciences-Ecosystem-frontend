@@ -95,7 +95,7 @@ export function EmailModal() {
             <label className="flex cursor-pointer items-start gap-2.5 rounded-lg bg-surface p-3 text-sm">
               <input
                 type="checkbox"
-                className="mt-0.5 h-4 w-4 accent-[#0F766E]"
+                className="mt-0.5 h-4 w-4 accent-[#2446F5]"
                 checked={approved}
                 onChange={(e) => setApproved(e.target.checked)}
               />

@@ -87,7 +87,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
           </p>
         </div>
         <div className="no-print flex flex-wrap items-center gap-2">
-          <div role="group" aria-label="Plan length" className="inline-flex gap-0.5 rounded-xl bg-[#EAECEF] p-[3px]">
+          <div role="group" aria-label="Plan length" className="inline-flex gap-0.5 rounded-xl bg-subtle p-[3px]">
             {HORIZONS.map((h) => (
               <button
                 key={h}
@@ -101,7 +101,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                 className={cn(
                   "h-[38px] rounded-[9px] px-3.5 text-sm",
                   plan.horizon === h
-                    ? "bg-white font-semibold text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
+                    ? "bg-card font-semibold text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
                     : "font-medium text-muted hover:text-ink",
                 )}
               >
@@ -126,7 +126,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
         </div>
       </div>
 
-      <p lang={profile.language} className="mt-4 max-w-[820px] text-base leading-[1.65] text-[#26303F]">
+      <p lang={profile.language} className="mt-4 max-w-[820px] text-base leading-[1.65] text-ink-2">
         {plan.summary}
       </p>
       {voiceError && (
@@ -137,7 +137,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
 
       {/* What to act on first */}
       <div className="mt-6 grid gap-3.5 lg:grid-cols-3">
-        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-5">
+        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
           <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <Users className="h-4 w-4 text-accent" aria-hidden />
             Contacts to reach first
@@ -166,7 +166,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
           </ol>
         </section>
 
-        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-5">
+        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
           <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <CircleDollarSign className="h-4 w-4 text-accent" aria-hidden />
             Funding and grants
@@ -225,7 +225,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
           )}
         </section>
 
-        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-5">
+        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
           <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
             <FlaskConical className="h-4 w-4 text-accent" aria-hidden />
             Lab space
@@ -251,7 +251,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
       </div>
 
       {/* Timeline */}
-      <div className="print-plain print-timeline mt-5 overflow-x-auto rounded-[18px] border border-line bg-white p-5">
+      <div className="print-plain print-timeline mt-5 overflow-x-auto rounded-[18px] border border-line bg-card p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">Timeline</h3>
           <span className="no-print flex gap-3.5 text-[13px] text-muted">
@@ -263,7 +263,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
           <div className="grid font-mono text-xs text-muted" style={gridStyle}>
             <div className="font-sans">{yearly ? "Month" : "Week"}</div>
             {periods.map((w, i) => (
-              <div key={w} className="border-l border-[#EEF0F3] pb-2 pl-1.5 tabular-nums">
+              <div key={w} className="border-l border-line pb-2 pl-1.5 tabular-nums">
                 {yearly ? monthNames[i] : `W${w}`}
               </div>
             ))}
@@ -272,7 +272,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
             {steps.map((step, index) => {
               const active = selected.id === step.id;
               return (
-                <li key={step.id} className="grid min-h-12 items-center border-t border-[#EEF0F3]" style={gridStyle}>
+                <li key={step.id} className="grid min-h-12 items-center border-t border-line" style={gridStyle}>
                   <button
                     type="button"
                     lang={profile.language}
@@ -292,7 +292,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                     aria-label={`${yearly ? "Month" : "Week"} ${step.start} to ${step.end}`}
                   >
                     {periods.map((w) => (
-                      <div key={w} className="border-l border-[#EEF0F3]" />
+                      <div key={w} className="border-l border-line" />
                     ))}
                     <button
                       type="button"
@@ -301,7 +301,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                       onClick={() => setSelectedId(step.id)}
                       className={cn(
                         "absolute top-1/2 h-[22px] -translate-y-1/2 rounded-full",
-                        active ? "bg-accent" : "bg-primary hover:bg-primary-dark",
+                        active ? "bg-accent" : "bg-primary hover:opacity-90",
                       )}
                       style={{
                         left: `calc(${((step.start - 1) / count) * 100}% + 3px)`,
@@ -349,7 +349,7 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
     .sort((a, b) => a - b);
 
   return (
-    <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-white p-6">
+    <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-6">
       <p className="font-mono text-xs uppercase text-accent">
         Step {number} ·{" "}
         {step.start === step.end ? `${unit} ${step.start}` : `${unit}s ${step.start} to ${step.end}`}
@@ -357,7 +357,7 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
       <h3 lang={language} className="mt-2 text-[22px] font-semibold">
         {step.title}
       </h3>
-      <p lang={language} className="mt-2.5 max-w-prose text-[15px] leading-[1.65] text-[#26303F]">
+      <p lang={language} className="mt-2.5 max-w-prose text-[15px] leading-[1.65] text-ink-2">
         {step.description}
       </p>
       {prerequisites.length > 0 && (
@@ -375,7 +375,7 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
                   <button
                     type="button"
                     onClick={() => openDetail(e.id)}
-                    className="inline-flex h-10 items-center rounded-xl border border-line bg-white px-3.5 text-sm font-medium text-ink hover:border-accent hover:text-accent"
+                    className="inline-flex h-10 items-center rounded-xl border border-line bg-card px-3.5 text-sm font-medium text-ink hover:border-accent hover:text-accent"
                   >
                     {e.name}
                   </button>

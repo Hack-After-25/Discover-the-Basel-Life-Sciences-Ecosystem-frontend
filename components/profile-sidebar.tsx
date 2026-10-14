@@ -32,7 +32,7 @@ export function ProfileSidebar({
 
   return (
     <aside aria-label="Your profile" className="no-print flex flex-col gap-3 lg:sticky lg:top-24">
-      <div className="rounded-[18px] border border-line bg-white p-[18px]">
+      <div className="rounded-[18px] border border-line bg-card p-[18px]">
         <div className="flex items-start justify-between gap-2">
           <div>
             <h2 className="text-base font-semibold">{profile.companyName ?? "Your team"}</h2>
@@ -63,7 +63,7 @@ export function ProfileSidebar({
                   type="button"
                   onClick={() => onJumpToNeed(need.category)}
                   title={need.detail}
-                  className="flex min-h-10 w-full items-center justify-between gap-2 rounded-[10px] px-2.5 text-left text-sm hover:bg-[#F0F2F5]"
+                  className="flex min-h-10 w-full items-center justify-between gap-2 rounded-[10px] px-2.5 text-left text-sm hover:bg-subtle"
                 >
                   <span className="flex items-center gap-2">
                     <span
@@ -104,9 +104,9 @@ export function ProfileSidebar({
 
       {next && (
         <div className="rounded-[18px] bg-primary-dark p-[18px] text-white">
-          <p className="text-[13px] font-semibold text-[#99F6E4]">Next deadline</p>
+          <p className="text-[13px] font-semibold text-[#D6FF3F]">Next deadline</p>
           <p className="mt-1.5 text-[15px] font-semibold">{next.title}</p>
-          <p className="mt-0.5 font-mono text-[13px] text-[#C7D2E8]">
+          <p className="mt-0.5 font-mono text-[13px] text-[#C9CCC0]">
             {new Date(next.date).toLocaleDateString(LOCALE[profile.language], { day: "numeric", month: "short", year: "numeric" })}
             {" · "}
             {daysLeft === 0 ? "today" : `in ${daysLeft} ${daysLeft === 1 ? "day" : "days"}`}

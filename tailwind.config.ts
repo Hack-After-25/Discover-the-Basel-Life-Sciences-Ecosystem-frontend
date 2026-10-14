@@ -5,16 +5,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: { DEFAULT: "#0E2A5E", dark: "#0A1F47", soft: "#E9EEF8" },
-        accent: { DEFAULT: "#0F766E", dark: "#0B5F58", soft: "#E3F3F1", bright: "#5EEAD4" },
-        ink: "#0B1220",
-        muted: "#566070",
-        line: "#E4E7EC",
-        surface: "#F5F6F8",
+        primary: { DEFAULT: "rgb(var(--primary) / <alpha-value>)", dark: "rgb(var(--primary-dark) / <alpha-value>)", soft: "rgb(var(--primary-soft) / <alpha-value>)" },
+        accent: { DEFAULT: "rgb(var(--accent) / <alpha-value>)", dark: "rgb(var(--accent-dark) / <alpha-value>)", soft: "rgb(var(--accent-soft) / <alpha-value>)" },
+        "on-primary": "rgb(var(--on-primary) / <alpha-value>)",
+        lime: "#D6FF3F",
+        mist: "#EEF0E8",
+        night: "#11120F",
+        card: { DEFAULT: "rgb(var(--card) / <alpha-value>)", 2: "rgb(var(--card-2) / <alpha-value>)" },
+        ink: { DEFAULT: "rgb(var(--ink) / <alpha-value>)", 2: "rgb(var(--ink-2) / <alpha-value>)", 3: "rgb(var(--ink-3) / <alpha-value>)" },
+        muted: "rgb(var(--muted) / <alpha-value>)",
+        line: "rgb(var(--line) / <alpha-value>)",
+        field: { DEFAULT: "rgb(var(--field) / <alpha-value>)", hover: "rgb(var(--field-hover) / <alpha-value>)" },
+        subtle: "rgb(var(--subtle) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
       },
       fontFamily: {
-        sans: ['"Geist Variable"', "system-ui", "Helvetica Neue", "Arial", "sans-serif"],
-        mono: ['"Geist Mono Variable"', "ui-monospace", "SFMono-Regular", "monospace"],
+        sans: ['"Manrope Variable"', "system-ui", "Helvetica Neue", "Arial", "sans-serif"],
+        mono: ['"Space Mono"', "ui-monospace", "SFMono-Regular", "monospace"],
       },
       boxShadow: {
         card: "0 1px 2px rgba(11, 18, 32, 0.04)",

@@ -69,7 +69,7 @@ export default function GraphView({ profile, matches, relations, entities, onSel
     }
 
     const nodes: GraphNode[] = [
-      { id: STARTUP_ID, label: profile.companyName ?? "Your team", color: "#123B7A", size: 9, isStartup: true },
+      { id: STARTUP_ID, label: profile.companyName ?? "Your team", color: "#2446F5", size: 9, isStartup: true },
       ...matched.map((m) => ({
         id: m.entity.id,
         label: m.entity.name,
@@ -102,7 +102,7 @@ export default function GraphView({ profile, matches, relations, entities, onSel
   };
 
   return (
-    <div ref={wrapper} className="relative overflow-hidden rounded-2xl border border-line bg-white">
+    <div ref={wrapper} className="relative overflow-hidden rounded-2xl border border-line bg-card">
       <ForceGraph3D
         ref={graph}
         graphData={data}
@@ -121,7 +121,7 @@ export default function GraphView({ profile, matches, relations, entities, onSel
           const node = n as GraphNode;
           const text = node.label.length > 30 ? `${node.label.slice(0, 28)}…` : node.label;
           const sprite = new SpriteText(text);
-          sprite.color = node.neighbour ? "#5A6781" : "#14213D";
+          sprite.color = node.neighbour ? "#5A6781" : "#11120F";
           sprite.textHeight = node.isStartup ? 5 : 3.2;
           sprite.fontWeight = node.isStartup ? "600" : "400";
           sprite.fontFace = '"Schibsted Grotesk Variable", Helvetica, Arial, sans-serif';
@@ -132,7 +132,7 @@ export default function GraphView({ profile, matches, relations, entities, onSel
           return sprite;
         }}
         linkLabel={(l) => (l as unknown as GraphLink).label}
-        linkColor={(l) => ((l as unknown as GraphLink).kind === "match" ? "#9FB0CC" : "#0E8F8A")}
+        linkColor={(l) => ((l as unknown as GraphLink).kind === "match" ? "#9FB0CC" : "#2446F5")}
         linkOpacity={0.7}
         linkWidth={(l) => ((l as unknown as GraphLink).kind === "match" ? 0.3 : 0.9)}
         linkDirectionalArrowLength={(l) => ((l as unknown as GraphLink).kind === "relation" ? 4 : 0)}
@@ -148,7 +148,7 @@ export default function GraphView({ profile, matches, relations, entities, onSel
         <button
           type="button"
           onClick={() => graph.current?.zoomToFit(600, 60)}
-          className="rounded-lg border border-line bg-white px-3 py-1.5 text-sm font-medium text-ink shadow-card hover:bg-surface"
+          className="rounded-lg border border-line bg-card px-3 py-1.5 text-sm font-medium text-ink shadow-card hover:bg-surface"
         >
           Reset view
         </button>

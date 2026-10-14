@@ -1,25 +1,30 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/geist";
-import "@fontsource-variable/geist-mono";
+import "@fontsource-variable/manrope";
+import "@fontsource/space-mono/400.css";
+import "@fontsource/space-mono/700.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { Overlays } from "@/components/overlays";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 
 export const metadata: Metadata = {
-  title: "ARIADNE — De Fadä durch Basel",
+  title: "FadäRhy — The ecosystem navigator",
   description:
-    "AI-powered Research, Innovation And Discovery Navigator for Entrepreneurs. Your thread through Basel’s life-sciences labyrinth.",
+    "FadäRhy helps founders navigate the Basel and Upper Rhine innovation ecosystem: programmes, expertise, laboratory access, funding pathways and partners.",
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-screen">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[2000] focus:rounded-lg focus:bg-white focus:px-3 focus:py-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[2000] focus:rounded-lg focus:bg-card focus:px-3 focus:py-2"
         >
           Skip to content
         </a>

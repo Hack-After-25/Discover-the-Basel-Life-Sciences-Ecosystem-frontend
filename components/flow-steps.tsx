@@ -10,15 +10,15 @@ export function FlowSteps({ current }: { current: number }) {
       {STEPS.map((label, i) => (
         <li key={label} className="flex items-center gap-2.5" aria-current={i === current ? "step" : undefined}>
           {i > 0 && (
-            <span aria-hidden className={cn("h-0.5 w-8 rounded sm:w-10", i <= current ? "bg-accent" : "bg-[#D9DDE3]")} />
+            <span aria-hidden className={cn("h-0.5 w-8 rounded sm:w-10", i <= current ? "bg-accent" : "bg-field")} />
           )}
           <span className={cn("flex items-center gap-2", i === current ? "font-semibold text-ink" : "text-muted")}>
             <span
               className={cn(
                 "inline-flex h-6 w-6 items-center justify-center rounded-full font-mono text-xs",
                 i < current && "bg-accent text-white",
-                i === current && "bg-primary text-white",
-                i > current && "border-[1.5px] border-[#C4CAD3]",
+                i === current && "bg-primary text-on-primary",
+                i > current && "border-[1.5px] border-field-hover",
               )}
             >
               {i < current ? <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden /> : i + 1}
