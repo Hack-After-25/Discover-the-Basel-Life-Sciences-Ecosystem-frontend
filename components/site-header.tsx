@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Bookmark, Compass, LayoutGrid, RotateCcw } from "lucide-react";
-import { LANGUAGES } from "@/lib/i18n";
+import { Bookmark, Compass, Languages, LayoutGrid, RotateCcw } from "lucide-react";
+import { LANGUAGE_LABEL, LANGUAGES } from "@/lib/i18n";
 import { useHydrated, useNavigator } from "@/lib/store";
 import type { Language } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { LogoMark, Wordmark } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
+import { Dropdown } from "./ui/dropdown";
 
 export function SiteHeader() {
   const hydrated = useHydrated();
@@ -36,14 +37,14 @@ export function SiteHeader() {
   ];
 
   return (
-    <header className="no-print sticky top-0 z-[900] px-3 pt-3 sm:px-6">
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-2 rounded-full border border-line/70 bg-card/90 py-2 pl-2 pr-2 shadow-[0_2px_12px_-4px_rgba(11,18,32,0.12)] backdrop-blur sm:gap-3 sm:pr-3">
-        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-full pr-2 text-ink" aria-label="FadäRhy home">
-          <LogoMark className="h-11 w-11" />
+    <header className="no-print sticky top-0 z-[900] px-2 pt-2 sm:px-6 sm:pt-3">
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-1.5 rounded-full border border-line/70 bg-card/90 px-1.5 shadow-[0_2px_12px_-4px_rgba(11,18,32,0.12)] backdrop-blur sm:h-16 sm:gap-3 sm:pl-2 sm:pr-3">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-full text-ink sm:pr-2" aria-label="FadäRhy home">
+          <LogoMark className="h-10 w-10 sm:h-11 sm:w-11" />
           <Wordmark className="hidden text-[22px] sm:inline" />
         </Link>
 
-        <nav aria-label="Main" className="flex items-center gap-1 rounded-full bg-subtle p-1">
+        <nav aria-label="Main" className="flex min-w-0 items-center gap-0.5 rounded-full bg-subtle p-1 sm:gap-1">
           {links.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
             return (
@@ -52,22 +53,24 @@ export function SiteHeader() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "inline-flex h-10 items-center gap-2 rounded-full px-3 text-[15px] font-semibold sm:px-4",
+                  "relative inline-flex h-10 min-w-10 items-center justify-center gap-2 rounded-full text-[15px] font-semibold lg:px-4",
                   active ? "bg-card text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
                 )}
               >
                 <Icon className="h-[18px] w-[18px]" aria-hidden />
-                <span className={cn(href === "/results" ? "hidden md:inline" : "hidden sm:inline")}>{label}</span>
-                <span className={cn("sr-only", href === "/results" ? "md:hidden" : "sm:hidden")}>{label}</span>
+                <span className="hidden lg:inline">{label}</span>
+                <span className="sr-only lg:hidden">{label}</span>
                 {href === "/shortlist" && hydrated && shortlistCount > 0 && (
-                  <span className="rounded-full bg-accent px-[7px] font-mono text-xs text-white">{shortlistCount}</span>
+                  <span className="absolute -right-0.5 -top-0.5 min-w-[18px] rounded-full bg-accent px-[5px] text-center font-mono text-[11px] leading-[18px] text-white lg:static lg:px-[7px] lg:text-xs lg:leading-normal">
+                    {shortlistCount}
+                  </span>
                 )}
               </Link>
             );
           })}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
           {hydrated && hasResults && (
             <button
               type="button"
@@ -83,7 +86,17 @@ export function SiteHeader() {
             </button>
           )}
           <ThemeToggle />
-          <div role="group" aria-label="Answer language" className="flex items-center rounded-full bg-subtle p-1">
+          {/* Phones and tablets: one compact menu; wide screens: the EN DE FR switch. */}
+          <Dropdown
+            aria-label="Answer language"
+            value={current ?? ""}
+            onChange={(v) => chooseLanguage(v as Language)}
+            options={LANGUAGES.map((l) => ({ value: l, label: l.toUpperCase() }))}
+            className="h-10 w-auto gap-1 rounded-full border-0 bg-subtle px-3 text-[13px] font-semibold text-ink lg:hidden"
+            itemLabel={(o) => LANGUAGE_LABEL[o.value as Language]}
+            placeholder={<Languages className="h-4 w-4" aria-hidden />}
+          />
+          <div role="group" aria-label="Answer language" className="hidden items-center rounded-full bg-subtle p-1 lg:flex">
             {LANGUAGES.map((l) => (
               <button
                 key={l}
@@ -91,7 +104,7 @@ export function SiteHeader() {
                 aria-pressed={current === l}
                 onClick={() => chooseLanguage(l)}
                 className={cn(
-                  "h-9 rounded-full px-2.5 text-[13px] font-semibold uppercase sm:h-10 sm:px-4",
+                  "h-10 rounded-full px-4 text-[13px] font-semibold uppercase",
                   current === l ? "bg-card text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
                 )}
               >

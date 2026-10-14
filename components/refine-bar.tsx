@@ -40,7 +40,7 @@ export function RefineBar({ onOpenHistory }: { onOpenHistory: () => void }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Refine in plain words, e.g. only investors who lead rounds"
-          className="min-h-11 min-w-0 flex-[1_1_240px] bg-transparent text-[15px] outline-none placeholder:text-muted/80"
+          className="min-h-11 min-w-0 flex-[1_1_200px] bg-transparent text-[15px] outline-none placeholder:text-muted/80"
         />
         <Button type="submit" size="sm" disabled={busy || !text.trim()}>
           {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
