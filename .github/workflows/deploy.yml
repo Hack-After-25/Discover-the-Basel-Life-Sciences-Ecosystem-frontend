@@ -1,0 +1,99 @@
+name: Deploy Fadarhy Frontend
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fadarhy-frontend-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # Build here, not on the VPS: next build needs more memory than the
+      # 2 GB VPS can spare next to the running apps. NEXT_PUBLIC_API_URL is
+      # baked into the browser bundle at build time, so it has to be set now.
+      - name: Build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+        run: |
+          if [ -z "$NEXT_PUBLIC_API_URL" ]; then
+            echo "::error::Set the NEXT_PUBLIC_API_URL repository variable, or the site falls back to mock data."
+            exit 1
+          fi
+          npm ci
+          npm run build
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          HOST_KEY: ${{ secrets.VPS_HOST_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$HOST_KEY" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Upload build
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          rsync -az --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='node_modules/' \
+            --exclude='.next/cache/' \
+            --exclude='.env*' \
+            -e "ssh -o StrictHostKeyChecking=yes" \
+            ./ "$VPS_USER@$VPS_HOST:/home/ubuntu/fadarhy-frontend/"
+
+      - name: Install dependencies and restart
+        # `bash -se` instead of the deploy user's login shell: a login shell
+        # runs ~/.bash_logout on exit, whose Ubuntu default fails without a
+        # terminal and turns a successful deploy into exit code 1.
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=yes \
+            "$VPS_USER@$VPS_HOST" 'bash -se' <<'EOF'
+          set -eu
+          cd /home/ubuntu/fadarhy-frontend
+
+          npm ci --omit=dev --no-audit --no-fund
+
+          sudo -n /usr/bin/systemctl restart fadarhy-web.service
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error \
+              http://127.0.0.1:3001/ > /dev/null 2>&1; then
+              echo "Frontend health check passed"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Frontend health check failed"
+          systemctl status fadarhy-web.service --no-pager || true
+          exit 1
+          EOF
