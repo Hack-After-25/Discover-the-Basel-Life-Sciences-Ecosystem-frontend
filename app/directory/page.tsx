@@ -63,13 +63,14 @@ function Directory() {
     );
   const viewButton = (active: boolean) =>
     cn(
-      "inline-flex h-[42px] w-11 items-center justify-center rounded-[9px]",
+      "inline-flex h-[42px] w-11 items-center justify-center rounded-md",
       active ? "bg-card text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]" : "text-muted hover:text-ink",
     );
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 pb-20 pt-8 sm:px-8">
-      <h1 className="text-[30px] font-semibold sm:text-4xl">Directory</h1>
+      <p className="label-mono">The Basel life-sciences graph</p>
+      <h1 className="mt-3 text-[34px] font-bold leading-[1.05] sm:text-[52px]">Directory</h1>
       <p className="mt-1.5 text-base text-muted">
         Every organisation in the Basel life-sciences graph, {entities.length} in total. Filter by category, region or focus.
       </p>
@@ -141,10 +142,10 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
   const shortlist = useNavigator((s) => s.shortlist);
   const toggleShortlist = useNavigator((s) => s.toggleShortlist);
   const regionName = useRegionName();
-  const th = "border-b border-line bg-card-2 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.05em] text-muted";
+  const th = "border-b border-line bg-card-2 px-4 py-3 text-left font-mono text-[11px] font-normal uppercase tracking-[0.02em] text-muted";
 
   return (
-    <div className="mt-4 overflow-hidden rounded-[18px] border border-line bg-card">
+    <div className="mt-4 overflow-hidden rounded-lg border border-line bg-card">
       <div className="relative overflow-x-auto">
         <table className="w-full min-w-[820px] border-collapse text-sm">
           <caption className="sr-only">Organisations in the directory</caption>
@@ -167,7 +168,7 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
                     <div className="flex items-center gap-3">
                       <span
                         aria-hidden
-                        className="inline-flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px] text-xs font-bold"
+                        className="inline-flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-md text-xs font-bold"
                         style={{ backgroundColor: `${meta.color}1A`, color: meta.color }}
                       >
                         {initials(e.name)}

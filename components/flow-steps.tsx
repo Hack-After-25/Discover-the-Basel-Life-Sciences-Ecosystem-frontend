@@ -17,7 +17,7 @@ export function FlowSteps({ current }: { current: number }) {
               className={cn(
                 "inline-flex h-6 w-6 items-center justify-center rounded-full font-mono text-xs",
                 i < current && "bg-accent text-white",
-                i === current && "bg-primary text-on-primary",
+                i === current && "bg-cta font-bold text-on-cta",
                 i > current && "border-[1.5px] border-field-hover",
               )}
             >

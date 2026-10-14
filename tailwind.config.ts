@@ -18,7 +18,12 @@ const config: Config = {
         field: { DEFAULT: "rgb(var(--field) / <alpha-value>)", hover: "rgb(var(--field-hover) / <alpha-value>)" },
         subtle: "rgb(var(--subtle) / <alpha-value>)",
         surface: "rgb(var(--surface) / <alpha-value>)",
+        cta: { DEFAULT: "rgb(var(--cta) / <alpha-value>)", hover: "rgb(var(--cta-hover) / <alpha-value>)" },
+        "on-cta": "rgb(var(--on-cta) / <alpha-value>)",
+        label: "rgb(var(--label) / <alpha-value>)",
       },
+      // fadarhy.ch uses tight 6px corners; the scale is pulled in to match.
+      borderRadius: { md: "6px", lg: "6px", xl: "8px", "2xl": "10px" },
       fontFamily: {
         sans: ['"Manrope Variable"', "system-ui", "Helvetica Neue", "Arial", "sans-serif"],
         mono: ['"Space Mono"', "ui-monospace", "SFMono-Regular", "monospace"],

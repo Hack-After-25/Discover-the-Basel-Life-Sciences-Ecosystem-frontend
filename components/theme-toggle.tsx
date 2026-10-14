@@ -29,7 +29,7 @@ export function ThemeToggle() {
         applyTheme(next);
         setTheme(next);
       }}
-      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-subtle text-muted hover:text-ink"
+      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-muted hover:bg-subtle hover:text-ink"
     >
       {theme === "dark" ? <Sun className="h-[18px] w-[18px]" aria-hidden /> : <Moon className="h-[18px] w-[18px]" aria-hidden />}
     </button>

@@ -74,7 +74,8 @@ export default function ResultsPage() {
       <div className="min-w-0">
         <div className="no-print flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-[26px] font-semibold sm:text-[30px]">
+            <p className="label-mono">Your routes · ranked by fit</p>
+            <h1 className="mt-2 text-[30px] font-bold leading-[1.05] sm:text-[40px]">
               {providerCount} {providerCount === 1 ? "match" : "matches"} for {needCount} {needCount === 1 ? "need" : "needs"}
             </h1>
             <p className="mt-1 text-sm text-muted">Ranked by fit with your field and stage. Every match shows its reason and source.</p>
@@ -97,7 +98,7 @@ export default function ResultsPage() {
                 tabIndex={tab === id ? 0 : -1}
                 onClick={() => setTab(id)}
                 className={cn(
-                  "flex min-h-14 flex-col items-center justify-center gap-1 px-2 text-[11px] font-medium lg:min-h-10 lg:flex-row lg:gap-2 lg:rounded-[10px] lg:px-3.5 lg:text-sm",
+                  "flex min-h-14 flex-col items-center justify-center gap-1 px-2 text-[11px] font-medium lg:min-h-10 lg:flex-row lg:gap-2 lg:rounded-md lg:px-3.5 lg:text-sm",
                   tab === id
                     ? "font-semibold text-primary lg:bg-card lg:text-ink lg:shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
                     : "text-muted hover:text-ink",
@@ -144,7 +145,7 @@ function CardSkeletons() {
   return (
     <div className="grid gap-3.5 md:grid-cols-2 2xl:grid-cols-3" role="status" aria-label="Loading matches">
       {Array.from({ length: 6 }, (_, i) => (
-        <Skeleton key={i} className="h-60 rounded-[18px]" />
+        <Skeleton key={i} className="h-60 rounded-lg" />
       ))}
     </div>
   );

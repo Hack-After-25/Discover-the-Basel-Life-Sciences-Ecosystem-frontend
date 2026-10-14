@@ -99,7 +99,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
                   void setHorizon(h);
                 }}
                 className={cn(
-                  "h-[38px] rounded-[9px] px-3.5 text-sm",
+                  "h-[38px] rounded-md px-3.5 text-sm",
                   plan.horizon === h
                     ? "bg-card font-semibold text-ink shadow-[0_1px_2px_rgba(0,0,0,0.08)]"
                     : "font-medium text-muted hover:text-ink",
@@ -137,8 +137,8 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
 
       {/* What to act on first */}
       <div className="mt-6 grid gap-3.5 lg:grid-cols-3">
-        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
-          <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
+        <section className="print-plain print-avoid-break rounded-lg border border-line bg-card p-5">
+          <h3 className="flex items-center gap-2 label-mono">
             <Users className="h-4 w-4 text-accent" aria-hidden />
             Contacts to reach first
           </h3>
@@ -166,8 +166,8 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
           </ol>
         </section>
 
-        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
-          <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
+        <section className="print-plain print-avoid-break rounded-lg border border-line bg-card p-5">
+          <h3 className="flex items-center gap-2 label-mono">
             <CircleDollarSign className="h-4 w-4 text-accent" aria-hidden />
             Funding and grants
           </h3>
@@ -225,8 +225,8 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
           )}
         </section>
 
-        <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-5">
-          <h3 className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
+        <section className="print-plain print-avoid-break rounded-lg border border-line bg-card p-5">
+          <h3 className="flex items-center gap-2 label-mono">
             <FlaskConical className="h-4 w-4 text-accent" aria-hidden />
             Lab space
           </h3>
@@ -251,7 +251,7 @@ export function PlanTab({ onJumpToNeed }: { onJumpToNeed?: (need: NeedCategory) 
       </div>
 
       {/* Timeline */}
-      <div className="print-plain print-timeline mt-5 overflow-x-auto rounded-[18px] border border-line bg-card p-5">
+      <div className="print-plain print-timeline mt-5 overflow-x-auto rounded-lg border border-line bg-card p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h3 className="text-lg font-semibold">Timeline</h3>
           <span className="no-print flex gap-3.5 text-[13px] text-muted">
@@ -349,7 +349,7 @@ function StepDetail({ step, number, interactive }: { step: RoadmapStep; number: 
     .sort((a, b) => a - b);
 
   return (
-    <section className="print-plain print-avoid-break rounded-[18px] border border-line bg-card p-6">
+    <section className="print-plain print-avoid-break rounded-lg border border-line bg-card p-6">
       <p className="font-mono text-xs uppercase text-accent">
         Step {number} ·{" "}
         {step.start === step.end ? `${unit} ${step.start}` : `${unit}s ${step.start} to ${step.end}`}
