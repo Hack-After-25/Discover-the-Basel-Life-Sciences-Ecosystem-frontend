@@ -146,14 +146,14 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
   return (
     <div className="mt-4 overflow-hidden rounded-[18px] border border-line bg-card">
       <div className="relative overflow-x-auto">
-        <table className="w-full min-w-[820px] border-collapse text-sm">
+        <table className="w-full border-collapse text-sm md:min-w-[820px]">
           <caption className="sr-only">Organisations in the directory</caption>
           <thead>
             <tr>
               <th scope="col" className={th}>Organisation</th>
-              <th scope="col" className={th}>Category</th>
-              <th scope="col" className={th}>Region</th>
-              <th scope="col" className={th}>Focus</th>
+              <th scope="col" className={cn(th, "hidden md:table-cell")}>Category</th>
+              <th scope="col" className={cn(th, "hidden md:table-cell")}>Region</th>
+              <th scope="col" className={cn(th, "hidden md:table-cell")}>Focus</th>
               <th scope="col" className={th}><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
@@ -172,19 +172,26 @@ function DirectoryTable({ entities }: { entities: Entity[] }) {
                       >
                         {initials(e.name)}
                       </span>
-                      <button type="button" onClick={() => openDetail(e.id)} className="text-left font-semibold hover:text-primary">
-                        {e.name}
-                      </button>
+                      <div className="min-w-0">
+                        <button type="button" onClick={() => openDetail(e.id)} className="text-left font-semibold hover:text-primary">
+                          {e.name}
+                        </button>
+                        {/* Phones drop the Category and Region columns, so they sit under the name. */}
+                        <p className="mt-0.5 flex items-start gap-1.5 text-xs text-muted md:hidden">
+                          <span aria-hidden className="mt-[5px] h-2 w-2 shrink-0 rounded-sm" style={{ backgroundColor: meta.color }} />
+                          {meta.label} · {regionName(e.canton)}
+                        </p>
+                      </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3.5">
+                  <td className="hidden px-4 py-3.5 md:table-cell">
                     <span className="inline-flex items-center gap-2">
                       <span aria-hidden className="h-2 w-2 rounded-sm" style={{ backgroundColor: meta.color }} />
                       {meta.label}
                     </span>
                   </td>
-                  <td className="px-4 py-3.5 text-ink-3">{regionName(e.canton)}</td>
-                  <td className="max-w-[320px] px-4 py-3.5 text-muted">
+                  <td className="hidden px-4 py-3.5 text-ink-3 md:table-cell">{regionName(e.canton)}</td>
+                  <td className="hidden max-w-[320px] px-4 py-3.5 text-muted md:table-cell">
                     {e.focusAreas.slice(0, 3).map((a) => (a === "all" ? "all fields" : a)).join(", ")}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3.5 text-right">

@@ -18,12 +18,17 @@ type Props = {
   size?: "md" | "sm";
   className?: string;
   "aria-label"?: string;
+  /** Shown when nothing is chosen and no option means "all". */
+  placeholder?: React.ReactNode;
+  /** Extra text after an option in the open menu only, e.g. "English" beside "EN". */
+  itemLabel?: (option: DropdownOption) => React.ReactNode;
 };
 
 /** Styled replacement for a native select: rounded trigger, floating card menu, teal check on the chosen option. */
-export function Dropdown({ id, value, onChange, options, size = "md", className, ...rest }: Props) {
+export function Dropdown({ id, value, onChange, options, size = "md", className, placeholder, itemLabel, ...rest }: Props) {
+  const hasAll = options.some((o) => !o.value);
   return (
-    <SelectPrimitive.Root value={value || EMPTY} onValueChange={(v) => onChange(v === EMPTY ? "" : v)}>
+    <SelectPrimitive.Root value={value || (hasAll ? EMPTY : "")} onValueChange={(v) => onChange(v === EMPTY ? "" : v)}>
       <SelectPrimitive.Trigger
         id={id}
         aria-label={rest["aria-label"]}
@@ -35,7 +40,7 @@ export function Dropdown({ id, value, onChange, options, size = "md", className,
         )}
       >
         <span className="truncate">
-          <SelectPrimitive.Value />
+          <SelectPrimitive.Value placeholder={placeholder} />
         </span>
         <SelectPrimitive.Icon asChild>
           <ChevronDown className="h-4 w-4 shrink-0 text-muted transition-transform group-data-[state=open]:rotate-180" aria-hidden />
@@ -58,6 +63,7 @@ export function Dropdown({ id, value, onChange, options, size = "md", className,
                 )}
               >
                 <SelectPrimitive.ItemText>{o.label}</SelectPrimitive.ItemText>
+                {itemLabel && <span className="text-muted">{itemLabel(o)}</span>}
                 <SelectPrimitive.ItemIndicator className="absolute right-3 inline-flex">
                   <Check className="h-4 w-4 text-accent" aria-hidden />
                 </SelectPrimitive.ItemIndicator>
